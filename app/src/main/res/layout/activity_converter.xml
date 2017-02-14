@@ -1,0 +1,191 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="10dip"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#333393"
+        android:paddingBottom="8dip"
+        android:paddingLeft="10dip"
+        android:paddingTop="10dip"
+        android:text="@string/decCoord"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="10dip"
+        >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.3"
+            android:layout_marginLeft="15dip"
+            android:textSize="16sp"
+            android:text="@string/lati"
+            />
+
+        <EditText
+            android:id="@+id/latDecimal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:inputType="number"
+            android:digits="0123456789.,-"
+            >
+            <requestFocus/>
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="5dip"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.3"
+            android:layout_marginLeft="15dip"
+            android:textSize="16sp"
+            android:text="@string/longi"
+            />
+
+        <EditText
+            android:id="@+id/lonDecimal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"
+            android:inputType="number"
+            android:digits="0123456789.,-"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#333393"
+        android:paddingBottom="8dip"
+        android:paddingLeft="10dip"
+        android:paddingTop="10dip"
+        android:text="@string/degCoord"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dip"
+        android:layout_marginTop="10dip"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dip"
+            android:text="@string/shlati"
+            />
+
+        <EditText
+            android:id="@+id/degreelat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="2"
+            android:inputType="numberSigned"
+            />
+
+        <EditText
+            android:id="@+id/minutelat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_weight="2"
+            android:inputType="number"
+            />
+
+        <EditText
+            android:id="@+id/secondlat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_weight="4"
+            android:inputType="number"
+            android:digits="0123456789.,"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip"
+            android:layout_weight="3"
+            android:textSize="16sp"
+            android:text="@string/shlongi"
+            />
+
+        <EditText
+            android:id="@+id/degreelon"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:inputType="numberSigned"
+            />
+
+        <EditText
+            android:id="@+id/minutelon"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:inputType="number"
+            />
+
+        <EditText
+            android:id="@+id/secondlon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_weight="4"
+            android:inputType="number"
+            android:digits="0123456789.,"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

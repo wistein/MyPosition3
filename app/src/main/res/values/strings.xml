@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2016. Wilhelm Stein, Bonn, Germany.
+  -->
+
+<resources>
+
+    <string name="app_name">My Position</string>
+    <string name="title_activity_my_position">My Position</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_about_dialog">About</string>
+    <string name="title_activity_converter">Convert GPS Coordinate</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_viewmap">View Map</string>
+    <string name="menu_getpos">Request position</string>
+    <string name="menu_toDegree">Decimal → Degree</string>
+    <string name="menu_toDecimal">Degree → Decimal</string>
+    <string name="menu_converter">Converter</string>
+    <string name="menu_about">About</string>
+    <string name="last_fix_time">Last GPS fix: </string>
+    <string name="geoloc">Coordinates:</string>
+    <string name="uncert">Uncertainty</string>
+    <string name="no_GPS">Sorry, no position, GPS is not activated.</string>
+    <string name="nogeocoder">No Geocoder service available</string>
+    <string name="emptyAddr">Empty address</string>
+    <string name="unknownAddr">Unknown address</string>
+    <string name="errAddr">Web read error!</string>
+    <string name="noAddr">No address data!</string>
+    <string name="noPos">No position found!</string>
+    <string name="addrInfo">Address Info</string>
+    <string name="toshortAddr">Address info:</string>
+    <string name="unknownLoc">Unknown location</string>
+    <string name="unknownCoord">Unknown coordinates</string>
+    <string name="posnotknown">Position not known yet…</string>
+    <string name="message">Message</string>
+    <string name="decCoord">Decimal Coordinates</string>
+    <string name="degCoord">Degree Coordinates</string>
+    <string name="myPos">My current position: </string>
+    <string name="myLoc">My current location: </string>
+    <string name="nord">N</string>
+    <string name="south">S</string>
+    <string name="west">W</string>
+    <string name="east">E</string>
+    <string name="longi">Longitude:</string>
+    <string name="lati">Latitude:</string>
+    <string name="shlongi">Lon.:</string>
+    <string name="shlati">Lat.:</string>
+    <string name="height">Height:</string>
+    <string name="degree">→ Degree:</string>
+    <string name="decimal">→ Decimal:</string>
+
+    <string name="titel_msg_header">Message header:</string>
+    <string name="msg_header">Text displayed in the share location message</string>
+    <string name="titel_pref_updfreq">Update Frequency</string>
+    <string name="pref_updfreq">Location update frequency (in minutes)</string>
+    <string name="pref_text">Click on the link below to see my position on the OSM map: </string>
+    <string name="my_location">About My Location</string>
+    <string name="invValue">Invalid value</string>
+    <string name="email_string">Necessary for reliable query of address data per OSM Nominatim Reverse Geocoder. The mail address will be treated confidential and only used to contact you in case of service problems. See http://wiki.openstreetmap.org/wiki/Nominatim.</string>
+    <string name="titel_email_string">Mail Address for Geocoder:</string>
+
+</resources>

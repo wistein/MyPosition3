@@ -1,0 +1,22 @@
+ Mein Standort, Version 1.3.0 von wistein, 2017,<br>
+ umfasst Code-Korrekturen und Ergänzungen,<br>
+ beendet GPS-Nutzung bei App-Ende,<br> 
+ verwendet zur Adressanzeige Reverse-Geocoding von OpenStreetMap (OSM),<br>
+ nutzt dazu optional Deine einstellbare E-Mail-Adresse, wie von OSM empfohlen,<br>
+ länderspezifische Darstellung der Adressinfo (at, ch, de, fr, it, Rest der Welt),<br>
+ sprachspezifische Anpassung der Texte (Deutsch, Englisch) und,<br>
+ sprachspezifische Anpassung der Zahlenumwandlung und -darstellung.<br>
+ <br>
+ https://github.com/wistein/MyPosition3<br>
+ Lizenziert unter der GNU GPLv2 oder neuer.<br>
+ https://www.gnu.org/licenses/gpl-3.0<br>
+ <br>
+ Die App wurde sorgfältig entwickelt und getestet.<br>
+ Sie berücksichtigt Deine Privatsphäre und ist werbefrei.<br>
+ Sie verwendet keine verborgenen Funktionen und benötigt gesicherten  
+ Internetzugang ausschließlich für die Abfrage von OSM-Adressdaten.<br>
+ Deine Mitteilungen werden über andere Apps wie Mail oder SMS versandt.<br>
+ <br>
+ Diese App wird angeboten in der Hoffnung, dass sie nützlich ist, aber ohne
+ jedwede Garantie.<br>
+ <br>

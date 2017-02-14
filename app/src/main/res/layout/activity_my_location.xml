@@ -1,0 +1,208 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/baseLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+    >
+
+    <LinearLayout
+        android:background="#e8e8e8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/TitleLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333393"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/addrInfo"
+            android:textColor="#afffff"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="40dip"
+                android:paddingBottom="14dip"
+                android:paddingTop="10dip"
+                android:text="@string/unknownLoc"
+                android:textSize="18sp"
+                />
+
+            <ImageView
+                android:id="@+id/shareLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="5dip"
+                android:src="@drawable/sharebutton"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/TitleDecimalCoord"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333393"
+            android:gravity="center"
+            android:paddingBottom="2dip"
+            android:paddingTop="5dip"
+            android:text="@string/decCoord"
+            android:textColor="#afffff"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tvUpdatedTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333393"
+            android:gravity="center"
+            android:paddingBottom="2dip"
+            android:paddingTop="2dip"
+            android:text="@string/posnotknown"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tvDecimalCoord"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="40dip"
+                android:paddingBottom="14dip"
+                android:paddingTop="10dip"
+                android:text="@string/unknownCoord"
+                android:textSize="18sp"
+                />
+
+            <ImageView
+                android:id="@+id/shareDecimal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="5dip"
+                android:src="@drawable/sharebutton"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/TitleDegreeCoord"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333393"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/degCoord"
+            android:textColor="#afffff"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tvDegreeCoord"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="40dip"
+                android:paddingBottom="14dip"
+                android:paddingTop="10dip"
+                android:text="@string/unknownCoord"
+                android:textSize="18sp"
+                />
+
+            <ImageView
+                android:id="@+id/shareDegree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="5dip"
+                android:src="@drawable/sharebutton"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/TitleMessage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333393"
+            android:gravity="center"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:text="@string/message"
+            android:textColor="#afffff"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="40dip"
+                android:paddingBottom="14dip"
+                android:paddingTop="10dip"
+                android:text="@string/unknownLoc"
+                android:textSize="16sp"
+                />
+
+            <ImageView
+                android:id="@+id/shareMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:paddingTop="5dip"
+                android:src="@drawable/sharebutton"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            >
+
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

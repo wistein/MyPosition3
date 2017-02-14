@@ -1,0 +1,22 @@
+ My Position, version 1.3.0 by wistein, 2017,<br>
+ includes code corrections and enhancements,<br>
+ ends GPS usage with terminating app,<br>
+ uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info,<br>
+ therefore uses optionally your provided email address as recommended by OSM,<br>
+ country-specific representation of address info (at, ch, de, fr, it, rest of the world),<br>
+ introduces localized strings (German, English) and<br>
+ considers localized number formats in calculations.<br>
+ <br>
+ https://github.com/wistein/MyPosition3<br>
+ Licensed under GNU GPLv2 or later.<br>
+ https://www.gnu.org/licenses/gpl-3.0<br>
+ <br>
+ The app was carefully developed and thoroughly tested.<br>
+ It respects your privacy and is ad-free.<br>
+ There is no hidden functionality and the app uses internet access only for the 
+ secured query of OSM address data. <br>
+ Your messages are sent by means of other apps like Mail or SMS.<br>
+ <br>
+ This app is distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.<br><br>

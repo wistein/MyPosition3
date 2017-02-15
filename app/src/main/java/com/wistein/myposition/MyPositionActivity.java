@@ -634,6 +634,18 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             {
                 try
                 {
+/*                  //prepare for URL shortener
+                    StringBuilder urlSB = new StringBuilder();
+                    urlSB.append("https://nominatim.openstreetmap.org/reverse?email=");
+                    urlSB.append(emailString);
+                    urlSB.append("&format=xml&lat=");
+                    urlSB.append(Double.toString(lat));
+                    urlSB.append("&lon=");
+                    urlSB.append(Double.toString(lon));
+                    urlSB.append("&zoom=18");
+                    urlSB.append("&addressdetails=1");
+                    String urlString = urlSB.toString();
+*/                    
                     String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
                         + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
                     url = new URL(urlString);

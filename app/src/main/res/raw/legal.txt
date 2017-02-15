@@ -1,4 +1,6 @@
  My Position, version 1.3.0 by wistein, 2017,<br>
+ https://github.com/wistein/MyPosition3<br>
+ stein.wm@web.de<br>
  includes code corrections and enhancements,<br>
  ends GPS usage with terminating app,<br>
  uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info,<br>
@@ -7,7 +9,6 @@
  introduces localized strings (German, English) and<br>
  considers localized number formats in calculations.<br>
  <br>
- https://github.com/wistein/MyPosition3<br>
  Licensed under GNU GPLv2 or later.<br>
  https://www.gnu.org/licenses/gpl-3.0<br>
  <br>
@@ -19,4 +20,5 @@
  <br>
  This app is distributed in the hope that it will be useful, but WITHOUT ANY
  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.<br><br>
+ FOR A PARTICULAR PURPOSE.<br>
+ <br>

@@ -2,7 +2,7 @@
  
  MyPosition3
  
- My Position, version 1.3.0, copyright by wistein, 2017
+ My Position (Mein Standort), version 1.3.0
  
  Share your location, easily.
  
@@ -29,14 +29,19 @@
  http://f.gdr.name/mylocation.png
  License: GNU GPLv2
 
- My Position version 1.3.0 by wistein introduces:
+ My Position version 1.3.0, 
+ copyright by wistein, 2017 (stein.wm@web.de),  
+ https://github.com/wistein/MyPosition3
+ 
+ introduces:
   
   - Reverse geocoding for address info by Nominatim service of OpenStreetMap,
 
+  - works without GApps,
+    
   - terminates GSM process when app is paused or ended,
    
   - optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for more reliable service),
    
-  - localization for German and English (default) of text and number formats
-  
+  - localization for German and English (default) of text and number formats,
   

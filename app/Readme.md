@@ -1,9 +1,8 @@
- # MyPosition3
  Readme.md
  
- My Position
- Version 1.3.0
- Copyright by wistein, 2017
+ MyPosition3
+ 
+ My Position, version 1.3.0, copyright by wistein, 2017
  
  Share your location, easily.
  
@@ -13,11 +12,11 @@
 
  It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info, therefore uses optionally your provided email address as recommended by OSM.
  
- It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings (German, English) and considers localized number formats in calculations.<br>
+ It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings (German, English) and considers localized number formats in calculations.
  
- Licensed under GNU GPLv2 or later.
+ Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
  
- https://www.gnu.org/licenses/gpl-3.0<br>
+ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  
  History:
  
@@ -25,5 +24,19 @@
  Copyright 2012 by Mohammad Hafiz Ismail
  http://code.google.com/p/mylocation/
  License: GNU GPLv2
- Intermediate Changes by GDR
+ 
+ Intermediate Changes and enhancements by GDR
  http://f.gdr.name/mylocation.png
+ License: GNU GPLv2
+
+ My Position version 1.3.0 by wistein introduces:
+  
+  - Reverse geocoding for address info by Nominatim service of OpenStreetMap,
+
+  - terminates GSM process when app is paused or ended,
+   
+  - optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for more reliable service),
+   
+  - localization for German and English (default) of text and number formats
+  
+  

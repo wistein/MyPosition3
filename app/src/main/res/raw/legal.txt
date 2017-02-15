@@ -2,7 +2,7 @@
  https://github.com/wistein/MyPosition3<br>
  stein.wm@web.de<br>
  includes code corrections and enhancements,<br>
- ends GPS usage with terminating app,<br>
+ interrupts GPS usage when app pauses or ends GPS usage when app terminates,<br>
  uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info,<br>
  therefore uses optionally your provided email address as recommended by OSM,<br>
  country-specific representation of address info (at, ch, de, fr, it, rest of the world),<br>

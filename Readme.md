@@ -39,7 +39,7 @@
 
   - works without GApps,
     
-  - terminates GSM process when app is paused or ended,
+  - interrupts GPS usage when app pauses or ends GPS usage when app terminates,
    
   - optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for more reliable service),
    

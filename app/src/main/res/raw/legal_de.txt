@@ -2,7 +2,7 @@
  https://github.com/wistein/MyPosition3<br>
  stein.wm@web.de<br>
  umfasst Code-Korrekturen und Ergänzungen,<br>
- beendet GPS-Nutzung bei App-Ende,<br> 
+ unterbricht bzw. beendet GPS-Nutzung bei App-Unterbrechung oder -Beendung,<br> 
  verwendet zur Adressanzeige Reverse-Geocoding von OpenStreetMap (OSM),<br>
  nutzt dazu optional Deine einstellbare E-Mail-Adresse, wie von OSM empfohlen,<br>
  länderspezifische Darstellung der Adressinfo (at, ch, de, fr, it, Rest der Welt),<br>

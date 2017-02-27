@@ -15,6 +15,7 @@
  Based on myLocation version 1.2,
  Copyright 2012 by Mohammad Hafiz Ismail<br>
  http://code.google.com/p/mylocation/<br>
- Intermediate Changes by GDR<br>
+ Licensed under GNU GPLv2.<br>
+ Additional changes by GDR<br>
  http://f.gdr.name/mylocation.png<br>
  <br>

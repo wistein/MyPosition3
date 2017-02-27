@@ -246,9 +246,11 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         // Get location service
         try
         {
+            //Potentially missing permission is catched by exception
             locationManager.requestLocationUpdates(GPS_PROVIDER, Integer.parseInt(strTime), 50, locationListener);
         } catch (Exception e)
         {
+            //Unfortunately the following Toast appears always once when the app resumes, so it is commented out 
             //Toast.makeText(this, getString(R.string.no_GPS), Toast.LENGTH_LONG).show();
         }
         boolean defaultTime = true;
@@ -264,6 +266,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             if (locationManager != null)
             {
+                //Potentially missing permission is catched by exception
                 locationManager.removeUpdates(locationListener);
                 locationManager = null;
             }
@@ -281,6 +284,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             if (locationManager != null)
             {
+                //Potentially missing permission is catched by exception
                 locationManager.removeUpdates(locationListener);
                 locationManager = null;
             }
@@ -634,18 +638,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             {
                 try
                 {
-/*                  //prepare for URL shortener
-                    StringBuilder urlSB = new StringBuilder();
-                    urlSB.append("https://nominatim.openstreetmap.org/reverse?email=");
-                    urlSB.append(emailString);
-                    urlSB.append("&format=xml&lat=");
-                    urlSB.append(Double.toString(lat));
-                    urlSB.append("&lon=");
-                    urlSB.append(Double.toString(lon));
-                    urlSB.append("&zoom=18");
-                    urlSB.append("&addressdetails=1");
-                    String urlString = urlSB.toString();
-*/                    
                     String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
                         + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
                     url = new URL(urlString);
@@ -690,7 +682,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                             send = xmlString.indexOf("</building>");
                             String building = xmlString.substring(sstart, send);
                             msg.append(building);
-                            msg.append("\n ");
+                            msg.append("\n");
                         }
                         if (xmlString.contains("<hotel>"))
                         {
@@ -698,7 +690,15 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                             send = xmlString.indexOf("</hotel>");
                             String hotel = xmlString.substring(sstart, send);
                             msg.append(hotel);
-                            msg.append("\n ");
+                            msg.append("\n");
+                        }
+                        if (xmlString.contains("<guest_house>"))
+                        {
+                            sstart = xmlString.indexOf("<guest_house>") + 13;
+                            send = xmlString.indexOf("</guest_house>");
+                            String guest_house = xmlString.substring(sstart, send);
+                            msg.append(guest_house);
+                            msg.append("\n");
                         }
 
                         if (xmlString.contains(">de<") || xmlString.contains(">fr<") || xmlString.contains(">ch<") || xmlString.contains(">at<") || xmlString.contains(">it<"))
@@ -712,6 +712,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append(road);
                                 msg.append(" ");
                             }
+                            if (xmlString.contains("<street>"))
+                            {
+                                sstart = xmlString.indexOf("<street>") + 8;
+                                send = xmlString.indexOf("</street>");
+                                String street = xmlString.substring(sstart, send);
+                                msg.append(street);
+                                msg.append(" ");
+                            }
                             if (xmlString.contains("<house_number>"))
                             {
                                 sstart = xmlString.indexOf("<house_number>") + 14;
@@ -722,7 +730,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                             }
                             else
                             {
-                                if (xmlString.contains("<road>"))
+                                if (xmlString.contains("<road>") || xmlString.contains("<street>"))
                                     msg.append("\n");
                             }
 
@@ -841,6 +849,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append(road);
                                 msg.append("\n");
                             }
+                            if (xmlString.contains("<street>"))
+                            {
+                                sstart = xmlString.indexOf("<street>") + 8;
+                                send = xmlString.indexOf("</street>");
+                                String street = xmlString.substring(sstart, send);
+                                msg.append(street);
+                                msg.append("\n");
+                            }
 
                             // 3. line: suburb
                             if (xmlString.contains("<suburb>"))
@@ -880,13 +896,22 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append("\n");
                             }
 
-                            //6. line: county
+                            //6. line: county, state_district
                             if (xmlString.contains("<county>"))
                             {
                                 sstart = xmlString.indexOf("<county>") + 8;
                                 send = xmlString.indexOf("</county>");
                                 String county = xmlString.substring(sstart, send);
                                 msg.append(county);
+                                msg.append("\n");
+                            }
+
+                            if (xmlString.contains("<state_district>"))
+                            {
+                                sstart = xmlString.indexOf("<state_district>") + 16;
+                                send = xmlString.indexOf("</state_district>");
+                                String state_district = xmlString.substring(sstart, send);
+                                msg.append(state_district);
                                 msg.append("\n");
                             }
 
@@ -918,6 +943,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                         }
 
                         addresslines = msg.toString();
+                        // format for TextView tvMessage
                         addresslines1 = "   " + addresslines;
                         addresslines1 = addresslines1.replace("\n", "\n   ");
                     }

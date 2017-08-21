@@ -3,7 +3,7 @@
  Share your location, easily.<br>
  <br>
  <h4>Description</h4>
- <b>My Position</b> determines the current location with address data and GPS coordinates.
+ <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.
  There are two GPS coordinate formats supported: <br>
  WGS84 Decimal coordinates and <br>
  DD MM SS coordinates. <br>

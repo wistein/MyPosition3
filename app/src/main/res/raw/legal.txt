@@ -1,7 +1,7 @@
  <h4>History</h4
  <B>My Position, version 1.3.1 by wistein, 2017-08-19,</B><br>
  https://github.com/wistein/MyPosition3<br>
- Height data is corrected according to Geoid sealevel.<br>
+ Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
  <br>
  <B>My Position, version 1.3.0 by wistein, 2017-04-11,</B><br>
  includes code corrections and enhancements,<br>

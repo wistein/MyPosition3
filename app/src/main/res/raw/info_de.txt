@@ -3,7 +3,7 @@
  Einfache Mitteilung Deiner Position.<br>
  <br>
  <h4>Beschreibung</h4>
- <b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten.
+ <b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.
  Es werden zwei GPS-Koordinatenformate unterstützt: <br>
  WGS84 Dezimal-Koordinaten und <br>
  GG-MM-SS-Koordinaten. <br>

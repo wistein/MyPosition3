@@ -1,6 +1,9 @@
- My Position, version 1.3.0 by wistein, 2017,<br>
+ <h4>History</h4
+ <B>My Position, version 1.3.1 by wistein, 2017-08-19,</B><br>
  https://github.com/wistein/MyPosition3<br>
- stein.wm@web.de<br>
+ Height data is corrected according to Geoid sealevel.<br>
+ <br>
+ <B>My Position, version 1.3.0 by wistein, 2017-04-11,</B><br>
  includes code corrections and enhancements,<br>
  interrupts GPS usage when app pauses or ends GPS usage when app terminates,<br>
  uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info,<br>
@@ -9,9 +12,14 @@
  introduces localized strings (German, English) and<br>
  considers localized number formats in calculations.<br>
  <br>
- Licensed under GNU GPLv2 or later.<br>
- https://www.gnu.org/licenses/gpl-3.0<br>
+ Based on myLocation version 1.2,
+ Copyright 2012 by Mohammad Hafiz Ismail<br>
+ http://code.google.com/p/mylocation/<br>
+ Licensed under GNU GPLv2.<br>
+ Additional changes by GDR<br>
+ http://f.gdr.name/mylocation.png<br>
  <br>
+ <h4>Legal and License</h4>
  The app was carefully developed and thoroughly tested.<br>
  It respects your privacy and is ad-free.<br>
  There is no hidden functionality and the app uses internet access only for the 
@@ -21,4 +29,7 @@
  This app is distributed in the hope that it will be useful, but WITHOUT ANY
  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.<br>
+ <br>
+ Licensed under GNU GPLv2 or later.<br>
+ https://www.gnu.org/licenses/gpl-3.0<br>
  <br>

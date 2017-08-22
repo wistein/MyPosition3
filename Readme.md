@@ -1,6 +1,6 @@
 ## MyPosition3
  
-### My Position (Mein Standort), version 1.3.0
+### My Position (Mein Standort), version 1.3.1
  
 Share your location, easily.
  
@@ -18,25 +18,30 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
  
 ### History:
  
+My Position version 1.3.1, 
+copyright by wistein, 2017-08-19 (stein.wm@web.de),
+https://github.com/wistein/MyPosition3
+
+  - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96,
+  - Settings allow to set a toast message about height values with height above sea-level, GPS-height and height correction,
+  - Bug fix: Changed app settings are valid without restarting the app.
+ 
+My Position version 1.3.0, 
+copyright by wistein, 2017-04-11,  
+
+  - Reverse geocoding for address info by Nominatim service of OpenStreetMap,
+  - works without GApps,
+  - interrupts GPS usage when app pauses or ends GPS usage when app terminates,
+  - optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for more reliable service),
+  - localization for German and English (default) of text and number formats
+  
+Intermediate Changes and enhancements by GDR
+http://f.gdr.name/mylocation.png
+License: GNU GPLv2
+
 Based on myLocation version 1.2,
 Copyright 2012 by Mohammad Hafiz Ismail
 http://code.google.com/p/mylocation/
 License: GNU GPLv2
  
-Intermediate Changes and enhancements by GDR
-http://f.gdr.name/mylocation.png
-License: GNU GPLv2
-
-My Position version 1.3.0, 
-copyright by wistein, 2017 (stein.wm@web.de),  
-https://github.com/wistein/MyPosition3
- 
-introduces:
-  
-  - Reverse geocoding for address info by Nominatim service of OpenStreetMap,
-  - works without GApps,
-  - interrupts GPS usage when app pauses or ends GPS usage when app terminates,
-  - optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for more reliable service),
-  - localization for German and English (default) of text and number formats,
-  
 App-Icon: wistein

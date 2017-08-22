@@ -18,9 +18,16 @@
  *    This file is derived from NGA/NASA software available for unlimited distribution.
  *    See http://earth-info.nima.mil/GandG/wgs84/gravitymod/.
  */
-package com.wistein.myposition;
+package com.wistein.egm;
 
-import java.io.*;
+import com.wistein.myposition.R;
+import com.wistein.myposition.myPosition;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.StringTokenizer;
 
 /**
@@ -40,6 +47,7 @@ import java.util.StringTokenizer;
  * @author Martin Desruisseaux
  * @version $Id$
  * @since 2.3
+ * Code adaptation for use by MyPositionActivity by wm.stein
  */
 public final class EarthGravitationalModel extends VerticalTransform 
 {
@@ -94,18 +102,18 @@ public final class EarthGravitationalModel extends VerticalTransform
 
     /**
      * The geopotential coefficients read from the ASCII file.
-     * Those arrays are filled by the {@link #load} method.
+     * Those arrays are filled by the load method.
      */
     private final double[] cnmGeopCoef, snmGeopCoef;
 
     /**
      * Cleanshaw coefficients needed for the selected gravimetric quantities that are computed.
-     * Those arrays are computed by the {@link #initialize} method.
+     * Those arrays are computed by the initialize method.
      */
     private final double[] aClenshaw, bClenshaw, as;
 
     /**
-     * Temporary buffer for use by {@link #heightOffset} only. Allocated once for ever
+     * Temporary buffer for use by heightOffset only. Allocated once for ever
      * for avoiding too many objects creation / destruction.
      */
     private final double[] cr, sr, s11, s12;
@@ -156,11 +164,11 @@ public final class EarthGravitationalModel extends VerticalTransform
     }
 
     /**
-     * Computes the index as it would be returned by the locating array {@code iv}
+     * Computes the index as it would be returned by the locating array iv
      * (from the Fortran code).
      * <p>
      * Tip (used in some place in this class):
-     * {@code locatingArray(n+1)} == {@code locatingArray(n) + n + 1}.
+     * locatingArray(n+1) == locatingArray(n) + n + 1.
      */
     private static int locatingArray(final int n) 
 	{
@@ -172,7 +180,7 @@ public final class EarthGravitationalModel extends VerticalTransform
      * clenshaw arrays.
      * <p>
      * Note: ASCII may looks like an unefficient format for binary distribution.
-     * A binary file with coefficient values read by {@link java.io.DataInput#readDouble} would
+     * A binary file with coefficient values read by java.io.DataInput readDouble would
      * be more compact than an uncompressed ASCII file. However, binary files are hard to
      * compress by the ZIP algorithm. Our experience show that a 675 kb uncompressed ASCII file
      * is only 222 kb after ZIP or JAR compression. The same data as a binary file is 257 kb
@@ -185,7 +193,6 @@ public final class EarthGravitationalModel extends VerticalTransform
     public void load() throws IOException 
 	{
         final InputStream stream = myPosition.getAppContext().getResources().openRawResource(R.raw.egm180);
-//        final InputStream stream = EarthGravitationalModel.class.getResourceAsStream(filename);
         if (stream == null) 
 		{
             throw new FileNotFoundException("egm180");

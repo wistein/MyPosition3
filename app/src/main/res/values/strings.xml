@@ -52,11 +52,16 @@
     <string name="titel_msg_header">Message header:</string>
     <string name="msg_header">Text displayed in the share location message</string>
     <string name="titel_pref_updfreq">Update Frequency</string>
-    <string name="pref_updfreq">Location update frequency (in minutes)</string>
+    <string name="pref_updfreq">Location update frequency</string>
     <string name="pref_text">Click on the link below to see my position on the OSM map: </string>
     <string name="my_location">About My Location</string>
     <string name="invValue">Invalid value</string>
     <string name="email_string">Necessary for reliable query of address data per OSM Nominatim Reverse Geocoder. The mail address will be treated confidential and only used to contact you in case of service problems. See http://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail Address for Geocoder:</string>
-
+    <string name="toast_string">Show toast for new position with height above sea-level, GPS-height und correction.</string>
+    <string name="titel_toast_string">Show Toast for height values</string>
+    <string name="h_nn">H. above Sea-level:</string>
+    <string name="h_gps">H. from GPS:</string>
+    <string name="h_corr">H. correction:</string>
+    
 </resources>

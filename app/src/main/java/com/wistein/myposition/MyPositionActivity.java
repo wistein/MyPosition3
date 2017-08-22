@@ -32,6 +32,7 @@ package com.wistein.myposition;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -57,6 +58,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wistein.egm.EarthGravitationalModel;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +74,8 @@ import java.util.TimeZone;
 
 import static android.location.LocationManager.GPS_PROVIDER;
 
-public class MyPositionActivity extends AppCompatActivity implements OnClickListener
+public class MyPositionActivity extends AppCompatActivity implements OnClickListener, 
+    SharedPreferences.OnSharedPreferenceChangeListener
 {
     private final static String LOG_TAG = "MyPositionActivity";
     private TextView tvDecimalCoord;
@@ -91,6 +95,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private String messageHeader = "";
     private String strTime = "10"; // default update period 10 sec.
     private String emailString = ""; // mail address for OSM query
+    private boolean showToast;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -129,9 +134,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         shareMessage.setOnClickListener(this);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+
         messageHeader = pref.getString("messageHeader", getString(R.string.pref_text));
         strTime = pref.getString("updateFreq", "10");
         emailString = pref.getString("emailString", "");
+        showToast = pref.getBoolean("show_Toast", false);
 
         // Get location service
         int REQUEST_CODE_GPS = 124;
@@ -262,6 +270,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         this.registerRelativeFixTime();
     }
 
+    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
+    {
+        messageHeader = pref.getString("messageHeader", getString(R.string.pref_text));
+        strTime = pref.getString("updateFreq", "10");
+        emailString = pref.getString("emailString", "");
+        showToast = pref.getBoolean("show_Toast", false);
+    }
+
     public void onPause()
     {
         super.onPause();
@@ -345,6 +361,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private double correctHeight(double gpsHeight)
     {
         double corrHeight = 0;
+        double nnHeight = 0;
 
         EarthGravitationalModel gh = new EarthGravitationalModel();
         try
@@ -352,7 +369,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             gh.load(); // load the WGS84 correction coefficient table egm180.txt
         } catch (IOException e)
         {
-            Toast.makeText(this, "No file found", Toast.LENGTH_SHORT).show();
             return 0;
         }
         
@@ -365,8 +381,15 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             return 0;
         }
         
-        corrHeight = gpsHeight + corrHeight;
-        return corrHeight;
+        nnHeight = gpsHeight + corrHeight;
+        if (showToast)
+        {
+            String hToast = getString(R.string.h_nn) + " " + Double.toString(nnHeight) 
+                + " \n " + getString(R.string.h_gps) + " " + Double.toString(gpsHeight) 
+                + " \n " + getString(R.string.h_corr) + " " + Double.toString(corrHeight);
+            Toast.makeText(this, hToast, Toast.LENGTH_LONG).show();
+        }
+        return nnHeight;
     }
     
     // Convert to degree

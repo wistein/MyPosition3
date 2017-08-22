@@ -2,6 +2,8 @@
  <B>My Position, version 1.3.1 by wistein, 2017-08-19,</B><br>
  https://github.com/wistein/MyPosition3<br>
  Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
+ Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction.<br> 
+ Bug fix: Changed app settings are valid without restarting the app.<br>  
  <br>
  <B>My Position, version 1.3.0 by wistein, 2017-04-11,</B><br>
  includes code corrections and enhancements,<br>

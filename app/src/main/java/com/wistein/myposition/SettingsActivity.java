@@ -28,29 +28,25 @@ package com.wistein.myposition;
  */
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity
 {
-
     @SuppressLint("LongLogTag")
     @SuppressWarnings("deprecation")
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference);
 
         PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preference, false);
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
+    public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
     }

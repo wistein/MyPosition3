@@ -2,24 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
+        android:key="updateFreq"
         android:entries="@array/freq_string"
         android:entryValues="@array/freq"
-        android:key="updateFreq"
         android:summary="@string/pref_updfreq"
         android:title="@string/titel_pref_updfreq"
         />
     <EditTextPreference
-        android:defaultValue="@string/pref_text"
         android:key="messageHeader"
+        android:defaultValue="@string/pref_text"
         android:summary="@string/msg_header"
         android:title="@string/titel_msg_header"
         />
 
     <EditTextPreference
-        android:defaultValue=""
         android:key="emailString"
         android:summary="@string/email_string"
         android:title="@string/titel_email_string"
+        />
+
+    <CheckBoxPreference
+        android:key="show_Toast"
+        android:summary="@string/toast_string"
+        android:title="@string/titel_toast_string"
         />
 
 </PreferenceScreen>

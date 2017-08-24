@@ -3,11 +3,12 @@
  Share your location, easily.<br>
  <br>
  <h4>Description</h4>
- <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.
+ <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
+ The application also simplifies the task of sharing your position data with your contacts.<br>
+ Your location may also be shown on a map either local (if a suitable app is installed) or by browser on OpenStreetMap.<br>
  There are two GPS coordinate formats supported: <br>
  WGS84 Decimal coordinates and <br>
  DD MM SS coordinates. <br>
- The application also simplifies the task of sharing your position data with your contacts.
  Additionally, this application also includes a tool to help converting between
  WGS84 decimal GPS coordinate and DD MM SS coordinate format.<br>
  <br>

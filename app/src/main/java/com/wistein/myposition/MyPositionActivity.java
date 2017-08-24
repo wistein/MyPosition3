@@ -96,6 +96,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private String strTime = "10"; // default update period 10 sec.
     private String emailString = ""; // mail address for OSM query
     private boolean showToast;
+    private boolean mapLocal;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -140,6 +141,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         strTime = pref.getString("updateFreq", "10");
         emailString = pref.getString("emailString", "");
         showToast = pref.getBoolean("show_Toast", false);
+        mapLocal = pref.getBoolean("map_Local", false);
 
         // Get location service
         int REQUEST_CODE_GPS = 124;
@@ -276,12 +278,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         strTime = pref.getString("updateFreq", "10");
         emailString = pref.getString("emailString", "");
         showToast = pref.getBoolean("show_Toast", false);
+        mapLocal = pref.getBoolean("map_Local", false);
     }
 
     public void onPause()
     {
         super.onPause();
 
+        // Stop location service
         try
         {
             if (locationManager != null)
@@ -300,6 +304,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     {
         super.onStop();
 
+        // Stop location service
         try
         {
             if (locationManager != null)
@@ -342,9 +347,22 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             startActivity(intent);
             return true;
 
+        // As "geo:" calls google maps on default devices instead of a local map app
+        // call openstreetmap instead
         case R.id.menu_viewmap:
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=15"));
-            startActivity(intent);
+            String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=16/" + lat + "/" + lon;
+            if (mapLocal)
+            {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=16"));
+            }else
+            {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
+            }
+            //Make sure there is an app to handle this intent
+            if (intent.resolveActivity(getPackageManager()) != null)
+                startActivity(intent);
+            else
+                Toast.makeText(this, getString(R.string.t_noapp), Toast.LENGTH_LONG).show();
             return true;
 
         case R.id.menu_converter:

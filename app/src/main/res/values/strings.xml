@@ -60,8 +60,11 @@
     <string name="titel_email_string">Mail Address for Geocoder:</string>
     <string name="toast_string">Show toast for new position with height above sea-level, GPS-height und correction.</string>
     <string name="titel_toast_string">Show Toast for height values</string>
+    <string name="map_string">Select a local map app to show position instead of OpenStreetMap online (eventually does not work on your device as it depends on Android\'s app management).</string>
+    <string name="titel_map_string">How to show the map?</string>
     <string name="h_nn">H. above Sea-level:</string>
     <string name="h_gps">H. from GPS:</string>
     <string name="h_corr">H. correction:</string>
+    <string name="t_noapp">There is no suitable app installed.</string>
     
 </resources>

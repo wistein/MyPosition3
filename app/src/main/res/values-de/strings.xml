@@ -60,8 +60,11 @@
     <string name="titel_email_string">Mail-Adresse für Geocoder:</string>
     <string name="toast_string">Zeige Toast für neue Position mit Höhe Über NN, GPS-Höhe und Korrektur.</string>
     <string name="titel_toast_string">Zeige Toast für Höhenwerte</string>
+    <string name="map_string">Wähle eine lokale Map-App um die Position anstelle online in OpenStreetMap anzuzeigen. (Funktioniert eventuell nicht auf diesem Gerät, abhängig vom internen App-Management).</string>
+    <string name="titel_map_string">Wie soll die Karte angezeigt werden?</string>
     <string name="h_nn">H. über NN:</string>
     <string name="h_gps">H. des GPS:</string>
     <string name="h_corr">H. Korrektur:</string>
+    <string name="t_noapp">Es ist keine passende App installiert.</string>
 
 </resources>

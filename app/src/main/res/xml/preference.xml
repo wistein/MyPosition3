@@ -22,6 +22,12 @@
         />
 
     <CheckBoxPreference
+        android:key="map_Local"
+        android:summary="@string/map_string"
+        android:title="@string/titel_map_string"
+        />
+
+    <CheckBoxPreference
         android:key="show_Toast"
         android:summary="@string/toast_string"
         android:title="@string/titel_toast_string"

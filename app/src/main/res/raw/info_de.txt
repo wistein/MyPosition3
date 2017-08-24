@@ -3,12 +3,14 @@
  Einfache Mitteilung Deiner Position.<br>
  <br>
  <h4>Beschreibung</h4>
- <b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.
+ <b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.<br>
+ Die App erlaubt die Übermittlung Deiner Position an Deine Kontakte.<br>
+ Dein Standort kann auf einer Karte angezeigt werden entweder lokal (falls passende App installiert ist oder im Browser bei OpenStreetMap.<br>
  Es werden zwei GPS-Koordinatenformate unterstützt: <br>
  WGS84 Dezimal-Koordinaten und <br>
  GG-MM-SS-Koordinaten. <br>
- Die App vereinfacht außerdem die Mitteilung Deines Standorts an Deine Kontakte.
  Zusätzlich bietet sie die Möglichkeit, Koordinaten zwischen WGS84-Dezimal- und Grad-Darstellung umzurechnen.<br>
  <br>
  ------------------------------<br>
+ 
  

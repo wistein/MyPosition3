@@ -1,8 +1,9 @@
  <h4>Historie</h4>
- <B>Mein Standort, Version 1.3.1 von wistein, 19.08.2017,</B><br>
+ <B>Mein Standort, Version 1.3.1 von wistein, 24.08.2017,</B><br>
  https://github.com/wistein/MyPosition3<br>
  Höhenangaben sind gemäß World Geodetic System WGS84 und Earth Gravitational Model EGM96 korrigiert.<br>
- Optional kann eine Toast-Meldung zur Höhenangabe mit Höhe über NN, GPS-Höhe und Höhenkorektur eingeblendet werden.<br> 
+ Die Position kann optional lokal (per Mapping-App) oder online bei OpenStreetMap angezeigt werden.<br>  
+ Optional kann eine Toast-Meldung zur Höhenangabe mit Höhe über NN, GPS-Höhe und Höhenkorektur eingeblendet werden.<br>
  Bug-fix: Geänderte App-Einstellungen sind nun gültig ohne Neustart der App.<br>
  <br>
  <B>Mein Standort, Version 1.3.0 von wistein, 11.04.2017,</B><br>

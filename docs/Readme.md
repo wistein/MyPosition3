@@ -28,6 +28,7 @@ https://github.com/wistein/MyPosition3
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96,
   - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
   - Settings allow to set a toast message about height values with height above sea-level, GPS-height and height correction,
+  - Settings allow to switch between portrait and landscape mode. 
   - Bug fix: Changed app settings are valid without restarting the app.
  
 My Position version 1.3.0, 

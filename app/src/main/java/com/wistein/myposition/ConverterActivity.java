@@ -27,7 +27,10 @@ package com.wistein.myposition;
  * My GPS Location Tool
  */
 
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +40,9 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
 
-public class ConverterActivity extends AppCompatActivity
+public class ConverterActivity extends AppCompatActivity implements 
+    SharedPreferences.OnSharedPreferenceChangeListener
 {
-
     private EditText tvDecimalLat;
     private EditText tvDecimalLon;
     private EditText tvDegreeLat;
@@ -48,11 +51,26 @@ public class ConverterActivity extends AppCompatActivity
     private EditText tvDegreeLon;
     private EditText tvMinuteLon;
     private EditText tvSecondLon;
+    private boolean screenOrientL; // option for screen orientation
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+
         setContentView(R.layout.activity_converter);
 
         //noinspection ConstantConditions
@@ -192,4 +210,10 @@ public class ConverterActivity extends AppCompatActivity
                 + " " + getString(R.string.invValue), Toast.LENGTH_LONG).show();
         }
     }
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
+    {
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+    }
+
 }

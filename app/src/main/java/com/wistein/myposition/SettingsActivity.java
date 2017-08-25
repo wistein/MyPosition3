@@ -28,18 +28,35 @@ package com.wistein.myposition;
  */
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-public class SettingsActivity extends PreferenceActivity
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
+    private boolean screenOrientL; // option for screen orientation
+
     @SuppressLint("LongLogTag")
     @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
         addPreferencesFromResource(R.xml.preference);
 
         PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preference, false);
@@ -49,6 +66,12 @@ public class SettingsActivity extends PreferenceActivity
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
+    {
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
     }
 
 }

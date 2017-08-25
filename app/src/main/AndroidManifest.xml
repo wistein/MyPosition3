@@ -21,25 +21,21 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_settings">
         </activity>
 
         <activity
             android:name=".AboutDialog"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_about_dialog">
         </activity>
 
         <activity
             android:name=".ConverterActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_converter">
         </activity>
 
         <activity
             android:name=".MyPositionActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_my_position">
 
             <intent-filter>

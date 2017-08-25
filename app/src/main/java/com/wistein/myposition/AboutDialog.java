@@ -29,8 +29,11 @@ package com.wistein.myposition;
  */
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.widget.TextView;
@@ -41,29 +44,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-public class AboutDialog extends Activity
+public class AboutDialog extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
+    private boolean screenOrientL; // option for screen orientation
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
         String language = Locale.getDefault().toString().substring(0, 2);
         setContentView(R.layout.activity_about_dialog);
 
-        TextView tv = (TextView) findViewById(R.id.legal_text);
-        if (language.equals("de"))
-        {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.legal_de)));
-        }
-        else
-        {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.legal)));
-        }
-        tv.setLinkTextColor(Color.BLUE);
-        Linkify.addLinks(tv, Linkify.WEB_URLS);
-        
-        tv = (TextView) findViewById(R.id.info_text);
+        TextView tv = (TextView) findViewById(R.id.info_text);
         if (language.equals("de"))
         {
             tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_de)));
@@ -72,6 +77,8 @@ public class AboutDialog extends Activity
         {
             tv.setText(Html.fromHtml(readRawTextFile(R.raw.info)));
         }
+        tv.setLinkTextColor(Color.BLUE);
+        Linkify.addLinks(tv, Linkify.WEB_URLS);
     }
 
     @Override
@@ -95,5 +102,11 @@ public class AboutDialog extends Activity
             return null;
         }
         return text.toString();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
+    {
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
     }
 }

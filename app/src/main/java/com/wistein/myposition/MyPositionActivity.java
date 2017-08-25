@@ -32,9 +32,9 @@ package com.wistein.myposition;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -92,11 +92,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
-    private String messageHeader = "";
     private String strTime = "10"; // default update period 10 sec.
+    private String messageHeader = ""; // 1st line in mail message
     private String emailString = ""; // mail address for OSM query
-    private boolean showToast;
-    private boolean mapLocal;
+    private boolean screenOrientL; // option for screen orientation
+    private boolean showToast; // option to show toast with height info
+    private boolean mapLocal; // option to select local or online map
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -106,6 +107,24 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     {
         super.onCreate(savedInstanceState);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+
+        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
+        strTime = pref.getString("update_Freq", "10");
+        emailString = pref.getString("email_String", "");
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+        mapLocal = pref.getBoolean("map_Local", false);
+        showToast = pref.getBoolean("show_Toast", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        
         setContentView(R.layout.activity_my_location);
         ScrollView baseLayout = (ScrollView) findViewById(R.id.baseLayout);
         assert baseLayout != null;
@@ -133,15 +152,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         shareDecimal.setOnClickListener(this);
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
-
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        pref.registerOnSharedPreferenceChangeListener(this);
-
-        messageHeader = pref.getString("messageHeader", getString(R.string.pref_text));
-        strTime = pref.getString("updateFreq", "10");
-        emailString = pref.getString("emailString", "");
-        showToast = pref.getBoolean("show_Toast", false);
-        mapLocal = pref.getBoolean("map_Local", false);
 
         // Get location service
         int REQUEST_CODE_GPS = 124;
@@ -257,6 +267,24 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     {
         super.onResume();
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref.registerOnSharedPreferenceChangeListener(this);
+
+        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
+        strTime = pref.getString("update_Freq", "10");
+        emailString = pref.getString("email_String", "");
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+        mapLocal = pref.getBoolean("map_Local", false);
+        showToast = pref.getBoolean("show_Toast", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
         // Get location service
         try
         {
@@ -274,11 +302,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
     public void onSharedPreferenceChanged(SharedPreferences pref, String key)
     {
-        messageHeader = pref.getString("messageHeader", getString(R.string.pref_text));
-        strTime = pref.getString("updateFreq", "10");
-        emailString = pref.getString("emailString", "");
-        showToast = pref.getBoolean("show_Toast", false);
+        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
+        strTime = pref.getString("update_Freq", "10");
+        emailString = pref.getString("email_String", "");
         mapLocal = pref.getBoolean("map_Local", false);
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+        showToast = pref.getBoolean("show_Toast", false);
     }
 
     public void onPause()
@@ -347,13 +376,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             startActivity(intent);
             return true;
 
-        // As "geo:" calls google maps on default devices instead of a local map app
-        // call openstreetmap instead
+        // As "geo:" calls google maps on some devices instead of a local map app call openstreetmap instead
         case R.id.menu_viewmap:
-            String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=16/" + lat + "/" + lon;
+            String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
             if (mapLocal)
             {
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=16"));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=17"));
             }else
             {
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));

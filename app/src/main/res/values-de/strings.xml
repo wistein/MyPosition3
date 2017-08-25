@@ -60,8 +60,10 @@
     <string name="titel_email_string">Mail-Adresse für Geocoder:</string>
     <string name="toast_string">Zeige Toast für neue Position mit Höhe Über NN, GPS-Höhe und Korrektur.</string>
     <string name="titel_toast_string">Zeige Toast für Höhenwerte</string>
-    <string name="map_string">Wähle eine lokale Map-App um die Position anstelle online in OpenStreetMap anzuzeigen. (Funktioniert eventuell nicht auf diesem Gerät, abhängig vom internen App-Management).</string>
+    <string name="map_string">Ohne Häkchen wird die Position online in OpenStreetMap angezeigt. Mit Häkchen wird versucht, eine lokale Map-App zu nutzen, um die Position anzuzeigen. (Funktioniert eventuell nicht auf diesem Gerät, abhängig vom internen App-Management).</string>
     <string name="titel_map_string">Wie soll die Karte angezeigt werden?</string>
+    <string name="screen_orientation">Ausrichtung in Landscape-Modus anstelle von Portrait-Modus.</string>
+    <string name="titel_screen_orientation">Landscape statt Portrait</string>
     <string name="h_nn">H. über NN:</string>
     <string name="h_gps">H. des GPS:</string>
     <string name="h_corr">H. Korrektur:</string>

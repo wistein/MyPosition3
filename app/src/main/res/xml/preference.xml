@@ -2,21 +2,21 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="updateFreq"
+        android:key="update_Freq"
         android:entries="@array/freq_string"
         android:entryValues="@array/freq"
         android:summary="@string/pref_updfreq"
         android:title="@string/titel_pref_updfreq"
         />
     <EditTextPreference
-        android:key="messageHeader"
+        android:key="message_Header"
         android:defaultValue="@string/pref_text"
         android:summary="@string/msg_header"
         android:title="@string/titel_msg_header"
         />
 
     <EditTextPreference
-        android:key="emailString"
+        android:key="email_String"
         android:summary="@string/email_string"
         android:title="@string/titel_email_string"
         />
@@ -25,6 +25,12 @@
         android:key="map_Local"
         android:summary="@string/map_string"
         android:title="@string/titel_map_string"
+        />
+
+    <CheckBoxPreference
+        android:key="screen_Orientation"
+        android:summary="@string/screen_orientation"
+        android:title="@string/titel_screen_orientation"
         />
 
     <CheckBoxPreference

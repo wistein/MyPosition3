@@ -15,6 +15,14 @@
  Zusätzlich bietet sie die Möglichkeit, Koordinaten zwischen WGS84-Dezimal- und Grad-Darstellung umzurechnen.<br>
  <br>
  
+ <h4>Haftungsausschluss und Lizenz</h4> 
+ Die App wurde sorgfältig entwickelt und getestet.<br>
+ Sie berücksichtigt Deine Privatsphäre und ist werbefrei.<br>
+ Sie verwendet keine verborgenen Funktionen und benötigt gesicherten  
+ Internetzugang ausschließlich für die Abfrage von OpenStreetMap-Adressdaten oder um den Standort im Browser anzuzeigen.<br>
+ Deine Mitteilungen werden über andere Apps wie Mail oder SMS versandt.<br>
+ <br>
+
  Diese App wird angeboten in der Hoffnung, dass sie nützlich ist, aber ohne
  jedwede Garantie.<br>
  <br>
@@ -53,12 +61,3 @@
   Änderungen durch GDR<br>
   http://f.gdr.name/mylocation.png<br>
   <br>
-
-  <h4>Haftungsausschluss und Lizenz</h4> 
-  Die App wurde sorgfältig entwickelt und getestet.<br>
-  Sie berücksichtigt Deine Privatsphäre und ist werbefrei.<br>
-  Sie verwendet keine verborgenen Funktionen und benötigt gesicherten  
-  Internetzugang ausschließlich für die Abfrage von OpenStreetMap-Adressdaten.<br>
-  Deine Mitteilungen werden über andere Apps wie Mail oder SMS versandt.<br>
-  <br>
-

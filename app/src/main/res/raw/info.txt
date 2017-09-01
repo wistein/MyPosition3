@@ -16,6 +16,14 @@
  WGS84 decimal GPS coordinate and DD MM SS coordinate format.<br>
  <br>
  
+ <h4>Legal and License</h4>
+ The app was carefully developed and thoroughly tested.<br>
+ It respects your privacy and is ad-free.<br>
+ There is no hidden functionality and the app uses internet access only for the 
+ secured query of OpenStreetMap address data or showing your location in your browser. <br>
+ Your messages are sent by means of other apps like Mail or SMS.<br>
+ <br>
+    
  This app is distributed in the hope that it will be useful, but WITHOUT ANY
  WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.<br>
@@ -48,7 +56,7 @@
   Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
   <br>
   
-  Based on myLocation version 1.2,
+  <B>Based on myLocation version 1.2</B>,
   Copyright 2012 by Mohammad Hafiz Ismail<br>
   http://code.google.com/p/mylocation/<br>
   Licensed under GNU GPLv2.<br>
@@ -56,11 +64,3 @@
   http://f.gdr.name/mylocation.png<br>
   <br>
   
-  <h4>Legal and License</h4>
-  The app was carefully developed and thoroughly tested.<br>
-  It respects your privacy and is ad-free.<br>
-  There is no hidden functionality and the app uses internet access only for the 
-  secured query of OpenStreetMap address data. <br>
-  Your messages are sent by means of other apps like Mail or SMS.<br>
-  <br>
-   

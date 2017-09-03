@@ -73,8 +73,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static android.location.LocationManager.GPS_PROVIDER;
+import static java.lang.Math.round;
 
-public class MyPositionActivity extends AppCompatActivity implements OnClickListener, 
+public class MyPositionActivity extends AppCompatActivity implements OnClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener
 {
     private final static String LOG_TAG = "MyPositionActivity";
@@ -87,17 +88,19 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private double lon;
     private double height = 0;
     private double uncertainty;
-    private long fixTime; // GPS fix time
+    private long fixTime = 0; // GPS fix time
     private boolean nonEmpty = false;
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
-    private String strTime = "10"; // default update period 10 sec.
+    private int timeIntervall = 10000; // GPS polling interval in msec
     private String messageHeader = ""; // 1st line in mail message
     private String emailString = ""; // mail address for OSM query
     private boolean screenOrientL; // option for screen orientation
     private boolean showToast; // option to show toast with height info
     private boolean mapLocal; // option to select local or online map
+    private int distance = 20; // option to set GPS polling distance, default 20 m
+    public boolean doubleBackToExitPressedOnce;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -110,21 +113,22 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pref.registerOnSharedPreferenceChangeListener(this);
 
-        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
-        strTime = pref.getString("update_Freq", "10");
+        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
         emailString = pref.getString("email_String", "");
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         mapLocal = pref.getBoolean("map_Local", false);
         showToast = pref.getBoolean("show_Toast", false);
+        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
 
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else
+        }
+        else
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        
+
         setContentView(R.layout.activity_my_location);
         ScrollView baseLayout = (ScrollView) findViewById(R.id.baseLayout);
         assert baseLayout != null;
@@ -191,12 +195,13 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             @Override
             public void onLocationChanged(Location location)
             {
+                nonEmpty = true;
+
                 lat = location.getLatitude();
                 lon = location.getLongitude();
                 height = location.getAltitude();
                 if (height != 0)
                     height = correctHeight(height);
-
                 uncertainty = location.getAccuracy();
                 fixTime = location.getTime();
 
@@ -205,7 +210,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                 String west = getString(R.string.west);
                 String south = getString(R.string.south);
                 String directionNS, directionEW;
-                nonEmpty = true;
+                String uncert = myPosition.getAppContext().getString(R.string.uncert);
+                String high = myPosition.getAppContext().getString(R.string.height);
 
                 if (lat >= 0)
                     directionNS = nord;
@@ -218,25 +224,35 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     directionEW = west;
 
                 sb = new StringBuffer();
-                final String time_header = getString(R.string.last_fix_time) + " ";
+
+                String lattemp = Float.toString((float) lat);
+                String lontemp = Float.toString((float) lon);
+                String heighttemp = String.format("%.1f", height);
+                String uncerttemp = String.format("%.1f", uncertainty);
 
                 String language = Locale.getDefault().toString().substring(0, 2);
-                if (language.equals("de"))
+                // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+                if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
                 {
-                    String lattemp = Float.toString((float) lat);
                     lattemp = lattemp.replace('.', ',');
-                    sb.append(lattemp).append(" ").append(directionNS).append(",  ");
-                    String lontemp = Float.toString((float) lon);
                     lontemp = lontemp.replace('.', ',');
-                    sb.append(lontemp).append(" ").append(directionEW);
+                    heighttemp = heighttemp.replace('.', ',');
+                    uncerttemp = uncerttemp.replace('.', ',');
+
+                    sb.append(lattemp).append(" ").append(directionNS).append(",   ")
+                        .append(lontemp).append(" ").append(directionEW).append("\n")
+                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                        .append(high).append(" ").append(heighttemp).append(" m");
                 }
                 else
                 {
-                    sb.append(directionNS).append(" ")
-                        .append(Float.toString((float) lat)).append(",  ")
-                        .append(directionEW).append(" ")
-                        .append(Float.toString((float) lon));
+                    sb.append(directionNS).append(" ").append(lattemp).append(",   ")
+                        .append(directionEW).append(" ").append(lontemp).append("\n")
+                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                        .append(high).append(" ").append(heighttemp).append(" m");
                 }
+
+                final String time_header = getString(R.string.last_fix_time) + " ";
 
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
@@ -246,7 +262,11 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     @Override
                     public void run()
                     {
-                        final String relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0).toString();
+                        String relative_date = getString(R.string.unknownFix);
+                        if (fixTime > 0)
+                        {
+                            relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0).toString();
+                        }
                         tvDecimalCoord.setText(sb.toString());
                         tvDegreeCoord.setText(toDegree(lat, lon));
                         String uTime = time_header + relative_date;
@@ -270,17 +290,18 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pref.registerOnSharedPreferenceChangeListener(this);
 
-        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
-        strTime = pref.getString("update_Freq", "10");
+        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
         emailString = pref.getString("email_String", "");
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         mapLocal = pref.getBoolean("map_Local", false);
         showToast = pref.getBoolean("show_Toast", false);
+        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
 
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else
+        }
+        else
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
@@ -289,25 +310,23 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         try
         {
             //Potentially missing permission is catched by exception
-            locationManager.requestLocationUpdates(GPS_PROVIDER, Integer.parseInt(strTime), 50, locationListener);
+            locationManager.requestLocationUpdates(GPS_PROVIDER, timeIntervall, distance, locationListener);
         } catch (Exception e)
         {
-            //Unfortunately the following Toast appears always once when the app resumes, so it is commented out 
-            //Toast.makeText(this, getString(R.string.no_GPS), Toast.LENGTH_LONG).show();
+            // Nothing to do
         }
-        boolean defaultTime = true;
-        this.registerLocationListener(defaultTime);
+        this.registerLocationListener();
         this.registerRelativeFixTime();
     }
 
     public void onSharedPreferenceChanged(SharedPreferences pref, String key)
     {
-        messageHeader = pref.getString("message_Header", getString(R.string.pref_text));
-        strTime = pref.getString("update_Freq", "10");
+        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
         emailString = pref.getString("email_String", "");
         mapLocal = pref.getBoolean("map_Local", false);
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         showToast = pref.getBoolean("show_Toast", false);
+        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
     }
 
     public void onPause()
@@ -361,8 +380,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
         case R.id.menu_getpos:
             // Get LocationManager instance
-            boolean defaultTime = false;
-            this.registerLocationListener(defaultTime);
+            this.registerLocationListener();
             this.registerRelativeFixTime();
             return true;
 
@@ -382,7 +400,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             if (mapLocal)
             {
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=17"));
-            }else
+            }
+            else
             {
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
             }
@@ -417,7 +436,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             return 0;
         }
-        
+
         // Calculate the offset between the ellipsoid and geoid
         try
         {
@@ -426,18 +445,32 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             return 0;
         }
-        
+
         nnHeight = gpsHeight + corrHeight;
+
         if (showToast)
         {
-            String hToast = getString(R.string.h_nn) + " " + Double.toString(nnHeight) 
-                + " \n " + getString(R.string.h_gps) + " " + Double.toString(gpsHeight) 
-                + " \n " + getString(R.string.h_corr) + " " + Double.toString(corrHeight);
+            String corrtemp = String.format("%.1f", corrHeight);
+            String gpstemp = String.format("%.1f", gpsHeight);
+            String nntemp = String.format("%.1f", nnHeight);
+
+            String language = Locale.getDefault().toString().substring(0, 2);
+            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+            if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+            {
+                corrtemp = corrtemp.replace('.', ',');
+                gpstemp = gpstemp.replace('.', ',');
+                nntemp = nntemp.replace('.', ',');
+            }
+
+            String hToast = getString(R.string.h_nn) + " " + nntemp
+                + " \n " + getString(R.string.h_gps) + " " + gpstemp
+                + " \n " + getString(R.string.h_corr) + " " + corrtemp;
             Toast.makeText(this, hToast, Toast.LENGTH_LONG).show();
         }
         return nnHeight;
     }
-    
+
     // Convert to degree
     private String toDegree(double lat, double lon)
     {
@@ -461,7 +494,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         else
             directionEW = west;
 
-        if (language.equals("de"))
+        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("\u00b0 ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("\' ");
@@ -527,6 +561,29 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         startActivity(Intent.createChooser(intent, "Share via"));
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        if (doubleBackToExitPressedOnce)
+        {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.back_twice, Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+
     // Show message to share
     private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, boolean nonEmpty, String adrlines)
     {
@@ -544,12 +601,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         String tempLat = Float.toString((float) lat);
         String tempLon = Float.toString((float) lon);
-        String tempHigh = Float.toString((float) height);
-        String tempUncert = Float.toString((float) uncertainty);
+        String tempHigh = String.format("%.1f", height);
+        String tempUncert = String.format("%.1f", uncertainty);
 
         String language = Locale.getDefault().toString().substring(0, 2);
-        // for "de" replace '.' with ',' in mumbers
-        if (language.equals("de"))
+        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             tempLat = tempLat.replace('.', ',');
             tempLon = tempLon.replace('.', ',');
@@ -602,7 +659,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         message.append(" m\n   ");
 
         message.append(uncert);
-        message.append(": ");
+        message.append(" ");
         message.append(tempUncert);
         message.append(" m\n\n");
         message.append(myPosition.getAppContext().getString(R.string.toshortAddr));
@@ -621,7 +678,11 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             @Override
             public void run()
             {
-                final String relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                String relative_date = getString(R.string.unknownFix);
+                if (fixTime > 0)
+                {
+                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                }
                 String uTime = time_header + relative_date;
                 tvUpdatedTime.setText(uTime);
                 handler.postDelayed(this, 10000);
@@ -631,24 +692,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
     // Gets last known location
     @SuppressLint("LongLogTag")
-    private void registerLocationListener(boolean defaultTime)
+    private void registerLocationListener()
     {
-        int time;
-        if (defaultTime)
-        {
-            time = Integer.parseInt(strTime) * 1000; // default: 10 sec
-        }
-        else
-        {
-            time = 0;
-        }
-        int distance = 50;
-        String nord = getString(R.string.nord);
-        String east = getString(R.string.east);
-        String west = getString(R.string.west);
-        String south = getString(R.string.south);
-        String directionNS, directionEW;
-
         int REQUEST_CODE_GPS = 124;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
@@ -666,16 +711,24 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         lon = 0.0;
         nonEmpty = false;
 
+        //Prepare display of decimal coordinates
         if (location != null)
         {
-            sb = new StringBuffer("");
             lat = location.getLatitude();
             lon = location.getLongitude();
             height = location.getAltitude();
             if (height != 0)
                 height = correctHeight(height);
-            fixTime = location.getTime();
             uncertainty = location.getAccuracy();
+            fixTime = location.getTime();
+
+            String nord = getString(R.string.nord);
+            String east = getString(R.string.east);
+            String west = getString(R.string.west);
+            String south = getString(R.string.south);
+            String directionNS, directionEW;
+            String uncert = myPosition.getAppContext().getString(R.string.uncert);
+            String high = myPosition.getAppContext().getString(R.string.height);
 
             if (lat >= 0)
                 directionNS = nord;
@@ -687,12 +740,35 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             else
                 directionEW = west;
 
+            sb = new StringBuffer("");
+
             String lattemp = Float.toString((float) lat);
-            lattemp = lattemp.replace('.', ',');
             String lontemp = Float.toString((float) lon);
-            lontemp = lontemp.replace('.', ',');
-            sb.append(lattemp).append(" ").append(directionNS).append(",  ")
-                .append(lontemp).append(" ").append(directionEW);
+            String heighttemp = String.format("%.1f", height);
+            String uncerttemp = String.format("%.1f", uncertainty);
+
+            String language = Locale.getDefault().toString().substring(0, 2);
+            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+            if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+            {
+                lattemp = lattemp.replace('.', ',');
+                lontemp = lontemp.replace('.', ',');
+                heighttemp = heighttemp.replace('.', ',');
+                uncerttemp = uncerttemp.replace('.', ',');
+
+                sb.append(lattemp).append(" ").append(directionNS).append(",   ")
+                    .append(lontemp).append(" ").append(directionEW).append("\n")
+                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                    .append(high).append(" ").append(heighttemp).append(" m");
+            }
+            else
+            {
+                sb.append(directionNS).append(" ").append(lattemp).append(",   ")
+                    .append(directionEW).append(" ").append(lontemp).append("\n")
+                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                    .append(high).append(" ").append(heighttemp).append(" m");
+            }
+
         }
         else
         {
@@ -709,7 +785,11 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             @Override
             public void run()
             {
-                final String relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                String relative_date = getString(R.string.unknownFix);
+                if (fixTime > 0)
+                {
+                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                }
                 tvDecimalCoord.setText(sb.toString());
                 tvDegreeCoord.setText(toDegree(lat, lon));
                 String uTime = time_header + relative_date;
@@ -722,7 +802,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             }
         });
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, distance, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, timeIntervall, distance, locationListener);
 
     } // End of registerLocationListener
 
@@ -777,7 +857,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                         //Log.d(LOG_TAG, "<addressparts>: " + xmlString);
                         StringBuilder msg = new StringBuilder();
 
-                        // 1. line: building, hotel
+                        // 1. line: building, viewpoint, hotel or guesthouse
                         if (xmlString.contains("<building>"))
                         {
                             sstart = xmlString.indexOf("<building>") + 10;
@@ -813,7 +893,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
                         if (xmlString.contains(">de<") || xmlString.contains(">fr<") || xmlString.contains(">ch<") || xmlString.contains(">at<") || xmlString.contains(">it<"))
                         {
-                            // 2. line: road, house-No.
+                            // 2. line: road or street, house-No.
                             if (xmlString.contains("<road>"))
                             {
                                 sstart = xmlString.indexOf("<road>") + 6;
@@ -838,7 +918,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append(house_number);
                                 msg.append("\n");
                             }
-                            else
+                            else // without house-No.
                             {
                                 if (xmlString.contains("<road>") || xmlString.contains("<street>"))
                                     msg.append("\n");
@@ -932,9 +1012,9 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append(country);
                             }
                         }
-                        else // not de, fr
+                        else // not de, fr, ch, at, it
                         {
-                            // 2. line: house, road, house-No.
+                            // 2. line: house, house-No., road or street
                             if (xmlString.contains("<house>"))
                             {
                                 sstart = xmlString.indexOf("<house>") + 7;
@@ -1025,7 +1105,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append("\n");
                             }
 
-                            // 7. line: state, country 
+                            // 7. line: state or country, postcode 
                             if (xmlString.contains("<state>"))
                             {
                                 sstart = xmlString.indexOf("<state>") + 7;

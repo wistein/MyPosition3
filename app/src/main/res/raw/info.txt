@@ -1,13 +1,8 @@
- <h3>My Position</h3>
- <h4>Version 1.3.1</h4>
- Share your location, easily.<br>
- <br>
- 
  <h4>Description</h4>
  <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
  The application simplifies the task of sharing your position data with your contacts.<br>
  Your location may be shown on a map either local (if a suitable app is installed) or by browser on OpenStreetMap.<br>
- Per Reverse Geocoding by OpenStreetMap query it shows local address info in a country-specific representation (at, ch, de, fr, it, rest of the world). To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
+ Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
  It introduces localized strings and considers localized number formats for German and English.<br>
  There are two GPS coordinate formats supported: <br>
  WGS84 Decimal coordinates and <br>
@@ -33,20 +28,20 @@
  https://www.gnu.org/licenses/gpl-3.0<br>
  <br>
 
- ------------------------------<br>
-
  <h4>History</h4
   
-  <B>My Position, version 1.3.1,</B> copyright by wistein, 2017-08-24,<br>
-  https://github.com/wistein/MyPosition3<br>
+  <B>My Position, version 1.3.1,</B> 2017-09-03,<br>
   Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
   Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
-  Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
-  Settings allow to switch between portrait and landscape mode.<br>
-  Bug fix: Changed app settings are now valid without restarting the app.<br>  
+  New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
+  New Option: Switch between portrait and landscape mode.<br>
+  Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
+  Some improvements to display details.<br>
+  Press back twice to exit.<br>
+  Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
   <br>
   
-  <B>My Position, version 1.3.0,</B> copyright by wistein, 2017-04-11,<br>
+  <B>My Position, version 1.3.0,</B> 2017-04-11,<br>
   Includes code corrections and enhancements.<br>
   Works without Google Apps (GApps).<br>
   Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>

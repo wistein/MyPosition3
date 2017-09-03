@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
-        android:key="update_Freq"
-        android:entries="@array/freq_string"
-        android:entryValues="@array/freq"
-        android:summary="@string/pref_updfreq"
-        android:title="@string/titel_pref_updfreq"
-        />
-    <EditTextPreference
-        android:key="message_Header"
-        android:defaultValue="@string/pref_text"
-        android:summary="@string/msg_header"
-        android:title="@string/titel_msg_header"
-        />
-
     <EditTextPreference
         android:key="email_String"
         android:summary="@string/email_string"
         android:title="@string/titel_email_string"
+        />
+
+    <ListPreference
+        android:key="update_Dist"
+        android:entries="@array/dist_string"
+        android:entryValues="@array/dist"
+        android:summary="@string/pref_upddist"
+        android:title="@string/titel_pref_upddist"
+        />
+
+    <EditTextPreference
+        android:key="message_Header"
+        android:defaultValue="@string/msg_text"
+        android:summary="@string/msg_header"
+        android:title="@string/titel_msg_header"
         />
 
     <CheckBoxPreference

@@ -25,7 +25,6 @@ package com.wistein.myposition;
  * 
  * AboutDialog.java
  * Custom class for displaying About Dialog
- * My GPS Location Tool
  */
 
 import android.app.Activity;
@@ -68,7 +67,19 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         String language = Locale.getDefault().toString().substring(0, 2);
         setContentView(R.layout.activity_about_dialog);
 
-        TextView tv = (TextView) findViewById(R.id.info_text);
+        TextView tv = (TextView) findViewById(R.id.info_head);
+        if (language.equals("de"))
+        {
+            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_head_de)));
+        }
+        else
+        {
+            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_head)));
+        }
+        tv.setLinkTextColor(Color.BLUE);
+        Linkify.addLinks(tv, Linkify.WEB_URLS);
+
+        tv = (TextView) findViewById(R.id.info_text);
         if (language.equals("de"))
         {
             tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_de)));

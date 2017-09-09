@@ -772,7 +772,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         }
         else
         {
-            sb = new StringBuffer(getString(R.string.unknownAddr));
+            sb = new StringBuffer(getString(R.string.posnotknown));
         }
 
         final String time_header = this.getString(R.string.last_fix_time) + " ";

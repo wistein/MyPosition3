@@ -22,7 +22,7 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 ### History:
  
 My Position version 1.3.1, 
-copyright by wistein, 2017-08-24,
+copyright by wistein, 2017-09-12,
 https://github.com/wistein/MyPosition3
 
   - Write system log only in debug version

@@ -48,9 +48,9 @@ package com.wistein.myposition;
  * JDT: Neptune and Company
  * <p>
  * Change log:
- * date       ver    by	    description of change
- * ---------  ----   ---    ---------------------------------------
- * 17 Dec 01  1.40   JDT	Version accompanying final deliverable.
+ * date         ver    by	  description of change
+ * -----------  ----   ---    ---------------------------------------
+ * 17 Dec 2001  1.40   JDT	  Version accompanying final deliverable.
  */
 
 /******************************************************************************

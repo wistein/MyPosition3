@@ -1,61 +1,61 @@
- <h4>Description</h4>
- <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
- The application simplifies the task of sharing your position data with your contacts.<br>
- Your location may be shown on a map either local (if a suitable app is installed) or by browser on OpenStreetMap.<br>
- Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
- It introduces localized strings and considers localized number formats for German and English.<br>
- There are two GPS coordinate formats supported: <br>
- WGS84 Decimal coordinates and <br>
- DD MM SS coordinates. <br>
- Additionally, this application also includes a tool to help converting between
- WGS84 decimal GPS coordinate and DD MM SS coordinate format.<br>
- <br>
- 
- <h4>Legal and License</h4>
- The app was carefully developed and thoroughly tested.<br>
- It respects your privacy and is ad-free.<br>
- There is no hidden functionality and the app uses internet access only for the 
- secured query of OpenStreetMap address data or showing your location in your browser. <br>
- Your messages are sent by means of other apps like Mail or SMS.<br>
- <br>
-    
- This app is distributed in the hope that it will be useful, but WITHOUT ANY
- WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.<br>
- <br>
+<h4>Description</h4>
+<b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
+The application simplifies the task of sharing your position data with your contacts.<br>
+Your location may be shown on a map either local (if a suitable app is installed) or by browser on OpenStreetMap.<br>
+Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
+It introduces localized strings and considers localized number formats for German and English.<br>
+There are two GPS coordinate formats supported: <br>
+WGS84 Decimal coordinates and <br>
+DD MM SS coordinates. <br>
+Additionally, this application also includes a tool to help converting between
+WGS84 decimal GPS coordinate and DD MM SS coordinate format.<br>
+<br>
 
- Licensed under GNU GPLv2 or later.<br>
- https://www.gnu.org/licenses/gpl-3.0<br>
- <br>
+<h4>Legal and License</h4>
+The app was carefully developed and thoroughly tested.<br>
+It respects your privacy and is ad-free.<br>
+There is no hidden functionality and the app uses internet access only for the 
+secured query of OpenStreetMap address data or showing your location in your browser. <br>
+Your messages are sent by means of other apps like Mail or SMS.<br>
+<br>
 
- <h4>History</h4
-  
-  <B>My Position, version 1.3.1,</B> 2017-09-03,<br>
-  Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
-  Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
-  New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
-  New Option: Switch between portrait and landscape mode.<br>
-  Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
-  Some improvements to display details.<br>
-  Press back twice to exit.<br>
-  Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
-  <br>
-  
-  <B>My Position, version 1.3.0,</B> 2017-04-11,<br>
-  Includes code corrections and enhancements.<br>
-  Works without Google Apps (GApps).<br>
-  Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
-  Uses Reverse Geocoding by Nominatim service of OpenStreetMap.<br>
-  Uses optionally your provided email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
-  Localization for German and English (default) of text and number formats.<br>
-  Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
-  <br>
-  
-  <B>Based on myLocation version 1.2</B>,
-  Copyright 2012 by Mohammad Hafiz Ismail<br>
-  http://code.google.com/p/mylocation/<br>
-  Licensed under GNU GPLv2.<br>
-  Additional changes by GDR<br>
-  http://f.gdr.name/mylocation.png<br>
-  <br>
-  
+This app is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.<br>
+<br>
+
+Licensed under GNU GPLv2 or later.<br>
+https://www.gnu.org/licenses/gpl-3.0<br>
+<br>
+
+<h4>History</h4
+
+<B>My Position, version 1.3.1,</B> 2017-09-12,<br>
+Write system log only in debug version
+Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
+Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
+New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
+New Option: Switch between portrait and landscape mode.<br>
+Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
+Some improvements to display details.<br>
+Press back twice to exit.<br>
+Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
+<br>
+
+<B>My Position, version 1.3.0,</B> 2017-04-11,<br>
+Includes code corrections and enhancements.<br>
+Works without Google Apps (GApps).<br>
+Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
+Uses Reverse Geocoding by Nominatim service of OpenStreetMap.<br>
+Uses optionally your provided email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
+Localization for German and English (default) of text and number formats.<br>
+Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
+<br>
+
+Based on myLocation version 1.2,<br>
+Copyright 2012 by Mohammad Hafiz Ismail<br>
+http://code.google.com/p/mylocation/<br>
+Licensed under GNU GPLv2.<br>
+Additional changes by GDR<br>
+http://f.gdr.name/mylocation.png<br>
+<br>

@@ -176,19 +176,22 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras)
             {
-                // Log.d(LOG_TAG, "onStatusChanged()");
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "onStatusChanged()");
             }
 
             @Override
             public void onProviderEnabled(String provider)
             {
-                // Log.d(LOG_TAG, "onProviderEnabled()");
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "onProviderEnabled()");
             }
 
             @Override
             public void onProviderDisabled(String provider)
             {
-                // Log.d(LOG_TAG, "onProviderDisabled()");
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "onProviderDisabled()");
             }
 
             @SuppressLint("LongLogTag")
@@ -823,7 +826,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
                         + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
                     url = new URL(urlString);
-                    //Log.d(LOG_TAG, "urlString: " + urlString); // Log url
+                    if (MyDebug.LOG)
+                        Log.d(LOG_TAG, "urlString: " + urlString); // Log url
 
                     //HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection(); // https-version?
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -844,7 +848,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     InputStream iStream = urlConnection.getInputStream();
 
                     String xmlString = convertStreamToString(iStream);
-                    Log.d(LOG_TAG, "xmlString: " + xmlString); // Log content of url
+                    if (MyDebug.LOG)
+                        Log.d(LOG_TAG, "xmlString: " + xmlString); // Log content of url
 
                     // parse the XML content 
                     addresslines = "";
@@ -854,7 +859,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                         int sstart = xmlString.indexOf("<addressparts>") + 14;
                         int send = xmlString.indexOf("</addressparts>");
                         xmlString = xmlString.substring(sstart, send);
-                        //Log.d(LOG_TAG, "<addressparts>: " + xmlString);
+                        if (MyDebug.LOG)
+                            Log.d(LOG_TAG, "<addressparts>: " + xmlString);
                         StringBuilder msg = new StringBuilder();
 
                         // 1. line: building, viewpoint, hotel or guesthouse

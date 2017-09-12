@@ -22,9 +22,10 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 ### History:
  
 My Position version 1.3.1, 
-copyright by wistein, 2017-08-24,
+copyright by wistein, 2017-09-12,
 https://github.com/wistein/MyPosition3
 
+  - Write system log only in debug version
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.
   - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.
   - Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction.

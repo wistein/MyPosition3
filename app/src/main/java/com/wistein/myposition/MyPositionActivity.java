@@ -1146,7 +1146,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
                 } catch (IOException e)
                 {
-                    e.printStackTrace();
+                    if (MyDebug.LOG)
+                        Log.e(LOG_TAG, "Problem with address handling: " + e.toString());
                     addresslines = getString(R.string.unknownAddr);
                     return addresslines;
                 }
@@ -1192,7 +1193,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                 }
             } catch (IOException e)
             {
-                e.printStackTrace();
+                if (MyDebug.LOG)
+                    Log.e(LOG_TAG, "Problem converting Stream to String: " + e.toString());
             } finally
             {
                 try
@@ -1200,7 +1202,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     is.close();
                 } catch (IOException e)
                 {
-                    e.printStackTrace();
+                    if (MyDebug.LOG)
+                        Log.e(LOG_TAG, "Problem closing InputStream: " + e.toString());
                 }
             }
             return sb.toString();

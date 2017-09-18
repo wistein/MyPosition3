@@ -113,7 +113,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pref.registerOnSharedPreferenceChangeListener(this);
 
-        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
+        messageHeader = getString(R.string.msg_text);
         emailString = pref.getString("email_String", "");
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         mapLocal = pref.getBoolean("map_Local", false);
@@ -293,7 +293,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         pref.registerOnSharedPreferenceChangeListener(this);
 
-        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
+        messageHeader = getString(R.string.msg_text);
         emailString = pref.getString("email_String", "");
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         mapLocal = pref.getBoolean("map_Local", false);
@@ -324,7 +324,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
     public void onSharedPreferenceChanged(SharedPreferences pref, String key)
     {
-        messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
+        //messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
         emailString = pref.getString("email_String", "");
         mapLocal = pref.getBoolean("map_Local", false);
         screenOrientL = pref.getBoolean("screen_Orientation", false);
@@ -1018,7 +1018,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                                 msg.append(country);
                             }
                         }
-                        else // not de, fr, ch, at, it
+                        else // not at, ch, de, fr, it
                         {
                             // 2. line: house, house-No., road or street
                             if (xmlString.contains("<house>"))

@@ -13,7 +13,7 @@
     <string name="menu_getpos">Positionsabfrage</string>
     <string name="menu_viewmap">Zeige Karte</string>
     <string name="menu_settings">Einstellungen</string>
-    <string name="menu_about">App Info</string>
+    <string name="menu_about">App-Info</string>
     <string name="menu_toDegree">Dezimal → Grad</string>
     <string name="menu_toDecimal">Grad → Dezimal</string>
     <string name="menu_converter">Konvertierung</string>
@@ -60,7 +60,7 @@
     <string name="invValue">Ungültiger Wert</string>
     <string name="email_string">Erforderlich für die zuverlässige Abfrage der Adressdaten per OSM-Nominatim-Reverse-Geocoder. Die Mail-Adresse wird vertraulich behandelt und nur verwendet, um bei Problemen zu kontaktieren. Siehe http://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail-Adresse für OSM-Geocoder</string>
-    <string name="toast_string">Zeige Toast für neue Position mit Höhe über NN, GPS-Höhe und Höhenkorrekturwert.</string>
+    <string name="toast_string">Zeige kurze Popup-Meldung für neue Position mit Höhe über NN, GPS-Höhe und Höhenkorrekturwert.</string>
     <string name="titel_toast_string">Zeige Toast für Höhenwerte</string>
     <string name="map_string">Ohne Häkchen wird die Position online in OpenStreetMap angezeigt. Mit Häkchen wird versucht, eine lokale Map-App zu nutzen, um die Position offline anzuzeigen. (Funktioniert eventuell nicht auf diesem Gerät, abhängig vom internen App-Management).</string>
     <string name="titel_map_string">Wie soll die Karte angezeigt werden?</string>

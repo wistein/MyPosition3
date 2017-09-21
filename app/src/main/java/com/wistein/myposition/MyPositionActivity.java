@@ -46,6 +46,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -73,7 +74,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static android.location.LocationManager.GPS_PROVIDER;
-import static java.lang.Math.round;
 
 public class MyPositionActivity extends AppCompatActivity implements OnClickListener,
     SharedPreferences.OnSharedPreferenceChangeListener
@@ -228,14 +228,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
                 sb = new StringBuffer();
 
-                String lattemp = Float.toString((float) lat);
-                String lontemp = Float.toString((float) lon);
+                String lattemp = String.format("%.5f", lat);
+                String lontemp = String.format("%.5f", lon);
                 String heighttemp = String.format("%.1f", height);
                 String uncerttemp = String.format("%.1f", uncertainty);
 
                 String language = Locale.getDefault().toString().substring(0, 2);
                 // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-                if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+                if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
                 {
                     lattemp = lattemp.replace('.', ',');
                     lontemp = lontemp.replace('.', ',');
@@ -309,10 +309,23 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(this, getString(R.string.noPermission), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Get location service
         try
         {
-            //Potentially missing permission is catched by exception
             locationManager.requestLocationUpdates(GPS_PROVIDER, timeIntervall, distance, locationListener);
         } catch (Exception e)
         {
@@ -397,20 +410,31 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             startActivity(intent);
             return true;
 
-        // As "geo:" calls google maps on some devices instead of a local map app call openstreetmap instead
         case R.id.menu_viewmap:
-            String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
             if (mapLocal)
             {
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + lat + "," + lon + "?z=17"));
+                // when GAPPS are present shows location online on Google Maps
+                // without GAPPS uses a local mapping app to show the location
+                String geo = "geo:" + lat + "," + lon + "?z=17";
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geo));
             }
             else
             {
+                String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
             }
+
             //Make sure there is an app to handle this intent
             if (intent.resolveActivity(getPackageManager()) != null)
+            {
+                if (MyDebug.LOG)
+                {
+                    String app = intent.resolveActivity(getPackageManager()).toString();
+                    Toast.makeText(this, app, Toast.LENGTH_LONG).show();
+                    Log.d(LOG_TAG, app);
+                }
                 startActivity(intent);
+            }
             else
                 Toast.makeText(this, getString(R.string.t_noapp), Toast.LENGTH_LONG).show();
             return true;
@@ -459,7 +483,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
             String language = Locale.getDefault().toString().substring(0, 2);
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
             {
                 corrtemp = corrtemp.replace('.', ',');
                 gpstemp = gpstemp.replace('.', ',');
@@ -498,12 +522,12 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             directionEW = west;
 
         // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("\u00b0 ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("\' ");
 
-            String sectemp = new DecimalFormat("#.###").format(convert.getSecond());
+            String sectemp = new DecimalFormat("#.#").format(convert.getSecond());
             sectemp = sectemp.replace('.', ',');
             stringb.append(sectemp).append("\" ").append(directionNS).append(",  ");
 
@@ -512,7 +536,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("\u00b0 ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("\' ");
 
-            sectemp = new DecimalFormat("#.###").format(convert.getSecond());
+            sectemp = new DecimalFormat("#.#").format(convert.getSecond());
             sectemp = sectemp.replace('.', ',');
             stringb.append(sectemp).append("\" ").append(directionEW);
         }
@@ -520,13 +544,13 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("\u00b0 ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("\' ");
-            stringb.append(new DecimalFormat("#.###").format(convert.getSecond())).append("\" ").append(directionNS).append(",  ");
+            stringb.append(new DecimalFormat("#.#").format(convert.getSecond())).append("\" ").append(directionNS).append(",  ");
 
             convert = new LatLonConvert(lon);
 
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("\u00b0 ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("\' ");
-            stringb.append(new DecimalFormat("#.###").format(convert.getSecond())).append("\" ").append(directionEW);
+            stringb.append(new DecimalFormat("#.#").format(convert.getSecond())).append("\" ").append(directionEW);
         }
 
         return stringb.toString();
@@ -602,14 +626,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         String directionNS, directionEW;
         String high = myPosition.getAppContext().getString(R.string.height);
 
-        String tempLat = Float.toString((float) lat);
-        String tempLon = Float.toString((float) lon);
+        String tempLat = String.format("%.5f", lat);
+        String tempLon = String.format("%.5f", lon);
         String tempHigh = String.format("%.1f", height);
         String tempUncert = String.format("%.1f", uncertainty);
 
         String language = Locale.getDefault().toString().substring(0, 2);
         // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             tempLat = tempLat.replace('.', ',');
             tempLon = tempLon.replace('.', ',');
@@ -745,14 +769,16 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
             sb = new StringBuffer("");
 
-            String lattemp = Float.toString((float) lat);
-            String lontemp = Float.toString((float) lon);
+            //String lattemp = Float.toString((float) lat);
+            //String lontemp = Float.toString((float) lon);
+            String lattemp = String.format("%.5f", lat);
+            String lontemp = String.format("%.5f", lon);
             String heighttemp = String.format("%.1f", height);
             String uncerttemp = String.format("%.1f", uncertainty);
 
             String language = Locale.getDefault().toString().substring(0, 2);
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr")|| language.equals("it") || language.equals("nl") || language.equals("pt"))
+            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
             {
                 lattemp = lattemp.replace('.', ',');
                 lontemp = lontemp.replace('.', ',');
@@ -1166,6 +1192,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             try
             {
                 tvLocation.setText(adrlines);
+
                 tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, true, addresslines1));
             } catch (Exception e)
             {

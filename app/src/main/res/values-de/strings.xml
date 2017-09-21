@@ -22,6 +22,7 @@
     <string name="uncert">Unschärfe: </string>
     <string name="nogeocoder">Kein Geocoder-Dienst verfügbar</string>
     <string name="no_GPS">Keine Positionsbestimmung, GPS ist nicht aktiviert.</string>
+    <string name="noPermission">Berechtigung zur GPS-Nutzung fehlt.</string>
     <string name="emptyAddr">Leere Adresse</string>
     <string name="unknownAddr">Unbekannte Adresse</string>
     <string name="noAddr">Keine Adressdaten!</string>

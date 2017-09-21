@@ -21,6 +21,7 @@
     <string name="geoloc">Coordinates:</string>
     <string name="uncert">Uncertainty:</string>
     <string name="no_GPS">Sorry, no position, GPS is not activated.</string>
+    <string name="noPermission">Permission to use GPS is not granted.</string>
     <string name="nogeocoder">No Geocoder service available</string>
     <string name="emptyAddr">Empty address</string>
     <string name="unknownAddr">Unknown address</string>

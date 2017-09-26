@@ -26,34 +26,40 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>Historie</h4>
 
+<B>Mein Standort, Version 1.3.2</B>, 26.09.2017,<br>
+ - Code angepasst und kompiliert für Android 7.1.<br>
+ - Systemlog-Meldungen nur noch im Debug-Modus.<br>
+ - Höhen- und Koordinaten-Anzeige ohne irrelevante Nachkommastellen.<br>
+<br>
+
 <B>Mein Standort, Version 1.3.1</B>, 12.09.2017,<br>
-Icons im Menu Einstellungen<br>
-Systemlog-Meldungen nur noch im Debug-Modus<br>
-Höhenangaben werden gemäß World Geodetic System WGS84 und Earth Gravitational Model EGM96 korrigiert.<br>
-Die Position kann optional lokal (per geeigneter Mapping-App) oder online bei OpenStreetMap angezeigt werden.<br>  
-Neue Option: Eine Toast-Meldung zur Höhenangabe mit Höhe über NN, GPS-Höhe und Höhenkorektur kann eingeblendet werden.<br>
-Neue Option: Die Anzeige kann zwischen Portrait- und Landscape-Modus gewechselt werden.<br> 
-Geänderte Option: GPS-Update-Parameter "Distanz" anstelle von "Zeitintervall" einstellbar.<br>
-Mehrere Verbesserungen in Details der Anzeige.<br>
-Zurück-Button zweimal klicken um App zu beenden.<br>
-Bug-fixes: U.a. Geänderte App-Einstellungen sind nun gültig ohne Neustart der App.<br>
+ - Icons im Menu Einstellungen<br>
+ - Höhenangaben werden gemäß World Geodetic System WGS84 und Earth Gravitational Model EGM96 korrigiert.<br>
+ - Die Position kann optional lokal (per geeigneter Mapping-App) oder online bei OpenStreetMap angezeigt werden.<br>  
+ - Neue Option: Eine Toast-Meldung zur Höhenangabe mit Höhe über NN, GPS-Höhe und Höhenkorektur kann eingeblendet werden.<br>
+ - Neue Option: Die Anzeige kann zwischen Portrait- und Landscape-Modus gewechselt werden.<br> 
+ - Geänderte Option: GPS-Update-Parameter "Distanz" anstelle von "Zeitintervall" einstellbar.<br>
+ - Mehrere Verbesserungen in Details der Anzeige.<br>
+ - Zurück-Button zweimal klicken um App zu beenden.<br>
+ - Bug-fixes: U.a. Geänderte App-Einstellungen sind nun gültig ohne Neustart der App.<br>
 <br>
 
 <B>Mein Standort, Version 1.3.0</B>, 11.04.2017,<br>
-umfasst Code-Korrekturen und Ergänzungen,<br>
-funktioniert ohne Google Apps (GApps),<br>
-unterbricht bzw. beendet GPS-Nutzung bei App-Unterbrechung oder -Beendung,<br> 
-verwendet zur Adressanzeige Reverse-Geocoding von OpenStreetMap,<br>
-nutzt dazu optional eine einstellbare E-Mail-Adresse, wie von OpenStreetMap empfohlen,<br>
-länderspezifische Darstellung der Adressinfo (at, ch, de, fr, it, Rest der Welt),<br>
-sprachspezifische Anpassung der Texte (Deutsch, Englisch) und,<br>
-sprachspezifische Anpassung der Zahlendarstellung (Deutsch, Englisch).<br>
+ - umfasst Code-Korrekturen und Ergänzungen,<br>
+ - funktioniert ohne Google Apps (GApps),<br>
+ - unterbricht bzw. beendet GPS-Nutzung bei App-Unterbrechung oder -Beendung,<br> 
+ - verwendet zur Adressanzeige Reverse-Geocoding von OpenStreetMap,<br>
+ - nutzt dazu optional eine einstellbare E-Mail-Adresse, wie von OpenStreetMap empfohlen,<br>
+ - länderspezifische Darstellung der Adressinfo (at, ch, de, fr, it, Rest der Welt),<br>
+ - sprachspezifische Anpassung der Texte (Deutsch, Englisch) und,<br>
+ - sprachspezifische Anpassung der Zahlendarstellung (Deutsch, Englisch).<br>
 <br>
 
 Basiert auf myLocation Version 1.2,<br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 Lizenziert unter der GNU GPLv2.<br>
+<br>
 Änderungen durch GDR<br>
 http://f.gdr.name/mylocation.png<br>
 <br>

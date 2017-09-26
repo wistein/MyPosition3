@@ -29,33 +29,39 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>History</h4>
 
+<B>My Position, version 1.3.2,</B> 2017-09-26,<br>
+ - Code adapted and compiled for Android 7.1.<br>
+ - Write system log only in debug version.<br>
+ - Showing height and coordinates without irrelevant decimal places.<br>
+<br>
+
 <B>My Position, version 1.3.1,</B> 2017-09-12,<br>
-Icons in settings menu<br>
-Write system log only in debug version<br>
-Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
-Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
-New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
-New Option: Switch between portrait and landscape mode.<br>
-Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
-Some improvements to display details.<br>
-Press back twice to exit.<br>
-Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
+ - Icons in settings menu<br>
+ - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
+ - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
+ - New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
+ - New Option: Switch between portrait and landscape mode.<br>
+ - Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
+ - Some improvements to display details.<br>
+ - Press back twice to exit.<br>
+ - Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
 <br>
 
 <B>My Position, version 1.3.0,</B> 2017-04-11,<br>
-Includes code corrections and enhancements.<br>
-Works without Google Apps (GApps).<br>
-Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
-Uses Reverse Geocoding by Nominatim service of OpenStreetMap.<br>
-Uses optionally your provided email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
-Localization for German and English (default) of text and number formats.<br>
-Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
+ - Includes code corrections and enhancements.<br>
+ - Works without Google Apps (GApps).<br>
+ - Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
+ - Uses Reverse Geocoding by Nominatim service of OpenStreetMap.<br>
+ - Uses optionally your provided email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
+ - Localization for German and English (default) of text and number formats.<br>
+ - Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
 <br>
 
 Based on myLocation version 1.2,<br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 Licensed under GNU GPLv2.<br>
+<br>
 Additional changes by GDR<br>
 http://f.gdr.name/mylocation.png<br>
 <br>

@@ -33,7 +33,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
@@ -70,11 +69,11 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         TextView tv = (TextView) findViewById(R.id.info_head);
         if (language.equals("de"))
         {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_head_de)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head_de)));
         }
         else
         {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_head)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head)));
         }
         tv.setLinkTextColor(Color.BLUE);
         Linkify.addLinks(tv, Linkify.WEB_URLS);
@@ -82,11 +81,11 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         tv = (TextView) findViewById(R.id.info_text);
         if (language.equals("de"))
         {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info_de)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_de)));
         }
         else
         {
-            tv.setText(Html.fromHtml(readRawTextFile(R.raw.info)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info)));
         }
         tv.setLinkTextColor(Color.BLUE);
         Linkify.addLinks(tv, Linkify.WEB_URLS);
@@ -120,4 +119,5 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
     {
         screenOrientL = pref.getBoolean("screen_Orientation", false);
     }
+
 }

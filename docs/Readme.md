@@ -21,9 +21,16 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
  
 ### History:
  
+My Position, version 1.3.2,
+copyright by wistein, 2017-09-26,
+https://github.com/wistein/MyPosition3
+
+  - Code adapted and compiled for Android 7.1.
+  - Write system log only in debug version.
+  - Showing height and coordinates without irrelevant decimal places.
+
 My Position version 1.3.1, 
 copyright by wistein, 2017-09-12,
-https://github.com/wistein/MyPosition3
 
   - Write system log only in debug version
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.

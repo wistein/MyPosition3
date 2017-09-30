@@ -7,7 +7,7 @@ Share your location, easily.
 My Position determines the current location with address data and GPS coordinates including height above sea-level. 
 The application simplifies the task of sharing your location data with your contacts.
  
-Your location may also be shown on a map either local (if a suitable app is installed) or by browser on OpenStreetMap.
+Your location may also be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed*) or by browser on OpenStreetMap.
 
 It uses Reverse Geocoding by OpenStreetMap query for showing address info. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
  
@@ -18,7 +18,18 @@ Additionally, this application also includes a tool to help converting between W
 Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
  
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- 
+
+*) To change the default from Google Maps to a preferred app, 
+- open the settings on your phone, 
+- tap Apps, 
+- find Maps and 
+- select Clear defaults. 
+
+Head back to My Position and call Show Map. 
+Now you’ll be asked which application to use.
+Pick the one you prefer, and tap `This time´ to test it. 
+Next time you may select ‘Always’ to make sure your preferred app opens by default.
+
 ### History:
  
 My Position, version 1.3.2,

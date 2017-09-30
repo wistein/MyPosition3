@@ -132,8 +132,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         setContentView(R.layout.activity_my_location);
         ScrollView baseLayout = (ScrollView) findViewById(R.id.baseLayout);
         assert baseLayout != null;
-        getSupportActionBar().setTitle(R.string.app_name);
-
+        try
+        {
+            getSupportActionBar().setTitle(R.string.app_name);
+        } catch (NullPointerException e)
+        {
+            // do nothing
+        }
+        
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = (TextView) findViewById(R.id.tvDecimalCoord);
@@ -326,7 +332,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         // Get location service
         try
         {
-            locationManager.requestLocationUpdates(GPS_PROVIDER, timeIntervall, distance, locationListener);
+            locationManager.requestLocationUpdates(provider, timeIntervall, distance, locationListener);
         } catch (Exception e)
         {
             // Nothing to do
@@ -452,8 +458,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
     private double correctHeight(double gpsHeight)
     {
-        double corrHeight = 0;
-        double nnHeight = 0;
+        double corrHeight;
+        double nnHeight;
 
         EarthGravitationalModel gh = new EarthGravitationalModel();
         try
@@ -732,7 +738,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         }
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(GPS_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(provider);
 
         lat = 0.0;
         lon = 0.0;
@@ -1201,7 +1207,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             }
         }
 
-        public String addresses()
+        String addresses()
         {
             return addresslines;
         }
@@ -1242,7 +1248,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     {
         double lat, lon;
 
-        public LatLong(double lat, double lon)
+        LatLong(double lat, double lon)
         {
             this.lat = lat;
             this.lon = lon;

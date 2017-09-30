@@ -28,12 +28,12 @@ package com.wistein.egm;
  * @since 2.3
  * Code adaptation for use by MyPositionActivity by wm.stein
  */
-public abstract class VerticalTransform extends AbstractMathTransform 
+abstract class VerticalTransform extends AbstractMathTransform 
 {
     /**
      * Creates a new instance of VerticalTransform.
      */
-    protected VerticalTransform() 
+    VerticalTransform() 
 	{
     }
 

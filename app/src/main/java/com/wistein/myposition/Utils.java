@@ -13,10 +13,10 @@ import android.text.Spanned;
  * Created by wistein on 25.09.17.
  */
 
-public class Utils
+class Utils
 {
     @SuppressWarnings("deprecation")
-    public static Spanned fromHtml(String source)
+    static Spanned fromHtml(String source)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {

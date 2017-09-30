@@ -8,7 +8,7 @@ package com.wistein.myposition;
  * Global constant to control logging, should always be set to false in
  * released versions.
  */
-public class MyDebug
+class MyDebug
 {
-    public static final boolean LOG = false;
+    static final boolean LOG = false;
 }

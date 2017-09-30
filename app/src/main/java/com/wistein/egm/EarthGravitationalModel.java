@@ -63,7 +63,7 @@ public final class EarthGravitationalModel extends VerticalTransform
     /**
      * The default value for {@link #nmax}.
      */
-    static final int DEFAULT_ORDER = 180;
+    private static final int DEFAULT_ORDER = 180;
 
     /**
      * Maximum degree and order attained.
@@ -129,7 +129,7 @@ public final class EarthGravitationalModel extends VerticalTransform
     /**
      * Creates a model with the specified maximum degree and order.
      */
-    public EarthGravitationalModel(final int nmax) 
+    private EarthGravitationalModel(final int nmax) 
 	{
         this.nmax = nmax;
         /*

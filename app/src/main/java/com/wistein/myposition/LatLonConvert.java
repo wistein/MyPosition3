@@ -1,8 +1,8 @@
 package com.wistein.myposition;
 
-/******************************************************************************
+/* ****************************************************************************
  * LatLonConvert.java
- * ******************************************************************************
+ * ****************************************************************************
  * <p>
  * Java Class: LatLonConvert
  * <p>
@@ -79,9 +79,7 @@ class LatLonConvert
      * -------------------------------------------------------------------------- */
 
     // This constructor converts decimal degrees to degrees/minutes/seconds
-    public LatLonConvert(
-        double dfDecimalIn
-    )
+    LatLonConvert(double dfDecimalIn)
     {
         // load local variables
         dfDecimal = dfDecimalIn;
@@ -91,11 +89,7 @@ class LatLonConvert
     }
 
     // This constructor converts degrees/minutes/seconds to decimal degrees
-    public LatLonConvert(
-        double dfDegreeIn,
-        double dfMinuteIn,
-        double dfSecondIn
-    )
+    LatLonConvert(double dfDegreeIn, double dfMinuteIn, double dfSecondIn)
     {
         // load local variables
         dfDegree = dfDegreeIn;
@@ -109,7 +103,7 @@ class LatLonConvert
     /******************************************************************************
      *	method:					fromDec2DMS()
      *******************************************************************************
-     *   Converts decimal degrees to degrees/minutes/seconds.
+     *  Converts decimal degrees to degrees/minutes/seconds.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
     private void fromDec2DMS()
@@ -157,7 +151,7 @@ class LatLonConvert
     /******************************************************************************
      *	method:					fromDMS2Dec()
      *******************************************************************************
-     *   Converts degrees/minutes/seconds to decimal degrees.
+     *  Converts degrees/minutes/seconds to decimal degrees.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
     private void fromDMS2Dec()
@@ -178,7 +172,7 @@ class LatLonConvert
     /******************************************************************************
      *	method:					getDecimal()
      *******************************************************************************
-     *   Gets the value in decimal degrees.
+     *  Gets the value in decimal degrees.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
     public double getDecimal()
@@ -188,10 +182,10 @@ class LatLonConvert
 
     /******************************************************************************
      *	method:					getDegree()
-     *   Gets the degree part of degrees/minutes/seconds.
+     *  Gets the degree part of degrees/minutes/seconds.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
-    public double getDegree()
+    double getDegree()
     {
         return (dfDegree);
     }
@@ -199,10 +193,10 @@ class LatLonConvert
     /******************************************************************************
      *	method:					getMinute()
      *******************************************************************************
-     *   Gets the minute part of degrees/minutes/seconds.
+     *  Gets the minute part of degrees/minutes/seconds.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
-    public double getMinute()
+    double getMinute()
     {
         return (dfMinute);
     }
@@ -210,10 +204,10 @@ class LatLonConvert
     /******************************************************************************
      *	method:					getSecond()
      *******************************************************************************
-     *   Gets the second part of degrees/minutes/seconds.
+     *  Gets the second part of degrees/minutes/seconds.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
-    public double getSecond()
+    double getSecond()
     {
         return (dfSecond);
     }

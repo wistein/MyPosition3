@@ -11,8 +11,6 @@ package com.wistein.myposition;
  */
 class MapUtils
 {
-    private static final String BASE_SHORT_OSM_URL = "https://openstreetmap.org/go/";
-
     /**
      * This array is a lookup table that translates 6-bit positive integer
      * index values into their "Base64 Alphabet" equivalents as specified
@@ -25,8 +23,8 @@ class MapUtils
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', '~'
     };
-    
-    public static String createShortLinkString(double latitude, double longitude, int zoom)
+
+    static String createShortLinkString(double latitude, double longitude, int zoom)
     {
         long lat = (long) (((latitude + 90d) / 180d) * (1L << 32));
         long lon = (long) (((longitude + 180d) / 360d) * (1L << 32));

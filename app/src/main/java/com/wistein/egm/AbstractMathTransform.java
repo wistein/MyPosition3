@@ -30,17 +30,17 @@ package com.wistein.egm;
  * themself if they know to maps two-dimensional coordinate systems.
  *
  * @author Martin Desruisseaux (IRD)
- * @tutorial http://docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
+ * tutorial: http://docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
  * @since 2.0
  * Code adaptation for use by MyPositionActivity by wm.stein
  */
-public abstract class AbstractMathTransform 
+abstract class AbstractMathTransform 
 {
     /**
      * Constructs a math transform.
      */
-    protected AbstractMathTransform() 
-	{
+    AbstractMathTransform()
+    {
     }
 
     /**

@@ -1,6 +1,6 @@
 ## MyPosition3
  
-### My Position (Mein Standort), version 1.3.1
+### My Position (Mein Standort), version 1.3.2
  
 Share your location, easily.
  

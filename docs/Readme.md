@@ -1,37 +1,46 @@
-## MyPosition3
+# MyPosition3
  
-### My Position (Mein Standort), version 1.3.3
+## My Position (Mein Standort)
  
-Share your location, easily.
- 
-My Position determines the current location with address data and GPS coordinates including height above sea-level. 
-The application simplifies the task of sharing your location data with your contacts.
- 
-Your location may also be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed*) or by browser on OpenStreetMap.
+Share your location, easily.  
+The app simplifies the task of sharing your location data with your contacts.
+### Features
+- My Position determines the current location with address data and GPS coordinates including height above sea-level. 
+- Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed*) or by browser on OpenStreetMap.
+- It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info.**)
+- It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings and number formats (German, English).
+- Additionally, the app also includes a tool to help converting between WGS84 decimal GPS coordinate and DD MM SS coordinate format.
 
-It uses Reverse Geocoding by OpenStreetMap query for showing address info. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
- 
-It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings and number formats (German, English).
- 
-Additionally, this application also includes a tool to help converting between WGS84 decimal GPS coordinate and DD MM SS coordinate format.
+*) To change the default from Google Maps to a preferred app,
+- open <i>Settings</i> on your phone, 
+- select <I>Apps</I>, 
+- find <i>Maps</i> and select <i>Clear defaults</i>. 
+- Head back to <i>My Position</I> and call <I>Show Map</I>. 
+- Now you’ll be asked which application to use.  
+Pick the one you prefer,
+- select <i>This time</I> to test it.  
+Next time you may select <i>Always</I> to make sure your preferred app opens by default.
 
+**) To achieve OSM Reverse Geocoding by a more reliable service and for protection against abuse it optionally takes your provided email address  
+(see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+
+ 
+### Permissions
+- Location (GPS and Network)
+- Internet access
+
+### License
 Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
  
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-*) To change the default from Google Maps to a preferred app,
-- open the settings on your phone, 
-- tap Apps, 
-- find Maps and 
-- select Clear defaults. 
-
-Head back to My Position and call Show Map. 
-Now you’ll be asked which application to use.
-Pick the one you prefer, and tap `This time´ to test it. 
-Next time you may select ‘Always’ to make sure your preferred app opens by default.
-
 ### History:
  
+<B>My Position, version 1.3.4,</B> 2018-09-19,<br>
+ - Added option to select a time interval to query the position.<br>
+ - GPS update function as background service.
+<br>
+
 <B>My Position, version 1.3.3</B>,<br>
 copyright by wistein, 2017-10-31,<br>
 https://github.com/wistein/MyPosition3
@@ -67,8 +76,8 @@ copyright by wistein, 2017-04-11
   - Country-specific representation of address info (at, ch, de, fr, it, rest of the world).
   - App-Icon by wistein.
   
-Changes and enhancements by GDR<br>
-http://f.gdr.name/mylocation.png<br>
+<B>Uses some changes and enhancements by GDR!</B><br>
+https://github.com/gjedeer/mylocation/<br>
 License: GNU GPLv2
 
 <B>Based on myLocation version 1.2</B>,<br>

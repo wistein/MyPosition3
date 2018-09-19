@@ -3,4 +3,5 @@ Share your location, easily.<br>
 <br>
 2017, copyright by wistein<br>
 https://github.com/wistein/MyPosition3<br>
+and other authors (see history)<br>
 <br>

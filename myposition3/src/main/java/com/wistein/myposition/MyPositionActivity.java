@@ -15,7 +15,7 @@ package com.wistein.myposition;
  *
  * MyPositionActivity.java
  * Main Activity Class for My Position
- * 
+ *
  * Based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
@@ -24,18 +24,19 @@ package com.wistein.myposition;
  * http://code.google.com/p/mylocation/
  * http://kirostudio.com
  * http://blog.mypapit.net/
- * 
- * Adopted by wistein for 
+ *
+ * Adopted by wistein for
  * My Position Ver. 3
- * Copyright 2017, Wilhelm Stein, Germany
+ * Copyright 2018, Wilhelm Stein, Germany
  */
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -73,10 +74,9 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static android.location.LocationManager.GPS_PROVIDER;
+//import static android.location.LocationManager.GPS_PROVIDER;
 
-public class MyPositionActivity extends AppCompatActivity implements OnClickListener,
-    SharedPreferences.OnSharedPreferenceChangeListener
+public class MyPositionActivity extends AppCompatActivity implements OnClickListener, LocationListener
 {
     private final static String LOG_TAG = "MyPositionActivity";
     private TextView tvDecimalCoord;
@@ -93,7 +93,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
-    private int timeIntervall = 10000; // GPS polling interval in msec
+    //    private int timeIntervall = 10000; // GPS polling interval in msec
     private String messageHeader = ""; // 1st line in mail message
     private String emailString = ""; // mail address for OSM query
     private boolean screenOrientL; // option for screen orientation
@@ -102,16 +102,18 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private int distance = 20; // option to set GPS polling distance, default 20 m
     public boolean doubleBackToExitPressedOnce;
 
+    private Location location;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private String provider = GPS_PROVIDER;
+    private String strTime = "0";
+    //    private String provider = GPS_PROVIDER;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0x29b;
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        pref.registerOnSharedPreferenceChangeListener(this);
 
         messageHeader = getString(R.string.msg_text);
         emailString = pref.getString("email_String", "");
@@ -119,6 +121,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         mapLocal = pref.getBoolean("map_Local", false);
         showToast = pref.getBoolean("show_Toast", false);
         distance = Integer.parseInt(pref.getString("update_Dist", "20"));
+        strTime = pref.getString("updateFreq", "3");
 
         if (screenOrientL)
         {
@@ -139,7 +142,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             // do nothing
         }
-        
+
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = (TextView) findViewById(R.id.tvDecimalCoord);
@@ -162,134 +165,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         shareDecimal.setOnClickListener(this);
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
-
-        // Get location service
-        int REQUEST_CODE_GPS = 124;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            int hasAccessFineLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (hasAccessFineLocationPermission != PackageManager.PERMISSION_GRANTED)
-            {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_GPS);
-            }
-        }
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        // Create LocationListener object
-        locationListener = new LocationListener()
-        {
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-                if (MyDebug.LOG)
-                    Log.d(LOG_TAG, "onStatusChanged()");
-            }
-
-            @Override
-            public void onProviderEnabled(String provider)
-            {
-                if (MyDebug.LOG)
-                    Log.d(LOG_TAG, "onProviderEnabled()");
-            }
-
-            @Override
-            public void onProviderDisabled(String provider)
-            {
-                if (MyDebug.LOG)
-                    Log.d(LOG_TAG, "onProviderDisabled()");
-            }
-
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                nonEmpty = true;
-
-                lat = location.getLatitude();
-                lon = location.getLongitude();
-                height = location.getAltitude();
-                if (height != 0)
-                    height = correctHeight(height);
-                uncertainty = location.getAccuracy();
-                fixTime = location.getTime();
-
-                String nord = getString(R.string.nord);
-                String east = getString(R.string.east);
-                String west = getString(R.string.west);
-                String south = getString(R.string.south);
-                String directionNS, directionEW;
-                String uncert = myPosition.getAppContext().getString(R.string.uncert);
-                String high = myPosition.getAppContext().getString(R.string.height);
-
-                if (lat >= 0)
-                    directionNS = nord;
-                else
-                    directionNS = south;
-
-                if (lon >= 0)
-                    directionEW = east;
-                else
-                    directionEW = west;
-
-                sb = new StringBuffer();
-
-                String lattemp = String.format("%.5f", lat);
-                String lontemp = String.format("%.5f", lon);
-                String heighttemp = String.format("%.1f", height);
-                String uncerttemp = String.format("%.1f", uncertainty);
-
-                String language = Locale.getDefault().toString().substring(0, 2);
-                // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-                if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
-                {
-                    lattemp = lattemp.replace('.', ',');
-                    lontemp = lontemp.replace('.', ',');
-                    heighttemp = heighttemp.replace('.', ',');
-                    uncerttemp = uncerttemp.replace('.', ',');
-
-                    sb.append(lattemp).append(" ").append(directionNS).append(",   ")
-                        .append(lontemp).append(" ").append(directionEW).append("\n")
-                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                        .append(high).append(" ").append(heighttemp).append(" m");
-                }
-                else
-                {
-                    sb.append(directionNS).append(" ").append(lattemp).append(",   ")
-                        .append(directionEW).append(" ").append(lontemp).append("\n")
-                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                        .append(high).append(" ").append(heighttemp).append(" m");
-                }
-
-                final String time_header = getString(R.string.last_fix_time) + " ";
-
-                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy);
-
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        String relative_date = getString(R.string.unknownFix);
-                        if (fixTime > 0)
-                        {
-                            relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0).toString();
-                        }
-                        tvDecimalCoord.setText(sb.toString());
-                        tvDegreeCoord.setText(toDegree(lat, lon));
-                        String uTime = time_header + relative_date;
-                        tvUpdatedTime.setText(uTime);
-
-                        RetrieveAddr getXML = new RetrieveAddr();
-                        getXML.execute(new LatLong(lat, lon));
-
-                        addresslines = getXML.addresses();
-                    }
-                });
-            } // End of onLocationChanged
-        };    // End of locationListener
-    }         // End of onCreate
+    } // End of onCreate
 
     @Override
     public void onResume()
@@ -297,7 +173,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         super.onResume();
 
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        pref.registerOnSharedPreferenceChangeListener(this);
 
         messageHeader = getString(R.string.msg_text);
         emailString = pref.getString("email_String", "");
@@ -305,6 +180,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         mapLocal = pref.getBoolean("map_Local", false);
         showToast = pref.getBoolean("show_Toast", false);
         distance = Integer.parseInt(pref.getString("update_Dist", "20"));
+        strTime = pref.getString("updateFreq", "3");
 
         if (screenOrientL)
         {
@@ -315,78 +191,112 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
+        // Check location permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             Toast.makeText(this, getString(R.string.noPermission), Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        // Get location service
-        try
-        {
-            locationManager.requestLocationUpdates(provider, timeIntervall, distance, locationListener);
-        } catch (Exception e)
-        {
-            // Nothing to do
+/*
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) 
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            else
+            {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+*/
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSIONS_REQUEST_LOCATION);
         }
-        this.registerLocationListener();
-        this.registerRelativeFixTime();
+        else
+        {
+            this.registerLocationListener();
+            this.registerRelativeFixTime();
+        }
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
     {
-        //messageHeader = pref.getString("message_Header", getString(R.string.msg_text));
-        emailString = pref.getString("email_String", "");
-        mapLocal = pref.getBoolean("map_Local", false);
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
-        showToast = pref.getBoolean("show_Toast", false);
-        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
+        switch (requestCode)
+        {
+        case MY_PERMISSIONS_REQUEST_LOCATION:
+        {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                // permission was granted
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED)
+                {
+                    if (MyDebug.LOG)
+                        Log.d(LOG_TAG, "Location permission request granted.");
+                    //Request location updates:
+                    this.registerLocationListener();
+                }
+                else
+                {
+                    if (MyDebug.LOG)
+                        Log.d(LOG_TAG, "Location permission request denied [1].");
+                    /* TODO: handle denial */
+                }
+            }
+            else
+            {
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "Location permission request denied [2].");
+                // TODO: handle denial
+            }
+        }
+        }
     }
 
+
+    @Override
     public void onPause()
     {
         super.onPause();
 
         // Stop location service
-        try
-        {
-            if (locationManager != null)
-            {
-                //Potentially missing permission is catched by exception
-                locationManager.removeUpdates(locationListener);
-                locationManager = null;
-            }
-        } catch (Exception e)
-        {
-            // do nothing
-        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.removeUpdates(this);
     }
 
+    @Override
     public void onStop()
     {
         super.onStop();
 
         // Stop location service
-        try
-        {
-            if (locationManager != null)
-            {
-                //Potentially missing permission is catched by exception
-                locationManager.removeUpdates(locationListener);
-                locationManager = null;
-            }
-        } catch (Exception e)
-        {
-            // do nothing
-        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras)
+    {
+        if (MyDebug.LOG)
+            Log.d(LOG_TAG, "onStatusChanged()");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider)
+    {
+        if (MyDebug.LOG)
+            Log.d(LOG_TAG, "onProviderEnabled()");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider)
+    {
+        if (MyDebug.LOG)
+            Log.d(LOG_TAG, "onProviderDisabled()");
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -402,8 +312,19 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
         case R.id.menu_getpos:
             // Get LocationManager instance
-            this.registerLocationListener();
-            this.registerRelativeFixTime();
+            Intent service = new Intent(MyPositionActivity.this, GetPosService.class);
+            if (!GetPosService.IS_SERVICE_RUNNING)
+            {
+                service.setAction(GetPosService.START_FOREGROUND_ACTION);
+                GetPosService.IS_SERVICE_RUNNING = true;
+            }
+            else
+            {
+                service.setAction(GetPosService.STOP_FOREGROUND_ACTION);
+                GetPosService.IS_SERVICE_RUNNING = false;
+
+            }
+            startService(service);
             return true;
 
         case R.id.menu_about:
@@ -724,7 +645,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     }
 
     // Gets last known location
-    @SuppressLint("LongLogTag")
     private void registerLocationListener()
     {
         int REQUEST_CODE_GPS = 124;
@@ -737,8 +657,22 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             }
         }
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Location location = locationManager.getLastKnownLocation(provider);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAltitudeRequired(true);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(false);
+        criteria.setCostAllowed(false);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
+
+        int time = Integer.parseInt(strTime) * 1000;
+        if (MyDebug.LOG)
+            Log.d(LOG_TAG, "preference retrieved " + time + "ms");
+
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         lat = 0.0;
         lon = 0.0;
@@ -775,14 +709,13 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
             sb = new StringBuffer("");
 
-            //String lattemp = Float.toString((float) lat);
-            //String lontemp = Float.toString((float) lon);
             String lattemp = String.format("%.5f", lat);
             String lontemp = String.format("%.5f", lon);
             String heighttemp = String.format("%.1f", height);
             String uncerttemp = String.format("%.1f", uncertainty);
 
             String language = Locale.getDefault().toString().substring(0, 2);
+
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
             if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
             {
@@ -810,384 +743,482 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             sb = new StringBuffer(getString(R.string.posnotknown));
         }
 
-        final String time_header = this.getString(R.string.last_fix_time) + " ";
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        runOnUiThread(new Runnable()
+        if (lat != 0 || lon != 0)
         {
-            @Override
-            public void run()
+            final String time_header = this.getString(R.string.last_fix_time) + " ";
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            runOnUiThread(new Runnable()
             {
-                String relative_date = getString(R.string.unknownFix);
-                if (fixTime > 0)
+                @Override
+                public void run()
                 {
-                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                    String relative_date = getString(R.string.unknownFix);
+                    if (fixTime > 0)
+                    {
+                        relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                    }
+                    tvDecimalCoord.setText(sb.toString());
+                    tvDegreeCoord.setText(toDegree(lat, lon));
+                    String uTime = time_header + relative_date;
+                    tvUpdatedTime.setText(uTime);
+
+                    RetrieveAddr getXML = new RetrieveAddr();
+                    getXML.execute(new LatLong(lat, lon));
+
+                    addresslines = getXML.addresses();
                 }
-                tvDecimalCoord.setText(sb.toString());
-                tvDegreeCoord.setText(toDegree(lat, lon));
-                String uTime = time_header + relative_date;
-                tvUpdatedTime.setText(uTime);
+            });
+        }
+        else
+            addresslines = getString(R.string.noAddr);
 
-                RetrieveAddr getXML = new RetrieveAddr();
-                getXML.execute(new LatLong(lat, lon));
-
-                addresslines = getXML.addresses();
-            }
-        });
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, timeIntervall, distance, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, time, distance, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, distance, this);
+        if (locationManager.getAllProviders().contains("network"))
+        {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, time, distance, this);
+        }
 
     } // End of registerLocationListener
 
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        nonEmpty = true;
+
+        lat = location.getLatitude();
+        lon = location.getLongitude();
+        height = location.getAltitude();
+        if (height != 0)
+            height = correctHeight(height);
+        uncertainty = location.getAccuracy();
+        fixTime = location.getTime();
+
+        String nord = getString(R.string.nord);
+        String east = getString(R.string.east);
+        String west = getString(R.string.west);
+        String south = getString(R.string.south);
+        String directionNS, directionEW;
+        String uncert = myPosition.getAppContext().getString(R.string.uncert);
+        String high = myPosition.getAppContext().getString(R.string.height);
+
+        if (lat >= 0)
+            directionNS = nord;
+        else
+            directionNS = south;
+
+        if (lon >= 0)
+            directionEW = east;
+        else
+            directionEW = west;
+
+        sb = new StringBuffer();
+
+        String lattemp = String.format("%.5f", lat);
+        String lontemp = String.format("%.5f", lon);
+        String heighttemp = String.format("%.1f", height);
+        String uncerttemp = String.format("%.1f", uncertainty);
+
+        String language = Locale.getDefault().toString().substring(0, 2);
+        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
+        {
+            lattemp = lattemp.replace('.', ',');
+            lontemp = lontemp.replace('.', ',');
+            heighttemp = heighttemp.replace('.', ',');
+            uncerttemp = uncerttemp.replace('.', ',');
+
+            sb.append(lattemp).append(" ").append(directionNS).append(",   ")
+                .append(lontemp).append(" ").append(directionEW).append("\n")
+                .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                .append(high).append(" ").append(heighttemp).append(" m");
+        }
+        else
+        {
+            sb.append(directionNS).append(" ").append(lattemp).append(",   ")
+                .append(directionEW).append(" ").append(lontemp).append("\n")
+                .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                .append(high).append(" ").append(heighttemp).append(" m");
+        }
+
+        if (lat != 0 || lon != 0)
+        {
+            final String time_header = getString(R.string.last_fix_time) + " ";
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    String relative_date = getString(R.string.unknownFix);
+                    if (fixTime > 0)
+                    {
+                        relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0).toString();
+                    }
+                    tvDecimalCoord.setText(sb.toString());
+                    tvDegreeCoord.setText(toDegree(lat, lon));
+                    String uTime = time_header + relative_date;
+                    tvUpdatedTime.setText(uTime);
+
+                    RetrieveAddr getXML = new RetrieveAddr();
+                    getXML.execute(new LatLong(lat, lon));
+
+                    addresslines = getXML.addresses();
+                }
+            });
+        }
+        else
+            addresslines = getString(R.string.noAddr);
+    } // End of onLocationChanged
+
+    
     /*********************************************************
      * Get address info from Reverse Geocoder of OpenStreetMap
      */
     private class RetrieveAddr extends AsyncTask<LatLong, Void, String>
     {
+        String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
+            + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
         URL url;
 
         @Override
         protected String doInBackground(LatLong... params)
         {
-            if (lat != 0 || lon != 0)
+            try
             {
-                try
+                url = new URL(urlString);
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "urlString: " + urlString); // Log url
+
+                //HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection(); // https-version?
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setReadTimeout(10000);
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setDoInput(true);
+                urlConnection.connect();
+
+                int status = urlConnection.getResponseCode();
+                if (status >= 400) // Error
                 {
-                    String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
-                        + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
-                    url = new URL(urlString);
-                    if (MyDebug.LOG)
-                        Log.d(LOG_TAG, "urlString: " + urlString); // Log url
-
-                    //HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection(); // https-version?
-                    HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setReadTimeout(10000);
-                    urlConnection.setConnectTimeout(15000);
-                    urlConnection.setRequestMethod("GET");
-                    urlConnection.setDoInput(true);
-                    urlConnection.connect();
-
-                    int status = urlConnection.getResponseCode();
-                    if (status >= 400) // Error
-                    {
-                        addresslines = (getString(R.string.errAddr));
-                        return addresslines;
-                    }
-
-                    // get the XML from input stream
-                    InputStream iStream = urlConnection.getInputStream();
-
-                    String xmlString = convertStreamToString(iStream);
-                    if (MyDebug.LOG)
-                        Log.d(LOG_TAG, "xmlString: " + xmlString); // Log content of url
-
-                    // parse the XML content 
-                    addresslines = "";
-
-                    if (xmlString.contains("<addressparts>"))
-                    {
-                        int sstart = xmlString.indexOf("<addressparts>") + 14;
-                        int send = xmlString.indexOf("</addressparts>");
-                        xmlString = xmlString.substring(sstart, send);
-                        if (MyDebug.LOG)
-                            Log.d(LOG_TAG, "<addressparts>: " + xmlString);
-                        StringBuilder msg = new StringBuilder();
-
-                        // 1. line: building, viewpoint, hotel or guesthouse
-                        if (xmlString.contains("<building>"))
-                        {
-                            sstart = xmlString.indexOf("<building>") + 10;
-                            send = xmlString.indexOf("</building>");
-                            String building = xmlString.substring(sstart, send);
-                            msg.append(building);
-                            msg.append("\n");
-                        }
-                        if (xmlString.contains("<viewpoint>"))
-                        {
-                            sstart = xmlString.indexOf("<viewpoint>") + 11;
-                            send = xmlString.indexOf("</viewpoint>");
-                            String viewpoint = xmlString.substring(sstart, send);
-                            msg.append(viewpoint);
-                            msg.append("\n");
-                        }
-                        if (xmlString.contains("<hotel>"))
-                        {
-                            sstart = xmlString.indexOf("<hotel>") + 7;
-                            send = xmlString.indexOf("</hotel>");
-                            String hotel = xmlString.substring(sstart, send);
-                            msg.append(hotel);
-                            msg.append("\n");
-                        }
-                        if (xmlString.contains("<guest_house>"))
-                        {
-                            sstart = xmlString.indexOf("<guest_house>") + 13;
-                            send = xmlString.indexOf("</guest_house>");
-                            String guest_house = xmlString.substring(sstart, send);
-                            msg.append(guest_house);
-                            msg.append("\n");
-                        }
-
-                        if (xmlString.contains(">de<") || xmlString.contains(">fr<") || xmlString.contains(">ch<") || xmlString.contains(">at<") || xmlString.contains(">it<"))
-                        {
-                            // 2. line: road or street, house-No.
-                            if (xmlString.contains("<road>"))
-                            {
-                                sstart = xmlString.indexOf("<road>") + 6;
-                                send = xmlString.indexOf("</road>");
-                                String road = xmlString.substring(sstart, send);
-                                msg.append(road);
-                                msg.append(" ");
-                            }
-                            if (xmlString.contains("<street>"))
-                            {
-                                sstart = xmlString.indexOf("<street>") + 8;
-                                send = xmlString.indexOf("</street>");
-                                String street = xmlString.substring(sstart, send);
-                                msg.append(street);
-                                msg.append(" ");
-                            }
-                            if (xmlString.contains("<house_number>"))
-                            {
-                                sstart = xmlString.indexOf("<house_number>") + 14;
-                                send = xmlString.indexOf("</house_number>");
-                                String house_number = xmlString.substring(sstart, send);
-                                msg.append(house_number);
-                                msg.append("\n");
-                            }
-                            else // without house-No.
-                            {
-                                if (xmlString.contains("<road>") || xmlString.contains("<street>"))
-                                    msg.append("\n");
-                            }
-
-                            // 3. line: city_district, suburb
-                            if (xmlString.contains("<city_district>"))
-                            {
-                                sstart = xmlString.indexOf("<city_district>") + 15;
-                                send = xmlString.indexOf("</city_district>");
-                                String city_district = xmlString.substring(sstart, send);
-                                msg.append(city_district);
-                                if (xmlString.contains("<suburb>"))
-                                {
-                                    msg.append(" - ");
-                                }
-                                else
-                                {
-                                    msg.append("\n");
-                                }
-                            }
-                            if (xmlString.contains("<suburb>"))
-                            {
-                                sstart = xmlString.indexOf("<suburb>") + 8;
-                                send = xmlString.indexOf("</suburb>");
-                                String suburb = xmlString.substring(sstart, send);
-                                msg.append(suburb);
-                                msg.append("\n");
-                            }
-
-                            // 4. line: postcode village, town, city, county
-                            if (xmlString.contains("<postcode>"))
-                            {
-                                sstart = xmlString.indexOf("<postcode>") + 10;
-                                send = xmlString.indexOf("</postcode>");
-                                String postcode = xmlString.substring(sstart, send);
-                                msg.append(postcode);
-                                msg.append(" ");
-                            }
-
-                            if (xmlString.contains("<village>"))
-                            {
-                                sstart = xmlString.indexOf("<village>") + 9;
-                                send = xmlString.indexOf("</village>");
-                                String village = xmlString.substring(sstart, send);
-                                msg.append(village);
-                                msg.append("\n");
-                            }
-
-                            if (xmlString.contains("<town>"))
-                            {
-                                sstart = xmlString.indexOf("<town>") + 6;
-                                send = xmlString.indexOf("</town>");
-                                String town = xmlString.substring(sstart, send);
-                                msg.append(town);
-                                msg.append("\n");
-                            }
-
-                            if (xmlString.contains("<city>"))
-                            {
-                                sstart = xmlString.indexOf("<city>") + 6;
-                                send = xmlString.indexOf("</city>");
-                                String city = xmlString.substring(sstart, send);
-                                msg.append(city);
-                                msg.append("\n");
-                            }
-
-                            if (xmlString.contains("<county>"))
-                            {
-                                sstart = xmlString.indexOf("<county>") + 8;
-                                send = xmlString.indexOf("</county>");
-                                String county = xmlString.substring(sstart, send);
-                                msg.append(county);
-                                msg.append("\n");
-                            }
-
-                            // 5. line: state, country 
-                            if (xmlString.contains("<state>"))
-                            {
-                                sstart = xmlString.indexOf("<state>") + 7;
-                                send = xmlString.indexOf("</state>");
-                                String state = xmlString.substring(sstart, send);
-                                msg.append(state);
-                                msg.append("\n");
-                            }
-                            if (xmlString.contains("<country>"))
-                            {
-                                sstart = xmlString.indexOf("<country>") + 9;
-                                send = xmlString.indexOf("</country>");
-                                String country = xmlString.substring(sstart, send);
-                                msg.append(country);
-                            }
-                        }
-                        else // not at, ch, de, fr, it
-                        {
-                            // 2. line: house, house-No., road or street
-                            if (xmlString.contains("<house>"))
-                            {
-                                sstart = xmlString.indexOf("<house>") + 7;
-                                send = xmlString.indexOf("</house>");
-                                String house = xmlString.substring(sstart, send);
-                                msg.append(house);
-                                msg.append(" ");
-                            }
-                            if (xmlString.contains("<house_number>"))
-                            {
-                                sstart = xmlString.indexOf("<house_number>") + 14;
-                                send = xmlString.indexOf("</house_number>");
-                                String house_number = xmlString.substring(sstart, send);
-                                msg.append(house_number);
-                                msg.append(" ");
-                            }
-                            if (xmlString.contains("<road>"))
-                            {
-                                sstart = xmlString.indexOf("<road>") + 6;
-                                send = xmlString.indexOf("</road>");
-                                String road = xmlString.substring(sstart, send);
-                                msg.append(road);
-                                msg.append("\n");
-                            }
-                            if (xmlString.contains("<street>"))
-                            {
-                                sstart = xmlString.indexOf("<street>") + 8;
-                                send = xmlString.indexOf("</street>");
-                                String street = xmlString.substring(sstart, send);
-                                msg.append(street);
-                                msg.append("\n");
-                            }
-
-                            // 3. line: suburb
-                            if (xmlString.contains("<suburb>"))
-                            {
-                                sstart = xmlString.indexOf("<suburb>") + 8;
-                                send = xmlString.indexOf("</suburb>");
-                                String suburb = xmlString.substring(sstart, send);
-                                msg.append(suburb);
-                                msg.append("\n");
-                            }
-
-                            // 4. line: village, town
-                            if (xmlString.contains("<village>"))
-                            {
-                                sstart = xmlString.indexOf("<village>") + 9;
-                                send = xmlString.indexOf("</village>");
-                                String village = xmlString.substring(sstart, send);
-                                msg.append(village);
-                                msg.append("\n");
-                            }
-                            if (xmlString.contains("<town>"))
-                            {
-                                sstart = xmlString.indexOf("<town>") + 6;
-                                send = xmlString.indexOf("</town>");
-                                String town = xmlString.substring(sstart, send);
-                                msg.append(town);
-                                msg.append("\n");
-                            }
-
-                            // 5. line: city
-                            if (xmlString.contains("<city>"))
-                            {
-                                sstart = xmlString.indexOf("<city>") + 6;
-                                send = xmlString.indexOf("</city>");
-                                String city = xmlString.substring(sstart, send);
-                                msg.append(city);
-                                msg.append("\n");
-                            }
-
-                            //6. line: county, state_district
-                            if (xmlString.contains("<county>"))
-                            {
-                                sstart = xmlString.indexOf("<county>") + 8;
-                                send = xmlString.indexOf("</county>");
-                                String county = xmlString.substring(sstart, send);
-                                msg.append(county);
-                                msg.append("\n");
-                            }
-
-                            if (xmlString.contains("<state_district>"))
-                            {
-                                sstart = xmlString.indexOf("<state_district>") + 16;
-                                send = xmlString.indexOf("</state_district>");
-                                String state_district = xmlString.substring(sstart, send);
-                                msg.append(state_district);
-                                msg.append("\n");
-                            }
-
-                            // 7. line: state or country, postcode 
-                            if (xmlString.contains("<state>"))
-                            {
-                                sstart = xmlString.indexOf("<state>") + 7;
-                                send = xmlString.indexOf("</state>");
-                                String state = xmlString.substring(sstart, send);
-                                msg.append(state);
-                                msg.append("\n");
-                            }
-                            if (xmlString.contains("<country>"))
-                            {
-                                sstart = xmlString.indexOf("<country>") + 9;
-                                send = xmlString.indexOf("</country>");
-                                String country = xmlString.substring(sstart, send);
-                                msg.append(country);
-                                msg.append(", ");
-                            }
-
-                            if (xmlString.contains("<postcode>"))
-                            {
-                                sstart = xmlString.indexOf("<postcode>") + 10;
-                                send = xmlString.indexOf("</postcode>");
-                                String postcode = xmlString.substring(sstart, send);
-                                msg.append(postcode);
-                            }
-                        }
-
-                        addresslines = msg.toString();
-                        // format for TextView tvMessage
-                        addresslines1 = "   " + addresslines;
-                        addresslines1 = addresslines1.replace("\n", "\n   ");
-                    }
-
-                } catch (IOException e)
-                {
-                    if (MyDebug.LOG)
-                        Log.e(LOG_TAG, "Problem with address handling: " + e.toString());
-                    addresslines = getString(R.string.unknownAddr);
+                    addresslines = (getString(R.string.errAddr));
                     return addresslines;
                 }
-            }
-            else
+
+                // get the XML from input stream
+                InputStream iStream = urlConnection.getInputStream();
+
+                String xmlString = convertStreamToString(iStream);
+                if (MyDebug.LOG)
+                    Log.d(LOG_TAG, "xmlString: " + xmlString); // Log content of url
+
+                // parse the XML content 
+                addresslines = "";
+
+                if (xmlString.contains("<addressparts>"))
+                {
+                    int sstart = xmlString.indexOf("<addressparts>") + 14;
+                    int send = xmlString.indexOf("</addressparts>");
+                    xmlString = xmlString.substring(sstart, send);
+                    if (MyDebug.LOG)
+                        Log.d(LOG_TAG, "<addressparts>: " + xmlString);
+                    StringBuilder msg = new StringBuilder();
+
+                    // 1. line: building, viewpoint, hotel or guesthouse
+                    if (xmlString.contains("<building>"))
+                    {
+                        sstart = xmlString.indexOf("<building>") + 10;
+                        send = xmlString.indexOf("</building>");
+                        String building = xmlString.substring(sstart, send);
+                        msg.append(building);
+                        msg.append("\n");
+                    }
+                    if (xmlString.contains("<viewpoint>"))
+                    {
+                        sstart = xmlString.indexOf("<viewpoint>") + 11;
+                        send = xmlString.indexOf("</viewpoint>");
+                        String viewpoint = xmlString.substring(sstart, send);
+                        msg.append(viewpoint);
+                        msg.append("\n");
+                    }
+                    if (xmlString.contains("<hotel>"))
+                    {
+                        sstart = xmlString.indexOf("<hotel>") + 7;
+                        send = xmlString.indexOf("</hotel>");
+                        String hotel = xmlString.substring(sstart, send);
+                        msg.append(hotel);
+                        msg.append("\n");
+                    }
+                    if (xmlString.contains("<guest_house>"))
+                    {
+                        sstart = xmlString.indexOf("<guest_house>") + 13;
+                        send = xmlString.indexOf("</guest_house>");
+                        String guest_house = xmlString.substring(sstart, send);
+                        msg.append(guest_house);
+                        msg.append("\n");
+                    }
+
+                    if (xmlString.contains(">de<") || xmlString.contains(">fr<") || xmlString.contains(">ch<") || xmlString.contains(">at<") || xmlString.contains(">it<"))
+                    {
+                        // 2. line: road or street, house-No.
+                        if (xmlString.contains("<road>"))
+                        {
+                            sstart = xmlString.indexOf("<road>") + 6;
+                            send = xmlString.indexOf("</road>");
+                            String road = xmlString.substring(sstart, send);
+                            msg.append(road);
+                            msg.append(" ");
+                        }
+                        if (xmlString.contains("<street>"))
+                        {
+                            sstart = xmlString.indexOf("<street>") + 8;
+                            send = xmlString.indexOf("</street>");
+                            String street = xmlString.substring(sstart, send);
+                            msg.append(street);
+                            msg.append(" ");
+                        }
+                        if (xmlString.contains("<house_number>"))
+                        {
+                            sstart = xmlString.indexOf("<house_number>") + 14;
+                            send = xmlString.indexOf("</house_number>");
+                            String house_number = xmlString.substring(sstart, send);
+                            msg.append(house_number);
+                            msg.append("\n");
+                        }
+                        else // without house-No.
+                        {
+                            if (xmlString.contains("<road>") || xmlString.contains("<street>"))
+                                msg.append("\n");
+                        }
+
+                        // 3. line: city_district, suburb
+                        if (xmlString.contains("<city_district>"))
+                        {
+                            sstart = xmlString.indexOf("<city_district>") + 15;
+                            send = xmlString.indexOf("</city_district>");
+                            String city_district = xmlString.substring(sstart, send);
+                            msg.append(city_district);
+                            if (xmlString.contains("<suburb>"))
+                            {
+                                msg.append(" - ");
+                            }
+                            else
+                            {
+                                msg.append("\n");
+                            }
+                        }
+                        if (xmlString.contains("<suburb>"))
+                        {
+                            sstart = xmlString.indexOf("<suburb>") + 8;
+                            send = xmlString.indexOf("</suburb>");
+                            String suburb = xmlString.substring(sstart, send);
+                            msg.append(suburb);
+                            msg.append("\n");
+                        }
+
+                        // 4. line: postcode village, town, city, county
+                        if (xmlString.contains("<postcode>"))
+                        {
+                            sstart = xmlString.indexOf("<postcode>") + 10;
+                            send = xmlString.indexOf("</postcode>");
+                            String postcode = xmlString.substring(sstart, send);
+                            msg.append(postcode);
+                            msg.append(" ");
+                        }
+
+                        if (xmlString.contains("<village>"))
+                        {
+                            sstart = xmlString.indexOf("<village>") + 9;
+                            send = xmlString.indexOf("</village>");
+                            String village = xmlString.substring(sstart, send);
+                            msg.append(village);
+                            msg.append("\n");
+                        }
+
+                        if (xmlString.contains("<town>"))
+                        {
+                            sstart = xmlString.indexOf("<town>") + 6;
+                            send = xmlString.indexOf("</town>");
+                            String town = xmlString.substring(sstart, send);
+                            msg.append(town);
+                            msg.append("\n");
+                        }
+
+                        if (xmlString.contains("<city>"))
+                        {
+                            sstart = xmlString.indexOf("<city>") + 6;
+                            send = xmlString.indexOf("</city>");
+                            String city = xmlString.substring(sstart, send);
+                            msg.append(city);
+                            msg.append("\n");
+                        }
+
+                        if (xmlString.contains("<county>"))
+                        {
+                            sstart = xmlString.indexOf("<county>") + 8;
+                            send = xmlString.indexOf("</county>");
+                            String county = xmlString.substring(sstart, send);
+                            msg.append(county);
+                            msg.append("\n");
+                        }
+
+                        // 5. line: state, country 
+                        if (xmlString.contains("<state>"))
+                        {
+                            sstart = xmlString.indexOf("<state>") + 7;
+                            send = xmlString.indexOf("</state>");
+                            String state = xmlString.substring(sstart, send);
+                            msg.append(state);
+                            msg.append("\n");
+                        }
+                        if (xmlString.contains("<country>"))
+                        {
+                            sstart = xmlString.indexOf("<country>") + 9;
+                            send = xmlString.indexOf("</country>");
+                            String country = xmlString.substring(sstart, send);
+                            msg.append(country);
+                        }
+                    }
+                    else // not at, ch, de, fr, it
+                    {
+                        // 2. line: house, house-No., road or street
+                        if (xmlString.contains("<house>"))
+                        {
+                            sstart = xmlString.indexOf("<house>") + 7;
+                            send = xmlString.indexOf("</house>");
+                            String house = xmlString.substring(sstart, send);
+                            msg.append(house);
+                            msg.append(" ");
+                        }
+                        if (xmlString.contains("<house_number>"))
+                        {
+                            sstart = xmlString.indexOf("<house_number>") + 14;
+                            send = xmlString.indexOf("</house_number>");
+                            String house_number = xmlString.substring(sstart, send);
+                            msg.append(house_number);
+                            msg.append(" ");
+                        }
+                        if (xmlString.contains("<road>"))
+                        {
+                            sstart = xmlString.indexOf("<road>") + 6;
+                            send = xmlString.indexOf("</road>");
+                            String road = xmlString.substring(sstart, send);
+                            msg.append(road);
+                            msg.append("\n");
+                        }
+                        if (xmlString.contains("<street>"))
+                        {
+                            sstart = xmlString.indexOf("<street>") + 8;
+                            send = xmlString.indexOf("</street>");
+                            String street = xmlString.substring(sstart, send);
+                            msg.append(street);
+                            msg.append("\n");
+                        }
+
+                        // 3. line: suburb
+                        if (xmlString.contains("<suburb>"))
+                        {
+                            sstart = xmlString.indexOf("<suburb>") + 8;
+                            send = xmlString.indexOf("</suburb>");
+                            String suburb = xmlString.substring(sstart, send);
+                            msg.append(suburb);
+                            msg.append("\n");
+                        }
+
+                        // 4. line: village, town
+                        if (xmlString.contains("<village>"))
+                        {
+                            sstart = xmlString.indexOf("<village>") + 9;
+                            send = xmlString.indexOf("</village>");
+                            String village = xmlString.substring(sstart, send);
+                            msg.append(village);
+                            msg.append("\n");
+                        }
+                        if (xmlString.contains("<town>"))
+                        {
+                            sstart = xmlString.indexOf("<town>") + 6;
+                            send = xmlString.indexOf("</town>");
+                            String town = xmlString.substring(sstart, send);
+                            msg.append(town);
+                            msg.append("\n");
+                        }
+
+                        // 5. line: city
+                        if (xmlString.contains("<city>"))
+                        {
+                            sstart = xmlString.indexOf("<city>") + 6;
+                            send = xmlString.indexOf("</city>");
+                            String city = xmlString.substring(sstart, send);
+                            msg.append(city);
+                            msg.append("\n");
+                        }
+
+                        //6. line: county, state_district
+                        if (xmlString.contains("<county>"))
+                        {
+                            sstart = xmlString.indexOf("<county>") + 8;
+                            send = xmlString.indexOf("</county>");
+                            String county = xmlString.substring(sstart, send);
+                            msg.append(county);
+                            msg.append("\n");
+                        }
+
+                        if (xmlString.contains("<state_district>"))
+                        {
+                            sstart = xmlString.indexOf("<state_district>") + 16;
+                            send = xmlString.indexOf("</state_district>");
+                            String state_district = xmlString.substring(sstart, send);
+                            msg.append(state_district);
+                            msg.append("\n");
+                        }
+
+                        // 7. line: state or country, postcode 
+                        if (xmlString.contains("<state>"))
+                        {
+                            sstart = xmlString.indexOf("<state>") + 7;
+                            send = xmlString.indexOf("</state>");
+                            String state = xmlString.substring(sstart, send);
+                            msg.append(state);
+                            msg.append("\n");
+                        }
+                        if (xmlString.contains("<country>"))
+                        {
+                            sstart = xmlString.indexOf("<country>") + 9;
+                            send = xmlString.indexOf("</country>");
+                            String country = xmlString.substring(sstart, send);
+                            msg.append(country);
+                            msg.append(", ");
+                        }
+
+                        if (xmlString.contains("<postcode>"))
+                        {
+                            sstart = xmlString.indexOf("<postcode>") + 10;
+                            send = xmlString.indexOf("</postcode>");
+                            String postcode = xmlString.substring(sstart, send);
+                            msg.append(postcode);
+                        }
+                    }
+
+                    addresslines = msg.toString();
+                    // format for TextView tvMessage
+                    addresslines1 = "   " + addresslines;
+                    addresslines1 = addresslines1.replace("\n", "\n   ");
+                }
+
+            } catch (IOException e)
             {
-                addresslines = getString(R.string.noAddr);
+                if (MyDebug.LOG)
+                    Log.e(LOG_TAG, "Problem with address handling: " + e.toString());
+                addresslines = getString(R.string.unknownAddr);
+                return addresslines;
             }
+
             return addresslines;
         }
 

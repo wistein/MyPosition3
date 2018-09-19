@@ -71,5 +71,9 @@
     <string name="h_gps">Height from GPS:</string>
     <string name="h_corr">Height correction:</string>
     <string name="t_noapp">There is no suitable app installed.</string>
+    <string name="upd_freq">Update Frequency</string>
+    <string name="upd_freq_sum">Location update frequency (in minutes)</string>
+    <string name="note_pos">Getting GPS position</string>
+    <string name="note_pos_sum">This notification will go away when fix is obtained</string>
     
 </resources>

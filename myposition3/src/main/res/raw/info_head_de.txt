@@ -3,4 +3,5 @@ Einfache Mitteilung Deiner Position.<br>
 <br>
 2017, copyright by wistein<br>
 https://github.com/wistein/MyPosition3<br>
+und anderen Autoren (siehe Historie)<br>
 <br>

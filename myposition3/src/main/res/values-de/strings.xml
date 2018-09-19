@@ -71,5 +71,9 @@
     <string name="h_gps">Höhe des GPS:</string>
     <string name="h_corr">Höhenkorrektur:</string>
     <string name="t_noapp">Es ist keine passende App installiert.</string>
+    <string name="upd_freq">Update-Frequenz</string>
+    <string name="upd_freq_sum">Positions-Update-Frequenz (in Minuten)</string>
+    <string name="note_pos">GPS Positionsabfrage</string>
+    <string name="note_pos_sum">Diese Info wird nach Empfang der Position beendet.</string>
 
 </resources>

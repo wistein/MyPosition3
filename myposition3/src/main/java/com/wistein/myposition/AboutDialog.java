@@ -21,7 +21,10 @@ package com.wistein.myposition;
  * http://code.google.com/p/mylocation/
  * http://kirostudio.com
  * http://blog.mypapit.net/
- * 
+ *
+ * Adopted by wistein for
+ * My Position Ver. 3
+ * Copyright 2018, Wilhelm Stein, Germany
  * 
  * AboutDialog.java
  * Custom class for displaying About Dialog

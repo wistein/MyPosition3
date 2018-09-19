@@ -10,7 +10,10 @@ import android.text.Spanned;
 
 /**
  * Class Utils cares for Android versions compatibility
- * Created by wistein on 25.09.17.
+ *  - in AboutDialog fromHtml
+ *  
+ * Created by wistein on 25.09.17,
+ *  last modified on 2018-06-13.
  */
 
 class Utils

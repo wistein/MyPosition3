@@ -26,6 +26,11 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>Historie</h4>
 
+<B>My Position, version 1.3.4,</B> 2018-06-12,<br>
+ - Option zur Auswahl des Zeitintervalls für die Positionsbestimmnung hinzugefügt.<br>
+ - GPS-Updatefunktion als Hintergrund-Service.<br>
+<br>
+
 <B>Mein Standort, Version 1.3.3</B>, 31.10.2017,<br>
  - Code angepasst und kompiliert unter Android Studio 3.0.<br>
 <br>
@@ -64,6 +69,6 @@ Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 Lizenziert unter der GNU GPLv2.<br>
 <br>
-Änderungen durch GDR<br>
-http://f.gdr.name/mylocation.png<br>
+Verwendet einige Änderungen durch GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
 <br>

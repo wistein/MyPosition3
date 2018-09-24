@@ -1,7 +1,7 @@
 <h3>Mein Standort</h3>
 Einfache Mitteilung Deiner Position.<br>
 <br>
-2017, copyright by wistein<br>
+2018, copyright by wistein<br>
 https://github.com/wistein/MyPosition3<br>
 und anderen Autoren (siehe Historie)<br>
 <br>

@@ -29,9 +29,10 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>History</h4>
 
-<B>My Position, version 1.3.4,</B> 2018-09-19,<br>
+<B>My Position, version 1.3.4,</B> 2018-09-25,<br>
  - Added option to select a time interval to query the position.<br>
  - GPS update function as background service.<br>
+ - Compiled for Android 8.1 (Oreo)
 <br>
 
 <B>My Position, version 1.3.3,</B> 2017-10-31,<br>

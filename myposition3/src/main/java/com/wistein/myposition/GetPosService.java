@@ -29,19 +29,24 @@ package com.wistein.myposition;
  * Copyright 2018, Wilhelm Stein, Germany
  */
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Objects;
 
 public class GetPosService extends Service implements LocationListener
 {
@@ -60,7 +65,7 @@ public class GetPosService extends Service implements LocationListener
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        if (intent.getAction().equals(START_FOREGROUND_ACTION))
+        if (Objects.equals(intent.getAction(), START_FOREGROUND_ACTION))
         {
             if (MyDebug.LOG)
 				Log.i(LOG_TAG, "Received Start Foreground Intent ");
@@ -77,7 +82,10 @@ public class GetPosService extends Service implements LocationListener
             criteria.setSpeedRequired(false);
             criteria.setCostAllowed(false);
             criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, (float) 0.1, this);
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, (float) 0.1, this);
+            }
         }
         else if (intent.getAction().equals(STOP_FOREGROUND_ACTION))
         {
@@ -134,7 +142,7 @@ public class GetPosService extends Service implements LocationListener
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        Notification notification = new NotificationCompat.Builder(this)
+        return new NotificationCompat.Builder(this)
             .setContentTitle(getString(R.string.note_pos))
             .setTicker(getString(R.string.note_pos))
             .setContentText(text)
@@ -142,8 +150,6 @@ public class GetPosService extends Service implements LocationListener
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .build();
-
-        return notification;
     }
 
     private void showNotification()

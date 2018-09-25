@@ -35,27 +35,27 @@ Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 ### History:
- 
-<B>My Position, version 1.3.4,</B> 2018-09-19,<br>
+
+Current version copyright by wistein, 2018,<br>
+https://github.com/wistein/MyPosition3<BR>
+
+<B>My Position, version 1.3.4,</B> 2018-09-19<br>
  - Added option to select a time interval to query the position.<br>
  - GPS update function as background service.
+ - Compiled for Android 8.1 (Oreo)
 <br>
 
-<B>My Position, version 1.3.3</B>,<br>
-copyright by wistein, 2017-10-31,<br>
-https://github.com/wistein/MyPosition3
+<B>My Position, version 1.3.3,</B> 2017-10-31<br>
  - Code adapted and compiled under Android Studio 3.0.
 <br>
 
-<B>My Position, version 1.3.2</B>,<br>
-copyright by wistein, 2017-09-26,
+<B>My Position, version 1.3.2</B>, 2017-09-26<br>
 
   - Code adapted and compiled for Android 7.1.
   - Write system log only in debug version.
   - Showing height and coordinates without irrelevant decimal places.
 
-<B>My Position version 1.3.1</B>,<br> 
-copyright by wistein, 2017-09-12,
+<B>My Position version 1.3.1</B>, 2017-09-12<br> 
 
   - Write system log only in debug version
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.
@@ -64,8 +64,7 @@ copyright by wistein, 2017-09-12,
   - Settings allow to switch between portrait and landscape mode. 
   - Bug fix: Changed app settings are valid without restarting the app.
  
-<B>My Position version 1.3.0</B>,<br> 
-copyright by wistein, 2017-04-11  
+<B>My Position version 1.3.0</B>, 2017-04-11<br> 
 
   - Code corrections and enhancements.
   - Works without GApps.
@@ -75,12 +74,14 @@ copyright by wistein, 2017-04-11
   - Localization for German and English (default) of text and number formats.
   - Country-specific representation of address info (at, ch, de, fr, it, rest of the world).
   - App-Icon by wistein.
+  - Based on the following projects:
   
-<B>Uses some changes and enhancements by GDR!</B><br>
+<B>myLocation version 1.2</B> <BR>
+Changes and enhancements by GDR!<br>
 https://github.com/gjedeer/mylocation/<br>
 License: GNU GPLv2
 
-<B>Based on myLocation version 1.2</B>,<br>
+<B>myLocation version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 License: GNU GPLv2

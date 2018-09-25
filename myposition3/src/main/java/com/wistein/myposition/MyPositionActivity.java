@@ -28,6 +28,7 @@ package com.wistein.myposition;
  * Adopted by wistein for
  * My Position Ver. 3
  * Copyright 2018, Wilhelm Stein, Germany
+ * last edited on 2018-09-25
  */
 
 import android.Manifest;
@@ -89,7 +90,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private double height = 0;
     private double uncertainty;
     private long fixTime = 0; // GPS fix time
-    private boolean nonEmpty = false;
+//    private boolean nonEmpty = false;
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
@@ -133,7 +134,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         }
 
         setContentView(R.layout.activity_my_location);
-        ScrollView baseLayout = (ScrollView) findViewById(R.id.baseLayout);
+        ScrollView baseLayout = findViewById(R.id.baseLayout);
         assert baseLayout != null;
         try
         {
@@ -145,16 +146,16 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
-        tvDecimalCoord = (TextView) findViewById(R.id.tvDecimalCoord);
-        tvDegreeCoord = (TextView) findViewById(R.id.tvDegreeCoord);
-        tvUpdatedTime = (TextView) findViewById(R.id.tvUpdatedTime);
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
-        tvMessage = (TextView) findViewById(R.id.tvMessage);
+        tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
+        tvDegreeCoord = findViewById(R.id.tvDegreeCoord);
+        tvUpdatedTime = findViewById(R.id.tvUpdatedTime);
+        tvLocation = findViewById(R.id.tvLocation);
+        tvMessage = findViewById(R.id.tvMessage);
 
-        ImageView shareLocation = (ImageView) findViewById(R.id.shareLocation);
-        ImageView shareDecimal = (ImageView) findViewById(R.id.shareDecimal);
-        ImageView shareDegree = (ImageView) findViewById(R.id.shareDegree);
-        ImageView shareMessage = (ImageView) findViewById(R.id.shareMessage);
+        ImageView shareLocation = findViewById(R.id.shareLocation);
+        ImageView shareDecimal = findViewById(R.id.shareDecimal);
+        ImageView shareDegree = findViewById(R.id.shareDegree);
+        ImageView shareMessage = findViewById(R.id.shareMessage);
 
         shareLocation.setClickable(true);
         shareDecimal.setClickable(true);
@@ -539,7 +540,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     }
 
     // Show message to share
-    private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, boolean nonEmpty, String adrlines)
+//    private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, boolean nonEmpty, String adrlines)
+    private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, String adrlines)
     {
         StringBuilder message = new StringBuilder();
         String geoLoc = myPosition.getAppContext().getString(R.string.geoloc);
@@ -568,7 +570,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             tempUncert = tempUncert.replace('.', ',');
         }
 
-        if (!nonEmpty && lat == 0.0 && lon == 0.0)
+//        if (!nonEmpty && lat == 0.0 && lon == 0.0)
+        if (lat == 0.0 && lon == 0.0)
         {
             return myPosition.getAppContext().getString(R.string.posnotknown);
         }
@@ -676,7 +679,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         lat = 0.0;
         lon = 0.0;
-        nonEmpty = false;
+//        nonEmpty = false;
 
         //Prepare display of decimal coordinates
         if (location != null)
@@ -787,7 +790,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     @Override
     public void onLocationChanged(Location location)
     {
-        nonEmpty = true;
+//        nonEmpty = true;
 
         lat = location.getLatitude();
         lon = location.getLongitude();
@@ -1230,7 +1233,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             {
                 tvLocation.setText(adrlines);
 
-                tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, true, addresslines1));
+//                tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, true, addresslines1));
+                tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, addresslines1));
             } catch (Exception e)
             {
                 tvLocation.setText(getString(R.string.noAddr));

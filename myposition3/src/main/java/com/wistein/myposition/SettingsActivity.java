@@ -14,6 +14,10 @@ package com.wistein.myposition;
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
+ * SettingsActivity.java
+ * Class for handling and displaying preferences
+
+ * Based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
@@ -21,25 +25,23 @@ package com.wistein.myposition;
  * http://code.google.com/p/mylocation/
  * http://kirostudio.com
  * http://blog.mypapit.net/
- * 
- * SettingsActivity.java
- * Class for handling and displaying preference
- * My GPS Location Tool
+ *
+ * Adopted by wistein for MyPosition3
+ * Copyright 2019, Wilhelm Stein, Germany
+ * last edited on 2019-01-03
  */
 
-import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
     private boolean screenOrientL; // option for screen orientation
 
-    @SuppressLint("LongLogTag")
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -57,9 +59,20 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        addPreferencesFromResource(R.xml.preference);
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+        // addPreferencesFromResource(R.xml.preference);
 
         PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preference, false);
+    }
+
+    public static class MyPreferenceFragment extends PreferenceFragment
+    {
+        @Override
+        public void onCreate(final Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preference);
+        }
     }
 
     @Override

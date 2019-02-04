@@ -1,4 +1,5 @@
 package com.wistein.myposition;
+
 /*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2 as
@@ -13,8 +14,9 @@ package com.wistein.myposition;
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
+ * 
  * MyPositionActivity.java
- * Main Activity Class for My Position
+ * Main Activity Class for MyPosition3
  *
  * Based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
@@ -25,19 +27,18 @@ package com.wistein.myposition;
  * http://kirostudio.com
  * http://blog.mypapit.net/
  *
- * Adopted by wistein for
- * My Position Ver. 3
- * Copyright 2018, Wilhelm Stein, Germany
- * last edited on 2018-09-25
+ * Adopted by wistein for MyPosition3
+ * Copyright 2019, Wilhelm Stein, Germany
+ * last edited on 2019-02-04
  */
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -48,6 +49,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -73,9 +75,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
-
-//import static android.location.LocationManager.GPS_PROVIDER;
 
 public class MyPositionActivity extends AppCompatActivity implements OnClickListener, LocationListener
 {
@@ -90,11 +91,10 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private double height = 0;
     private double uncertainty;
     private long fixTime = 0; // GPS fix time
-//    private boolean nonEmpty = false;
+    //    private boolean nonEmpty = false;
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
-    //    private int timeIntervall = 10000; // GPS polling interval in msec
     private String messageHeader = ""; // 1st line in mail message
     private String emailString = ""; // mail address for OSM query
     private boolean screenOrientL; // option for screen orientation
@@ -103,27 +103,16 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private int distance = 20; // option to set GPS polling distance, default 20 m
     public boolean doubleBackToExitPressedOnce;
 
-    private Location location;
     private LocationManager locationManager;
-    private LocationListener locationListener;
-    private String strTime = "0";
-    //    private String provider = GPS_PROVIDER;
+    private String strTime = "3"; // in sec.
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0x29b;
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        messageHeader = getString(R.string.msg_text);
-        emailString = pref.getString("email_String", "");
         screenOrientL = pref.getBoolean("screen_Orientation", false);
-        mapLocal = pref.getBoolean("map_Local", false);
-        showToast = pref.getBoolean("show_Toast", false);
-        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
-        strTime = pref.getString("updateFreq", "3");
-
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -138,7 +127,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         assert baseLayout != null;
         try
         {
-            getSupportActionBar().setTitle(R.string.app_name);
+            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
         } catch (NullPointerException e)
         {
             // do nothing
@@ -172,7 +161,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     public void onResume()
     {
         super.onResume();
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         messageHeader = getString(R.string.msg_text);
@@ -198,18 +186,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
             Toast.makeText(this, getString(R.string.noPermission), Toast.LENGTH_SHORT).show();
 
-/*
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) 
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            else
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-*/
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 MY_PERMISSIONS_REQUEST_LOCATION);
         }
@@ -222,7 +198,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
     
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
         switch (requestCode)
         {
@@ -238,14 +214,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                 {
                     if (MyDebug.LOG)
                         Log.d(LOG_TAG, "Location permission request granted.");
-                    //Request location updates:
+                    // Request location updates
                     this.registerLocationListener();
                 }
                 else
                 {
                     if (MyDebug.LOG)
                         Log.d(LOG_TAG, "Location permission request denied [1].");
-                    /* TODO: handle denial */
+                    // TODO: handle denial
                 }
             }
             else
@@ -266,7 +242,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         // Stop location service
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(this);
+        Objects.requireNonNull(locationManager).removeUpdates(this);
     }
 
     @Override
@@ -276,7 +252,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         // Stop location service
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.removeUpdates(this);
+        Objects.requireNonNull(locationManager).removeUpdates(this);
     }
 
     @Override
@@ -313,19 +289,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         {
         case R.id.menu_getpos:
             // Get LocationManager instance
-            Intent service = new Intent(MyPositionActivity.this, GetPosService.class);
-            if (!GetPosService.IS_SERVICE_RUNNING)
-            {
-                service.setAction(GetPosService.START_FOREGROUND_ACTION);
-                GetPosService.IS_SERVICE_RUNNING = true;
-            }
-            else
-            {
-                service.setAction(GetPosService.STOP_FOREGROUND_ACTION);
-                GetPosService.IS_SERVICE_RUNNING = false;
-
-            }
-            startService(service);
+            this.registerLocationListener();
             return true;
 
         case R.id.menu_about:
@@ -341,13 +305,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         case R.id.menu_viewmap:
             if (mapLocal)
             {
-                // when GAPPS are present shows location online on Google Maps
-                // without GAPPS uses a local mapping app to show the location
+                // when GAPPS are present MyPosition3 shows location online on Google Maps
+                // without GAPPS MyPosition3 uses a local mapping app to show the location
                 String geo = "geo:" + lat + "," + lon + "?z=17";
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(geo));
             }
             else
             {
+                // use browser or other web app to show location in OpenStreetMap
                 String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
             }
@@ -357,7 +322,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             {
                 if (MyDebug.LOG)
                 {
-                    String app = intent.resolveActivity(getPackageManager()).toString();
+                    String app;
+                    app = intent.resolveActivity(getPackageManager()).toString(); // used only in debug mode
                     Toast.makeText(this, app, Toast.LENGTH_LONG).show();
                     Log.d(LOG_TAG, app);
                 }
@@ -405,7 +371,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         if (showToast)
         {
-            String corrtemp = String.format("%.1f", corrHeight);
+            String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
             String gpstemp = String.format("%.1f", gpsHeight);
             String nntemp = String.format("%.1f", nnHeight);
 
@@ -540,7 +506,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     }
 
     // Show message to share
-//    private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, boolean nonEmpty, String adrlines)
     private static String getMessage(double lat, double lon, double height, double uncertainty, String messageHeader, String adrlines)
     {
         StringBuilder message = new StringBuilder();
@@ -555,7 +520,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         String directionNS, directionEW;
         String high = myPosition.getAppContext().getString(R.string.height);
 
-        String tempLat = String.format("%.5f", lat);
+        String tempLat = String.format("%.5f", lat); // warnings not relevant here
         String tempLon = String.format("%.5f", lon);
         String tempHigh = String.format("%.1f", height);
         String tempUncert = String.format("%.1f", uncertainty);
@@ -570,7 +535,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             tempUncert = tempUncert.replace('.', ',');
         }
 
-//        if (!nonEmpty && lat == 0.0 && lon == 0.0)
         if (lat == 0.0 && lon == 0.0)
         {
             return myPosition.getAppContext().getString(R.string.posnotknown);
@@ -642,9 +606,9 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                 }
                 String uTime = time_header + relative_date;
                 tvUpdatedTime.setText(uTime);
-                handler.postDelayed(this, 10000);
+                handler.postDelayed(this, Integer.parseInt(strTime) * 1000);
             }
-        }, 10000);
+        }, Integer.parseInt(strTime)* 1000);
     }
 
     // Gets last known location
@@ -662,24 +626,14 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        criteria.setAltitudeRequired(true);
-        criteria.setBearingRequired(false);
-        criteria.setSpeedRequired(false);
-        criteria.setCostAllowed(false);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_LOW);
-
         int time = Integer.parseInt(strTime) * 1000;
         if (MyDebug.LOG)
             Log.d(LOG_TAG, "preference retrieved " + time + "ms");
 
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         lat = 0.0;
         lon = 0.0;
-//        nonEmpty = false;
 
         //Prepare display of decimal coordinates
         if (location != null)
@@ -712,7 +666,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
             sb = new StringBuffer("");
 
-            String lattemp = String.format("%.5f", lat);
+            String lattemp = String.format("%.5f", lat); // warnings not relevant here
             String lontemp = String.format("%.5f", lon);
             String heighttemp = String.format("%.1f", height);
             String uncerttemp = String.format("%.1f", uncertainty);
@@ -768,6 +722,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     String uTime = time_header + relative_date;
                     tvUpdatedTime.setText(uTime);
 
+                    // call reverse geocoding
                     RetrieveAddr getXML = new RetrieveAddr();
                     getXML.execute(new LatLong(lat, lon));
 
@@ -790,8 +745,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     @Override
     public void onLocationChanged(Location location)
     {
-//        nonEmpty = true;
-
         lat = location.getLatitude();
         lon = location.getLongitude();
         height = location.getAltitude();
@@ -820,7 +773,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
 
         sb = new StringBuffer();
 
-        String lattemp = String.format("%.5f", lat);
+        String lattemp = String.format("%.5f", lat); // warnings not relevant here
         String lontemp = String.format("%.5f", lon);
         String heighttemp = String.format("%.1f", height);
         String uncerttemp = String.format("%.1f", uncertainty);
@@ -868,7 +821,8 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                     tvDegreeCoord.setText(toDegree(lat, lon));
                     String uTime = time_header + relative_date;
                     tvUpdatedTime.setText(uTime);
-
+                    
+                    // call reverse geocoding
                     RetrieveAddr getXML = new RetrieveAddr();
                     getXML.execute(new LatLong(lat, lon));
 
@@ -884,6 +838,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     /*********************************************************
      * Get address info from Reverse Geocoder of OpenStreetMap
      */
+    @SuppressLint("StaticFieldLeak")
     private class RetrieveAddr extends AsyncTask<LatLong, Void, String>
     {
         String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="

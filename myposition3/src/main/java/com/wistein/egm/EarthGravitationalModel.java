@@ -28,14 +28,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
 /**
  * Transforms vertical coordinates using coefficients from the
  * http://earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
  * Earth Gravitational Model.
- * <p>
- * Aknowledgement<br>
+ * 
+ * Aknowledgement
  * This class is an adaption of Fortran code
  * http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/clenqt.for 
  * from the National Geospatial-Intelligence Agency and available in public domain. 
@@ -198,7 +199,7 @@ public final class EarthGravitationalModel extends VerticalTransform
             throw new FileNotFoundException("egm180");
         }
         final LineNumberReader in;
-        in = new LineNumberReader(new InputStreamReader(stream, "ISO-8859-1"));
+        in = new LineNumberReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         String line;
         while ((line = in.readLine()) != null) 
 		{

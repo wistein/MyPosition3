@@ -12,7 +12,12 @@ package com.wistein.myposition;
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *
+ *  
+ * ConverterActivity.java
+ * Converts between Decimal GPS coordinate and DD MM SS coordinate with appropriate
+ * language-specific formatting
+ * 
+ * Based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
@@ -20,11 +25,10 @@ package com.wistein.myposition;
  * http://code.google.com/p/mylocation/
  * http://kirostudio.com
  * http://blog.mypapit.net/
- * 
- * 
- * ConverterActivity.java
- * Tool for converting between Decimal GPS coordinate and DD MM SS coordinate
- * My GPS Location Tool
+ *
+ * Adopted by wistein for MyPosition3
+ * Copyright 2019, Wilhelm Stein, Germany
+ * last edited on 2019-01-03
  */
 
 import android.content.SharedPreferences;
@@ -76,16 +80,16 @@ public class ConverterActivity extends AppCompatActivity implements
         //noinspection ConstantConditions
         getSupportActionBar().setTitle(R.string.title_activity_converter);
 
-        tvDecimalLat = (EditText) findViewById(R.id.latDecimal);
-        tvDecimalLon = (EditText) findViewById(R.id.lonDecimal);
+        tvDecimalLat = findViewById(R.id.latDecimal);
+        tvDecimalLon = findViewById(R.id.lonDecimal);
 
-        tvDegreeLat = (EditText) findViewById(R.id.degreelat);
-        tvMinuteLat = (EditText) findViewById(R.id.minutelat);
-        tvSecondLat = (EditText) findViewById(R.id.secondlat);
+        tvDegreeLat = findViewById(R.id.degreelat);
+        tvMinuteLat = findViewById(R.id.minutelat);
+        tvSecondLat = findViewById(R.id.secondlat);
 
-        tvDegreeLon = (EditText) findViewById(R.id.degreelon);
-        tvMinuteLon = (EditText) findViewById(R.id.minutelon);
-        tvSecondLon = (EditText) findViewById(R.id.secondlon);
+        tvDegreeLon = findViewById(R.id.degreelon);
+        tvMinuteLon = findViewById(R.id.minutelon);
+        tvSecondLon = findViewById(R.id.secondlon);
         String coordinates = (String) getIntent().getSerializableExtra("Coordinate");
         StringTokenizer token = new StringTokenizer(coordinates, ", ");
 

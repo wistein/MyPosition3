@@ -26,10 +26,17 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>Historie</h4>
 
-<B>My Position, version 1.3.4,</B> 2018-09-25,<br>
+<B>My Position, version 1.3.5,</B> 04.02.2019<br>
+ - Kompiliet mit Android Studio 3.3 und Gradle 4.10.1.<br>
+ - Unnütze GPS-First-Fix-Funktion entfernt.<br>
+ - Statt dessen direkte GPS-Positionsabfrage.<br>
+ - Einige Code-Bereinigungen.<br>
+<br>
+
+<B>My Position, version 1.3.4,</B> 25.09.2018,<br>
  - Option zur Auswahl des Zeitintervalls für die Positionsbestimmnung hinzugefügt.<br>
- - GPS-Updatefunktion als Hintergrund-Service.<br>
- - Kompiliet für Android 8.1 (Oreo)
+ - GPS-First-Fix-Funktion als Hintergrund-Service.<br>
+ - Kompiliert für Android 8.1 (Oreo).<br>
 <br>
 
 <B>Mein Standort, Version 1.3.3</B>, 31.10.2017,<br>

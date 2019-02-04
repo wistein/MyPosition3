@@ -10,6 +10,7 @@ The app simplifies the task of sharing your location data with your contacts.
 - It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info.**)
 - It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings and number formats (German, English).
 - Additionally, the app also includes a tool to help converting between WGS84 decimal GPS coordinate and DD MM SS coordinate format.
+- Runs on Android 5.0 or newer.
 
 *) To change the default from Google Maps to a preferred app,
 - open <i>Settings</i> on your phone, 
@@ -27,7 +28,7 @@ Next time you may select <i>Always</I> to make sure your preferred app opens by 
  
 ### Permissions
 - Location (GPS and Network)
-- Internet access
+- Internet access (for Reverse Geocoding by OpenStreetMap)
 
 ### License
 Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
@@ -36,11 +37,17 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 ### History:
 
-Current version copyright by wistein, 2018,<br>
+Current version copyright by wistein, 2019,<br>
 https://github.com/wistein/MyPosition3<BR>
 
+<B>My Position, version 1.3.5,</B> 2019-02-03<br>
+ - Compiled with Android Studio 3.3 and Gradle 4.10.1
+ - Bug fix in Notification function 
+ - Some code cleaning
+<br>
+
 <B>My Position, version 1.3.4,</B> 2018-09-19<br>
- - Added option to select a time interval to query the position.<br>
+ - Added option to select a time interval to query the position.
  - GPS update function as background service.
  - Compiled for Android 8.1 (Oreo)
 <br>

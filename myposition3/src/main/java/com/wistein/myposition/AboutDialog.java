@@ -14,6 +14,10 @@ package com.wistein.myposition;
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
+ * AboutDialog.java
+ * Custom class for displaying About Dialog
+
+ * Based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
@@ -22,12 +26,9 @@ package com.wistein.myposition;
  * http://kirostudio.com
  * http://blog.mypapit.net/
  *
- * Adopted by wistein for
- * My Position Ver. 3
- * Copyright 2018, Wilhelm Stein, Germany
- * 
- * AboutDialog.java
- * Custom class for displaying About Dialog
+ * Adopted by wistein for MyPosition3
+ * Copyright 2019, Wilhelm Stein, Germany
+ * last edited on 2019-02-03
  */
 
 import android.app.Activity;
@@ -69,7 +70,7 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         String language = Locale.getDefault().toString().substring(0, 2);
         setContentView(R.layout.activity_about_dialog);
 
-        TextView tv = (TextView) findViewById(R.id.info_head);
+        TextView tv = findViewById(R.id.info_head);
         if (language.equals("de"))
         {
             tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head_de)));
@@ -81,7 +82,7 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         tv.setLinkTextColor(Color.BLUE);
         Linkify.addLinks(tv, Linkify.WEB_URLS);
 
-        tv = (TextView) findViewById(R.id.info_text);
+        tv = findViewById(R.id.info_text);
         if (language.equals("de"))
         {
             tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_de)));

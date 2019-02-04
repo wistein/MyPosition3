@@ -3,9 +3,9 @@ package com.wistein.myposition;
 /* ****************************************************************************
  * LatLonConvert.java
  * ****************************************************************************
- * <p>
+ * 
  * Java Class: LatLonConvert
- * <p>
+ * 
  * This Java class is part of a collection of classes developed for the
  * reading and processing of oceanographic and meterological data collected
  * since 1970 by environmental buoys and stations.  This dataset is
@@ -13,55 +13,54 @@ package com.wistein.myposition;
  * available.  These Java classes were written for the US Environmental
  * Protection Agency's National Exposure Research Laboratory under Contract
  * No. GS-10F-0073K with Neptune and Company of Los Alamos, New Mexico.
- * <p>
+ * 
  * Purpose:
  * This class contains utilities for latitude/longitude conversions.
  * Specifically, this class performs conversions from lat (or long)
  * in decimal degrees to degrees-minutes-seconds, and vice versa.
- * <p>
+ * 
  * Inputs:
  * Given a decimal degree, the equivalent degrees/minutes/seconds
  * are calculated, and vice versa, using two methods.
- * <p>
+ * 
  * Outputs:
  * The outputs are provided as public accessor methods:
  * double getDecimal()	returns decimal degrees
  * double getDegree()	returns degree part of degree/minute/second
  * double getMinute()	returns minute part of degree/minute/second
  * double getSecond()	returns second part of degree/minute/second
- * <p>
+ * 
  * Required classes or packages:
  * Classes from the java language:
  * java.lang.Math
- * <p>
+ * 
  * Package of which this class is a member:
  * default
- * <p>
+ * 
  * Known limitations:
  * Values provided to this class as input are assumed to be valid,
  * but the math doesn't care.
- * <p>
+ * 
  * Compatibility:
  * Java 1.1.8
- * <p>
+ * 
  * Author/Company:
  * JDT: Neptune and Company
- * <p>
+ * 
  * Change log:
  * date         ver    by	  description of change
  * -----------  ----   ---    ---------------------------------------
  * 17 Dec 2001  1.40   JDT	  Version accompanying final deliverable.
+ * 
+ * Adopted by wistein for MyPosition3
+ * Copyright 2019, Wilhelm Stein, Germany
+ * last edited on 2019-02-03
  */
 
-/******************************************************************************
- *	class:						LatLonConvert class
- *******************************************************************************
- *	This class contains utilities for latitude/longitude conversions.
- * -------------------------------------------------------------------------- */
 class LatLonConvert
 {
     // declare local variables used throughout the class
-    private double dfDecimal;        // decimal degrees
+    private double dfDecimal;       // decimal degrees
     private double dfDegree;        // degree part of degrees/minutes/seconds
     private double dfMinute;        // minute part of degrees/minutes/seconds
     private double dfSecond;        // second part of degrees/minutes/seconds
@@ -175,7 +174,7 @@ class LatLonConvert
      *  Gets the value in decimal degrees.
      *	Member of LatLonConvert class
      * -------------------------------------------------------------------------- */
-    public double getDecimal()
+    double getDecimal()
     {
         return (dfDecimal);
     }

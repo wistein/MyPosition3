@@ -6,7 +6,6 @@
 
     <string name="app_name">Mein Standort</string>
     <string name="title_activity_my_position">Mein Standort</string>
-    <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about_dialog">Info</string>
     <string name="title_activity_converter">Konvertiere GPS-Koordinaten</string>
@@ -20,13 +19,9 @@
     <string name="last_fix_time">Letzte GPS-Abfrage: </string>
     <string name="geoloc">Koordinaten:</string>
     <string name="uncert">Unschärfe: </string>
-    <string name="nogeocoder">Kein Geocoder-Dienst verfügbar</string>
-    <string name="no_GPS">Keine Positionsbestimmung, GPS ist nicht aktiviert.</string>
     <string name="noPermission">Berechtigung zur GPS-Nutzung fehlt.</string>
-    <string name="emptyAddr">Leere Adresse</string>
     <string name="unknownAddr">Unbekannte Adresse</string>
     <string name="noAddr">Keine Adressdaten!</string>
-    <string name="noPos">Keine Position gefunden!</string>
     <string name="errAddr">Web-Lesefehler!</string>
     <string name="addrInfo">Adressinfo</string>
     <string name="toshortAddr">Adressinfo:</string>
@@ -52,12 +47,9 @@
     <string name="decimal">→ Dezimal:</string>
     <string name="back_twice">Zum Beenden erneut drücken</string>
 
-    <string name="titel_msg_header">Anfangssatz der Nachricht</string>
-    <string name="msg_header">Angezeigter Text in der Nachrichtenkopfzeile</string>
     <string name="msg_text">Klicke auf den Link unten, um meine Position auf der OSM-Karte zu sehen: </string>
     <string name="titel_pref_upddist">GPS-Update-Distanz</string>
     <string name="pref_upddist">Nach welcher Distanz soll die neue Position angezeigt werden?</string>
-    <string name="my_location">Über Mein Standort</string>
     <string name="invValue">Ungültiger Wert</string>
     <string name="email_string">Erforderlich für die zuverlässige Abfrage der Adressdaten per OSM-Nominatim-Reverse-Geocoder. Die Mail-Adresse wird vertraulich behandelt und nur verwendet, um bei Problemen zu kontaktieren. Siehe http://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail-Adresse für OSM-Geocoder</string>
@@ -73,7 +65,5 @@
     <string name="t_noapp">Es ist keine passende App installiert.</string>
     <string name="upd_freq">Update-Frequenz</string>
     <string name="upd_freq_sum">Positions-Update-Frequenz (in Minuten)</string>
-    <string name="note_pos">GPS Positionsabfrage</string>
-    <string name="note_pos_sum">Diese Info wird nach Empfang der Position beendet.</string>
 
 </resources>

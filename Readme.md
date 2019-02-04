@@ -41,9 +41,10 @@ Current version copyright by wistein, 2019,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>
- - Compiled with Android Studio 3.3 and Gradle 4.10.1
- - Bug fix in Notification function 
- - Some code cleaning
+ - Compiled with Android Studio 3.3 and Gradle 4.10.1.
+ - Removed obsolete background service for GPS first fix function.
+ - Instead direct GPS position request.
+ - Some code cleaning.
 <br>
 
 <B>My Position, version 1.3.4,</B> 2018-09-19<br>

@@ -14,7 +14,7 @@ package com.wistein.myposition;
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * 
+ ************************* 
  * MyPositionActivity.java
  * Main Activity Class for MyPosition3
  *
@@ -29,19 +29,15 @@ package com.wistein.myposition;
  *
  * Adopted by wistein for MyPosition3
  * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-02-04
+ * last edited on 2019-08-14
  */
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,8 +45,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -78,20 +73,14 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
-public class MyPositionActivity extends AppCompatActivity implements OnClickListener, LocationListener
+public class MyPositionActivity extends AppCompatActivity implements OnClickListener, PermissionsDialogFragment.PermissionsGrantedCallback
 {
     private final static String LOG_TAG = "MyPositionActivity";
     private TextView tvDecimalCoord;
     private TextView tvDegreeCoord;
-    private TextView tvLocation;
-    private TextView tvMessage;
+    public TextView tvLocation;
+    public TextView tvMessage;
     private TextView tvUpdatedTime;
-    private double lat;
-    private double lon;
-    private double height = 0;
-    private double uncertainty;
-    private long fixTime = 0; // GPS fix time
-    //    private boolean nonEmpty = false;
     private StringBuffer sb;
     private String addresslines; // formatted string for Address field
     private String addresslines1; // formatted string for message
@@ -100,17 +89,36 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     private boolean screenOrientL; // option for screen orientation
     private boolean showToast; // option to show toast with height info
     private boolean mapLocal; // option to select local or online map
-    private int distance = 20; // option to set GPS polling distance, default 20 m
     public boolean doubleBackToExitPressedOnce;
+    private SharedPreferences pref;
+    
+    /* Permission Handling
+     * variable 'modePerm' controls Permission dispatcher mode: 
+     * 1 = use location service
+     * 2 = end location service
+     */
+    private int modePerm;
 
-    private LocationManager locationManager;
-    private String strTime = "3"; // in sec.
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0x29b;
+    /* Permission Handling
+     * variable 'permLocGiven' contains the initial location permission state that
+     * controls stopping the location listener after permission has been changed: 
+     * - Stop listener if permission was denied after listener start
+     * - don't stop listener if permission was allowed later and listener has not been started
+     */
+    private boolean permLocGiven;
+    
+    // Location info handling
+    private double lat, lon, uncertainty;
+    private double height = 0;
+    private long fixTime = 0; // GPS fix time
+    private String strTime = "10"; // option to set GPS polling time, default 10 sec
+    LocationService locationService;
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        emailString = pref.getString("email_String", "");
 
         screenOrientL = pref.getBoolean("screen_Orientation", false);
         if (screenOrientL)
@@ -133,6 +141,27 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             // do nothing
         }
 
+    } // End of onCreate
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        messageHeader = getString(R.string.msg_text);
+        screenOrientL = pref.getBoolean("screen_Orientation", false);
+        mapLocal = pref.getBoolean("map_Local", false);
+        showToast = pref.getBoolean("show_Toast", false);
+        permLocGiven = pref.getBoolean("permLoc_Given", false);
+
+        if (screenOrientL)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        else
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
@@ -155,94 +184,37 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         shareDecimal.setOnClickListener(this);
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
-    } // End of onCreate
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        // Get location with permissions check
+        locationService = new LocationService(this);
 
-        messageHeader = getString(R.string.msg_text);
-        emailString = pref.getString("email_String", "");
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
-        mapLocal = pref.getBoolean("map_Local", false);
-        showToast = pref.getBoolean("show_Toast", false);
-        distance = Integer.parseInt(pref.getString("update_Dist", "20"));
-        strTime = pref.getString("updateFreq", "3");
+        // check initial location permission state
+        permLocGiven = isPermissionGranted();
 
-        if (screenOrientL)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        // store location permission state
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("permLoc_Given", permLocGiven);
+        editor.apply();
 
-        // Check location permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
-            Toast.makeText(this, getString(R.string.noPermission), Toast.LENGTH_SHORT).show();
+        // Get location with permissions check
+        modePerm = 1; // get location
+        permissionCaptureFragment();
+        registerRelativeFixTime();
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSIONS_REQUEST_LOCATION);
-        }
-        else
-        {
-            this.registerLocationListener();
-            this.registerRelativeFixTime();
-        }
     }
-
-    
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
-    {
-        switch (requestCode)
-        {
-        case MY_PERMISSIONS_REQUEST_LOCATION:
-        {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                // permission was granted
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED)
-                {
-                    if (MyDebug.LOG)
-                        Log.d(LOG_TAG, "Location permission request granted.");
-                    // Request location updates
-                    this.registerLocationListener();
-                }
-                else
-                {
-                    if (MyDebug.LOG)
-                        Log.d(LOG_TAG, "Location permission request denied [1].");
-                    // TODO: handle denial
-                }
-            }
-            else
-            {
-                if (MyDebug.LOG)
-                    Log.d(LOG_TAG, "Location permission request denied [2].");
-                // TODO: handle denial
-            }
-        }
-        }
-    }
-
 
     @Override
     public void onPause()
     {
         super.onPause();
 
-        // Stop location service
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Objects.requireNonNull(locationManager).removeUpdates(this);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("permLoc_Given", permLocGiven);
+        editor.apply();
+
+        // Stop location service with permissions check
+        modePerm = 2;
+        permissionCaptureFragment();
     }
 
     @Override
@@ -250,30 +222,19 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
     {
         super.onStop();
 
-        // Stop location service
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Objects.requireNonNull(locationManager).removeUpdates(this);
+        // Stop location service with permissions check
+        modePerm = 2;
+        permissionCaptureFragment();
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras)
-    {
-        if (MyDebug.LOG)
-            Log.d(LOG_TAG, "onStatusChanged()");
-    }
 
-    @Override
-    public void onProviderEnabled(String provider)
+    public void onDestroy()
     {
-        if (MyDebug.LOG)
-            Log.d(LOG_TAG, "onProviderEnabled()");
-    }
+        super.onDestroy();
 
-    @Override
-    public void onProviderDisabled(String provider)
-    {
-        if (MyDebug.LOG)
-            Log.d(LOG_TAG, "onProviderDisabled()");
+        // Stop location service with permissions check
+        modePerm = 2;
+        permissionCaptureFragment();
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -288,8 +249,16 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         switch (item.getItemId())
         {
         case R.id.menu_getpos:
-            // Get LocationManager instance
-            this.registerLocationListener();
+            // Get location with permissions check
+            modePerm = 1; // get location
+            // call DummyActivity to reenter MyPositionActivity to get the new position
+            intent = new Intent(MyPositionActivity.this, DummyActivity.class);
+            startActivity(intent);
+            return true;
+
+        case R.id.menu_help:
+            intent = new Intent(MyPositionActivity.this, HelpDialog.class);
+            startActivity(intent);
             return true;
 
         case R.id.menu_about:
@@ -342,9 +311,166 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         }
 
         return super.onOptionsItemSelected(item);
+    } // end of onOptionsItemSelected
+
+    // Part of location permission handling
+    @Override
+    public void permissionCaptureFragment()
+    {
+        if (isPermissionGranted())
+        {
+            switch (modePerm)
+            {
+            case 1: // get location
+                if (permLocGiven) // location permission state after start
+                    getLoc();
+                break;
+
+            case 2: // stop location service
+                if (permLocGiven)
+                {
+                    locationService.stopListener();
+                    if (MyDebug.LOG)
+                        Toast.makeText(this, "Stop locationService", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+        }
+        else
+        {
+            if (modePerm == 1)
+                PermissionsDialogFragment.newInstance().show(getSupportFragmentManager(), PermissionsDialogFragment.class.getName());
+        }
     }
 
-    private double correctHeight(double gpsHeight)
+    // if API level > 23 test for permissions granted
+    private boolean isPermissionGranted()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        }
+        else
+        {
+            // handle permissions for Build.VERSION_CODES < M here
+            return true;
+        }
+    }
+
+    // get the location data
+    public void getLoc()
+    {
+        if (locationService.canGetLocation())
+        {
+            lon = locationService.getLongitude();
+            lat = locationService.getLatitude();
+            height = locationService.getAltitude();
+            if (height != 0)
+                height = correctHeight(lat, lon, height);
+            uncertainty = locationService.getAccuracy();
+            fixTime = locationService.getTime();
+
+            String nord = getString(R.string.nord);
+            String east = getString(R.string.east);
+            String west = getString(R.string.west);
+            String south = getString(R.string.south);
+            String directionNS, directionEW;
+            String uncert = getString(R.string.uncert);
+            String high = getString(R.string.height);
+
+            if (lat >= 0)
+                directionNS = nord;
+            else
+                directionNS = south;
+
+            if (lon >= 0)
+                directionEW = east;
+            else
+                directionEW = west;
+
+            sb = new StringBuffer();
+
+            String lattemp = String.format("%.5f", lat); // warnings not relevant here
+            String lontemp = String.format("%.5f", lon);
+            String heighttemp = String.format("%.1f", height);
+            String uncerttemp = String.format("%.1f", uncertainty);
+
+            String language = Locale.getDefault().toString().substring(0, 2);
+
+            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
+            {
+                lattemp = lattemp.replace('.', ',');
+                lontemp = lontemp.replace('.', ',');
+                heighttemp = heighttemp.replace('.', ',');
+                uncerttemp = uncerttemp.replace('.', ',');
+
+                sb.append(lattemp).append(" ").append(directionNS).append(",   ")
+                    .append(lontemp).append(" ").append(directionEW).append("\n")
+                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                    .append(high).append(" ").append(heighttemp).append(" m");
+            }
+            else
+            {
+                sb.append(directionNS).append(" ").append(lattemp).append(",   ")
+                    .append(directionEW).append(" ").append(lontemp).append("\n")
+                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                    .append(high).append(" ").append(heighttemp).append(" m");
+            }
+
+        }
+        else
+        {
+            sb = new StringBuffer(getString(R.string.posnotknown));
+        }
+
+        // get reverse geocoding
+        if (locationService.canGetLocation() && (lat != 0 || lon != 0))
+        {
+            final String time_header = this.getString(R.string.last_fix_time) + " ";
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    String relative_date = getString(R.string.unknownFix);
+                    if (fixTime > 0)
+                    {
+                        relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                    }
+                    tvDecimalCoord.setText(sb.toString());
+                    tvDegreeCoord.setText(toDegree(lat, lon));
+                    String uTime = time_header + relative_date;
+                    tvUpdatedTime.setText(uTime);
+
+                    // call reverse geocoding
+                    URL url;
+                    String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
+                        + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+                    try
+                    {
+                        url = new URL(urlString);
+                        RetrieveAddr getXML = new RetrieveAddr();
+                        getXML.execute(url);
+                        addresslines = getXML.addresses();
+                    } catch (IOException e)
+                    {
+                        // do nothing
+                    }
+                }
+            });
+        }
+        else
+            addresslines = getString(R.string.noAddr);
+
+    } // end of getLoc
+
+    private double correctHeight(double lat, double lon, double gpsHeight)
     {
         double corrHeight;
         double nnHeight;
@@ -502,7 +628,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             {
                 doubleBackToExitPressedOnce = false;
             }
-        }, 2000);
+        }, 1000);
     }
 
     // Show message to share
@@ -588,8 +714,9 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
         message.append(adrlines);
 
         return message.toString();
-    }
+    } // end of getMessage
 
+    // updates fixtime display every second
     private void registerRelativeFixTime()
     {
         final Handler handler = new Handler();
@@ -610,251 +737,27 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             }
         }, Integer.parseInt(strTime)* 1000);
     }
-
-    // Gets last known location
-    private void registerLocationListener()
-    {
-        int REQUEST_CODE_GPS = 124;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            int hasAccessFineLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (hasAccessFineLocationPermission != PackageManager.PERMISSION_GRANTED)
-            {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_GPS);
-            }
-        }
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        int time = Integer.parseInt(strTime) * 1000;
-        if (MyDebug.LOG)
-            Log.d(LOG_TAG, "preference retrieved " + time + "ms");
-
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        lat = 0.0;
-        lon = 0.0;
-
-        //Prepare display of decimal coordinates
-        if (location != null)
-        {
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-            height = location.getAltitude();
-            if (height != 0)
-                height = correctHeight(height);
-            uncertainty = location.getAccuracy();
-            fixTime = location.getTime();
-
-            String nord = getString(R.string.nord);
-            String east = getString(R.string.east);
-            String west = getString(R.string.west);
-            String south = getString(R.string.south);
-            String directionNS, directionEW;
-            String uncert = myPosition.getAppContext().getString(R.string.uncert);
-            String high = myPosition.getAppContext().getString(R.string.height);
-
-            if (lat >= 0)
-                directionNS = nord;
-            else
-                directionNS = south;
-
-            if (lon >= 0)
-                directionEW = east;
-            else
-                directionEW = west;
-
-            sb = new StringBuffer("");
-
-            String lattemp = String.format("%.5f", lat); // warnings not relevant here
-            String lontemp = String.format("%.5f", lon);
-            String heighttemp = String.format("%.1f", height);
-            String uncerttemp = String.format("%.1f", uncertainty);
-
-            String language = Locale.getDefault().toString().substring(0, 2);
-
-            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
-            {
-                lattemp = lattemp.replace('.', ',');
-                lontemp = lontemp.replace('.', ',');
-                heighttemp = heighttemp.replace('.', ',');
-                uncerttemp = uncerttemp.replace('.', ',');
-
-                sb.append(lattemp).append(" ").append(directionNS).append(",   ")
-                    .append(lontemp).append(" ").append(directionEW).append("\n")
-                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                    .append(high).append(" ").append(heighttemp).append(" m");
-            }
-            else
-            {
-                sb.append(directionNS).append(" ").append(lattemp).append(",   ")
-                    .append(directionEW).append(" ").append(lontemp).append("\n")
-                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                    .append(high).append(" ").append(heighttemp).append(" m");
-            }
-
-        }
-        else
-        {
-            sb = new StringBuffer(getString(R.string.posnotknown));
-        }
-
-        if (lat != 0 || lon != 0)
-        {
-            final String time_header = this.getString(R.string.last_fix_time) + " ";
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    String relative_date = getString(R.string.unknownFix);
-                    if (fixTime > 0)
-                    {
-                        relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
-                    }
-                    tvDecimalCoord.setText(sb.toString());
-                    tvDegreeCoord.setText(toDegree(lat, lon));
-                    String uTime = time_header + relative_date;
-                    tvUpdatedTime.setText(uTime);
-
-                    // call reverse geocoding
-                    RetrieveAddr getXML = new RetrieveAddr();
-                    getXML.execute(new LatLong(lat, lon));
-
-                    addresslines = getXML.addresses();
-                }
-            });
-        }
-        else
-            addresslines = getString(R.string.noAddr);
-
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, time, distance, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, distance, this);
-        if (locationManager.getAllProviders().contains("network"))
-        {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, time, distance, this);
-        }
-
-    } // End of registerLocationListener
-
-    @Override
-    public void onLocationChanged(Location location)
-    {
-        lat = location.getLatitude();
-        lon = location.getLongitude();
-        height = location.getAltitude();
-        if (height != 0)
-            height = correctHeight(height);
-        uncertainty = location.getAccuracy();
-        fixTime = location.getTime();
-
-        String nord = getString(R.string.nord);
-        String east = getString(R.string.east);
-        String west = getString(R.string.west);
-        String south = getString(R.string.south);
-        String directionNS, directionEW;
-        String uncert = myPosition.getAppContext().getString(R.string.uncert);
-        String high = myPosition.getAppContext().getString(R.string.height);
-
-        if (lat >= 0)
-            directionNS = nord;
-        else
-            directionNS = south;
-
-        if (lon >= 0)
-            directionEW = east;
-        else
-            directionEW = west;
-
-        sb = new StringBuffer();
-
-        String lattemp = String.format("%.5f", lat); // warnings not relevant here
-        String lontemp = String.format("%.5f", lon);
-        String heighttemp = String.format("%.1f", height);
-        String uncerttemp = String.format("%.1f", uncertainty);
-
-        String language = Locale.getDefault().toString().substring(0, 2);
-        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
-        {
-            lattemp = lattemp.replace('.', ',');
-            lontemp = lontemp.replace('.', ',');
-            heighttemp = heighttemp.replace('.', ',');
-            uncerttemp = uncerttemp.replace('.', ',');
-
-            sb.append(lattemp).append(" ").append(directionNS).append(",   ")
-                .append(lontemp).append(" ").append(directionEW).append("\n")
-                .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                .append(high).append(" ").append(heighttemp).append(" m");
-        }
-        else
-        {
-            sb.append(directionNS).append(" ").append(lattemp).append(",   ")
-                .append(directionEW).append(" ").append(lontemp).append("\n")
-                .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                .append(high).append(" ").append(heighttemp).append(" m");
-        }
-
-        if (lat != 0 || lon != 0)
-        {
-            final String time_header = getString(R.string.last_fix_time) + " ";
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            runOnUiThread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    String relative_date = getString(R.string.unknownFix);
-                    if (fixTime > 0)
-                    {
-                        relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0).toString();
-                    }
-                    tvDecimalCoord.setText(sb.toString());
-                    tvDegreeCoord.setText(toDegree(lat, lon));
-                    String uTime = time_header + relative_date;
-                    tvUpdatedTime.setText(uTime);
-                    
-                    // call reverse geocoding
-                    RetrieveAddr getXML = new RetrieveAddr();
-                    getXML.execute(new LatLong(lat, lon));
-
-                    addresslines = getXML.addresses();
-                }
-            });
-        }
-        else
-            addresslines = getString(R.string.noAddr);
-    } // End of onLocationChanged
-
     
     /*********************************************************
      * Get address info from Reverse Geocoder of OpenStreetMap
      */
     @SuppressLint("StaticFieldLeak")
-    private class RetrieveAddr extends AsyncTask<LatLong, Void, String>
+    private class RetrieveAddr extends AsyncTask<URL, Void, String>
     {
-        String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
-            + Double.toString(lat) + "&lon=" + Double.toString(lon) + "&zoom=18&addressdetails=1";
-        URL url;
+        final String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
+            + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
 
         @Override
-        protected String doInBackground(LatLong... params)
+        protected String doInBackground(URL... params)
         {
+            URL url = params[0];
+            String xmlString;
+            
             try
             {
-                url = new URL(urlString);
                 if (MyDebug.LOG)
                     Log.d(LOG_TAG, "urlString: " + urlString); // Log url
 
-                //HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection(); // https-version?
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setReadTimeout(10000);
                 urlConnection.setConnectTimeout(15000);
@@ -872,7 +775,7 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
                 // get the XML from input stream
                 InputStream iStream = urlConnection.getInputStream();
 
-                String xmlString = convertStreamToString(iStream);
+                xmlString = convertStreamToString(iStream);
                 if (MyDebug.LOG)
                     Log.d(LOG_TAG, "xmlString: " + xmlString); // Log content of url
 
@@ -1187,8 +1090,6 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             try
             {
                 tvLocation.setText(adrlines);
-
-//                tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, true, addresslines1));
                 tvMessage.setText(MyPositionActivity.getMessage(lat, lon, height, uncertainty, messageHeader, addresslines1));
             } catch (Exception e)
             {
@@ -1232,17 +1133,5 @@ public class MyPositionActivity extends AppCompatActivity implements OnClickList
             return sb.toString();
         }
     } // end of class RetrieveAddr
-
-    //
-    class LatLong
-    {
-        double lat, lon;
-
-        LatLong(double lat, double lon)
-        {
-            this.lat = lat;
-            this.lon = lon;
-        }
-    }
 
 }

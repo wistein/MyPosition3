@@ -15,21 +15,11 @@ package com.wistein.myposition;
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *  
  ******************
- * AboutDialog.java
- * Custom class for displaying the About Dialog
+ * HelpDialog.java
+ * Custom class for displaying the Help Dialog
  *
- * Based on
- * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
- * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
- *
- * Info url :
- * http://code.google.com/p/mylocation/
- * http://kirostudio.com
- * http://blog.mypapit.net/
- *
- * Adopted by wistein for MyPosition3
  * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-05-21
+ * last edited on 2019-08-12
  */
 
 import android.app.Activity;
@@ -47,7 +37,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
-public class AboutDialog extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener
+public class HelpDialog extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener
 {
     private boolean screenOrientL; // option for screen orientation
 
@@ -69,28 +59,28 @@ public class AboutDialog extends Activity implements SharedPreferences.OnSharedP
         }
 
         String language = Locale.getDefault().toString().substring(0, 2);
-        setContentView(R.layout.activity_about_dialog);
+        setContentView(R.layout.activity_help_dialog);
 
-        TextView tv = findViewById(R.id.info_head);
+        TextView tv = findViewById(R.id.help_head);
         if (language.equals("de"))
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head_de)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.help_head_de)));
         }
         else
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.help_head)));
         }
         tv.setLinkTextColor(Color.BLUE);
         Linkify.addLinks(tv, Linkify.WEB_URLS);
 
-        tv = findViewById(R.id.info_text);
+        tv = findViewById(R.id.help_text);
         if (language.equals("de"))
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_de)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.help_de)));
         }
         else
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info)));
+            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.help)));
         }
         tv.setLinkTextColor(Color.BLUE);
         Linkify.addLinks(tv, Linkify.WEB_URLS);

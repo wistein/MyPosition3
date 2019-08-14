@@ -1,0 +1,48 @@
+<h3>1. Allgemeines</h3>
+<b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN. 
+<br><br>
+Um landesspezifische <b>Adressdaten</b> anzuzeigen, verwendet die App den Nominatim Reverse Geocoding Service von OpenStreetMap. Somit werden keine Google-Services benötigt und keine Adressdaten an Datensammler durch die App übermittelt.
+<br><br>
+Mit der App ist es einfach, die momentanen <b>Positionsdaten</b> mittels E-Mail oder Messaging-Apps an Kontakte zu <b>übermitteln</b>. 
+<br><br>
+Deine <b>Position</b> kann <b>auf einer Karte angezeigt</b> werden; offline mittels installierter Karten-App (falls eine geeignete Karten-App installiert und unter App-Einstellungen der Standard für die Kartendarstellung - Google Maps - geändert ist *) oder online im Internet-Browser auf <b>OpenStreetMap</b>.
+<br><br>
+Zusätzlich beinhaltet die App einen <b>Konverter zur Umrechnung</b> von Dezimalgraden in Grad-Minuten-Sekunden Format und umgekehrt. 
+<br><br>
+<h3>2. Einrichtung</h3>
+Vor der ersten Verwendung solltest Du die <b>Einstellungen</b>-Seite aufrufen und eine gültige <b>E-Mail-Adresse</b> für den Nominatim Reverse Geocoding Service von OpenStreetMap eingeben. Das ist zwar optional, aber für einen auf Dauer zuverlässigen Dienst und aus Sicherheitsgründen zum Schutz gegen Missbrauch gefordert. (Für Details siehe http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+<br><br>
+Die aktuelle <b>Position</b> lässt sich <b>auf einer Karte</b> darstellen. Standardmäßig wird die Position online auf der <b>OpenStreetMap</b>-Karte im Browser angezeigt. Mit gesetztem Haken wird versucht, die Position <b>offline</b> auf der Karte einer installierten Karten-App wie Locus, OruxMaps oder OSMAnd, etc. anzuzeigen. Standardmäßig wird aber hier die Position online auf Google Maps angezeigt, da dieses die voreingestellte App-Geo-Link-Einstellung des Smartphones ist. *)
+<br><br>
+Die App nutzt eine feste Ausrichtung, die sich einstellen lässt, <b>Landscape</b> 
+oder <b>Portrait</b>. Die feste Ausrichtung vermeidet eine unerwartete und störende Drehung des Bildschirminhalts bei Bewegung.
+<br><br>
+Da das GPS-Signal Höhenwerte gemäß dem idealisierten Geoid liefert, können diese stark von der üblicherweise genutzten Höhe über NN abweichen. Die letzte Option erlaubt die Anzeige einer Popup-Toast-Meldung, die über die verschiedenen Höhenwerte (Höhe über NN, GPS-Höhe und lokaler Korrekturwert informiert).
+<br><br>
+<h3>3. Benutzung</h3>
+Nach dem Starten der App versucht sie sich mit den GPS-Satelliten zu synchronisieren (falls nicht bereits durch eine andere App erfolgt). Sobald sie die Position festgestellt hat, zeigt sie die Koordinaten mit Abweichung und Höhe über NN an. (Nach einer Weile werden die Werte präziser.)
+<br><br>
+Dann wird versucht, <b>Adressinformation</b> zur Position durch Abfrage des Nominatim Service von OpenStreetMap zu erhalten. Falls kein Internet-Zugang besteht, zeigt das Adress-Anzeigefeld: “Keine Adressdaten!”. Die Adressinformation wird für einige Länder in landesspezifischem Format aufbereitet (AT, CH, DE, FR, IT, Rest der Welt). 
+<br><br>
+Die Koordinaten werden in zwei Formaten angezeigt: WGS84 <b>Dezimal</b> (dd.ddddddd) Koordinatenformat und <b>Grad</b>-Minuten-Sekunden (dd° mm’ ss.sss”) Koordinatenformat.
+<br><br>
+Der untere Anzeigebereich <b>Mitteilung</b> enthält eine vorbereitete, editierbare Meldung, die an jemanden, den Du über Deinen Standort informieren möchtest, versendet werden kann. Die Meldung enthält die aktuelle Positionsinformation und einen Link, der die Position online auf OpenStreetMap anzeigt.
+<br><br>
+Die Kopfzeile der App zeigt drei Icons, <b>Update Position, Kartenansicht</b> und <b>App-Menü</b>. 
+<br><br>
+<b>Update Position</b> veranlasst den GPS-Empfänger die Position neu abzufragen.
+<br><br>
+<b>Kartenansicht</b> versucht die aktuelle Position entweder offline auf der Karte einer installierten Karten-App oder online im Browser auf OpenStreetMap anzuzeigen, abhängig von der Auswahl unter Einstellungen. 
+<br><br>
+Im App-Menü lassen sich die Funktionen: <b>Einstellungen</b> (siehe 2. Einrichtung), <b>Konvertierung</b> des Koordinatenformats, diese <b>Hilfe</b> und <b>App-Info</b> mit Versionsnummer, Beschreibung, Haftungsausschluss und Lizenz sowie Historie aufrufen.
+<br><br>
+Wenn <b>Mein Standort</b> beendet wird, wird GPS abgeschaltet (falls GPS nicht noch von einer anderen App verwendet wird).
+<br><br>
+___________
+<br>
+*) Zur Änderung der Standort-Standardeinstellung von `Google Maps´ zu einer bevorzugten Karten-App, gehe unter Einstellungen zu Apps, wähle unter App-Berechtigungen `Standort` und setze den Eintrag von Google Maps zurück.
+<br><br>
+In `Mein Standort´ öffne die Kartendarstellung. Wähle die bevorzugte Karten-App aus und starte sie testweise mit `nur diesmal´. 
+<br><br>
+Falls die Funktion den Erwartungen entspricht, kann die Auswahl beim nächsten Aufruf als Standard festgelegt werden. 
+<br>

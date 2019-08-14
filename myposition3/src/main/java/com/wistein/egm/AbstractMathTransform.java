@@ -46,12 +46,12 @@ abstract class AbstractMathTransform
     /**
      * Gets the dimension of input points.
      */
-    public abstract int getSourceDimensions();
+    protected abstract int getSourceDimensions();
 
     /**
      * Gets the dimension of output points.
      */
-    public abstract int getTargetDimensions();
+    protected abstract int getTargetDimensions();
 
     /**
      * Returns a hash value for this transform.

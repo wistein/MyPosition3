@@ -7,7 +7,7 @@ buildscript {
     }
     
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.4.2'
     }
 }
 
@@ -19,7 +19,7 @@ android {
         applicationId "com.wistein.myposition"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 135
+        versionCode 136
     }
 
     buildTypes {
@@ -33,6 +33,14 @@ android {
             outputFileName = "myposition3_${variant.buildType.name}_${defaultConfig.versionCode}.apk"
         }
     }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
 }
 
 dependencies {

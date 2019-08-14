@@ -40,9 +40,17 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 Current version copyright by wistein, 2019,<br>
 https://github.com/wistein/MyPosition3<BR>
 
+<B>My Position, version 1.3.6,</B> 2019-08-14<br>
+ - GPS handling as background service.
+ - Fix values for min. distance and polling time 
+ - Help incorporated.
+ - Docs revised.
+ - Compiled with Android Studio 3.4.2 and Gradle 5.1.1.
+<br>
+
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>
  - Compiled with Android Studio 3.3 and Gradle 4.10.1.
- - Removed obsolete background service for GPS first fix function.
+ - Removed background service for GPS first fix function.
  - Instead direct GPS position request.
  - Some code cleaning.
 <br>
@@ -58,13 +66,13 @@ https://github.com/wistein/MyPosition3<BR>
 <br>
 
 <B>My Position, version 1.3.2</B>, 2017-09-26<br>
-
   - Code adapted and compiled for Android 7.1.
   - Write system log only in debug version.
   - Showing height and coordinates without irrelevant decimal places.
+<br>
 
 <B>My Position version 1.3.1</B>, 2017-09-12<br> 
-
+  - Icons in settings menu
   - Write system log only in debug version
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.
   - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.
@@ -73,7 +81,6 @@ https://github.com/wistein/MyPosition3<BR>
   - Bug fix: Changed app settings are valid without restarting the app.
  
 <B>My Position version 1.3.0</B>, 2017-04-11<br> 
-
   - Code corrections and enhancements.
   - Works without GApps.
   - Interrupts GPS usage when app pauses or ends GPS usage when app terminates.

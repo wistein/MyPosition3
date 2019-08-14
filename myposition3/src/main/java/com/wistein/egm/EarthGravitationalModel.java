@@ -23,7 +23,6 @@ package com.wistein.egm;
 import com.wistein.myposition.R;
 import com.wistein.myposition.myPosition;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,6 +48,7 @@ import java.util.StringTokenizer;
  * @version $Id$
  * @since 2.3
  * Code adaptation for use by MyPositionActivity by wm.stein
+ * Last edited on 2019-05-18
  */
 public final class EarthGravitationalModel extends VerticalTransform 
 {
@@ -194,10 +194,6 @@ public final class EarthGravitationalModel extends VerticalTransform
     public void load() throws IOException 
 	{
         final InputStream stream = myPosition.getAppContext().getResources().openRawResource(R.raw.egm180);
-        if (stream == null) 
-		{
-            throw new FileNotFoundException("egm180");
-        }
         final LineNumberReader in;
         in = new LineNumberReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         String line;

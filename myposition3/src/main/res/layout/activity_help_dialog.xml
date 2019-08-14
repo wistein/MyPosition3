@@ -10,7 +10,7 @@
         >
 
         <ImageView
-            android:id="@+id/imageLogoAbout"
+            android:id="@+id/imageLogoHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
@@ -23,10 +23,10 @@
             />
 
         <TextView
-            android:id="@+id/info_head"
+            android:id="@+id/help_head"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/imageLogoAbout"
+            android:layout_toEndOf="@+id/imageLogoHelp"
             android:gravity="center"
             android:paddingStart="10dip"
             android:paddingEnd="10dip"
@@ -36,11 +36,11 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/info_head"
+            android:layout_below="@+id/help_head"
             >
 
             <TextView
-                android:id="@+id/info_text"
+                android:id="@+id/help_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"

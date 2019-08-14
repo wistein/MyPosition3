@@ -8,24 +8,6 @@
         android:summary="@string/email_string"
         />
 
-    <ListPreference
-        android:key="updateFreq"
-        android:title="@string/upd_freq"
-        android:icon="@drawable/ic_schedule_black_48dp"
-        android:summary="@string/upd_freq_sum"
-        android:entryValues="@array/freq"
-        android:entries="@array/freq_string"
-        />
-    
-    <ListPreference
-        android:key="update_Dist"
-        android:title="@string/titel_pref_upddist"
-        android:icon="@drawable/ic_settings_direction_black_48dp"
-        android:entries="@array/dist_string"
-        android:entryValues="@array/dist"
-        android:summary="@string/pref_upddist"
-        />
-
     <CheckBoxPreference
         android:key="map_Local"
         android:title="@string/titel_map_string"

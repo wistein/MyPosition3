@@ -28,7 +28,7 @@ package com.wistein.myposition;
  *
  * Adopted by wistein for MyPosition3
  * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-01-03
+ * last edited on 2019-05-21
  */
 
 import android.content.SharedPreferences;

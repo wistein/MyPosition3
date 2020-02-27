@@ -40,12 +40,13 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 Current version copyright by wistein, 2019,<br>
 https://github.com/wistein/MyPosition3<BR>
 
-<B>My Position, version 1.3.6,</B> 2019-11-09<br>
+<B>My Position, version 1.3.6,</B> 2020-02-27<br>
  - GPS handling as background service.
  - Fix values for min. distance and polling time 
  - Help incorporated.
  - Docs revised.
- - Compiled with Android Studio 3.5.2 and Gradle 5.4.1.
+ - Compiled with Android Studio 3.6 and Gradle 5.6.4.
+ - Code shrinked.
 <br>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>

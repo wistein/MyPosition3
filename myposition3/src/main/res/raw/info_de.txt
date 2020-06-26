@@ -26,6 +26,12 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>Historie</h4>
 
+<B>Mein Standort, Version 1.3.7,</B> 27.06.2020<br>
+ - Lokalisierung korrigiert für Netz-basierte Standortbestimmung.
+ - Kompiled mit Android Studio 4.0 und Gradle 6.1.1.
+ - Migriert zu AndroidX-Bibliotheken
+<br>
+
 <B>Mein Standort, Version 1.3.6,</B> 27.02.2020<br>
  - GPS-Funktionen als Hintergrund-Service.<br>
  - Feste Werte für min. Distanz (10 m) und min. Abfrageintervall (10 sec). <br>

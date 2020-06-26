@@ -45,8 +45,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -72,6 +70,9 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class MyPositionActivity extends AppCompatActivity implements OnClickListener, PermissionsDialogFragment.PermissionsGrantedCallback
 {

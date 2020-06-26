@@ -10,11 +10,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Objects;
+
+import androidx.core.app.ActivityCompat;
 
 /***************************************************************************************
  * LocationService provides the location data: latitude, longitude, height, uncertainty.
@@ -25,7 +26,7 @@ import java.util.Objects;
  * licensed under the MIT License.
  * 
  * Adopted for MyPostion3 by wmstein since 2019-02-07,
- * last modification on 2019-08-14
+ * last modification on 2020-06-26
  */
 
 public class LocationService extends Service implements LocationListener
@@ -41,6 +42,7 @@ public class LocationService extends Service implements LocationListener
     private static final long MIN_TIME_BW_UPDATES = 10000; // (msec)
     private long fixTime;
     protected LocationManager locationManager;
+    private boolean exactLocation = false;
 
     public LocationService(Context mContext)
     {
@@ -72,8 +74,34 @@ public class LocationService extends Service implements LocationListener
                 Toast.makeText(mContext, getString(R.string.no_provider), Toast.LENGTH_SHORT).show();
             }
 
-            // if only Network is enabled get position using Network Service
-                if (checkNetwork && !checkGPS)
+            // if GPS is enabled get position using GPS Service
+            if (checkGPS && canGetLocation)
+            {
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                {
+                    locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_FOR_UPDATES, this);
+                    if (locationManager != null)
+                    {
+                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if (location != null)
+                        {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                            height = location.getAltitude();
+                            uncertainty = location.getAccuracy();
+                            exactLocation = true;
+                        }
+                    }
+                }
+            }
+
+            if (!exactLocation)
+            {
+                // if Network is enabled and still no GPS fix achieved
+                if (checkNetwork && canGetLocation)
                 {
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                     {
@@ -81,7 +109,7 @@ public class LocationService extends Service implements LocationListener
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_FOR_UPDATES, this);
-                        
+
                         if (locationManager != null)
                         {
                             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -91,33 +119,12 @@ public class LocationService extends Service implements LocationListener
                                 longitude = location.getLongitude();
                                 height = 0;
                                 uncertainty = 500;
+                                exactLocation = false;
                             }
                         }
                     }
                 }
-
-                // if GPS is enabled get position using GPS Service
-                if (checkGPS)
-                {
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    {
-                        locationManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_FOR_UPDATES, this);
-                        if (locationManager != null)
-                        {
-                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                            if (location != null)
-                            {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                height = location.getAltitude();
-                                uncertainty = location.getAccuracy();
-                            }
-                        }
-                    }
-                } 
+            }
 
         } catch (Exception e)
         {
@@ -209,24 +216,24 @@ public class LocationService extends Service implements LocationListener
     @Override
     public void onLocationChanged(Location location)
     {
-
+        // do nothing
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle)
     {
-
+        // do nothing
     }
 
     @Override
     public void onProviderEnabled(String s)
     {
-
+        // do nothing
     }
 
     @Override
     public void onProviderDisabled(String s)
     {
-
+        // do nothing
     }
 }

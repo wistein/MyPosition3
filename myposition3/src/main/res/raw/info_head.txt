@@ -1,7 +1,7 @@
 <h3>My Position</h3>
 Share your location, easily.<br>
 <br>
-2020, copyright by wistein<br>
+2017-2020, copyright by wistein, Bonn, Germany<br>
 https://github.com/wistein/MyPosition3<br>
 and other authors (see history)<br>
 <br>

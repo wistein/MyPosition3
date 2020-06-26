@@ -37,8 +37,14 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 ### History:
 
-Current version copyright by wistein, 2019,<br>
+My Position copyright by wistein, Bonn, Germany, 2017-2020,<br>
 https://github.com/wistein/MyPosition3<BR>
+
+<B>My Position, version 1.3.7,</B> 2020-06-27<br>
+ - Location handling corrected for coarse location.
+ - Compiled with Android Studio 4.0 and Gradle 6.1.1.
+ - Migrated to AndroidX libraries
+<br>
 
 <B>My Position, version 1.3.6,</B> 2020-02-27<br>
  - GPS handling as background service.

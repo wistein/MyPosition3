@@ -29,6 +29,12 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>History</h4>
 
+<B>My Position, version 1.3.7,</B> 2020-06-27<br>
+ - Location handling corrected for coarse location.
+ - Compiled with Android Studio 4.0 and Gradle 6.1.1.
+ - Migrated to AndroidX libraries
+<br>
+
 <B>My Position, version 1.3.6,</B> 2020-02-27<br>
  - GPS handling as background service.<br>
  - Fix values for min. distance (10 m) and min. polling time (10 sec).<br> 

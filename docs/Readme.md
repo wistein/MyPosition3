@@ -37,60 +37,78 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 ### History:
 
-Current version copyright by wistein, 2019,<br>
+Current version copyright by wistein, 2021,<br>
 https://github.com/wistein/MyPosition3<BR>
 
+<B>My Position, version 1.3.8a,</B> 2021-06-05<br>
+ - Compiled for SdkVersion 29 as 30 cannot be installed in Android 11<br>
+<br>
+
+<B>My Position, version 1.3.8,</B> 2021-05-30<br>
+ - Use Code library mavenCentral instead of deprecated jCenter<br>
+ - Compiled with Android Studio 4.2.1 and Gradle 6.7.1<br>
+ - Compiled for SdkVersion 30<br>
+<br>
+
+<B>My Position, version 1.3.7,</B> 2020-10-07<br>
+ - Permission handling for Access Background Location<br>
+ - Migrate Code to AndroidX<br>
+ - Compiled with Android Studio 4.0.2 and Gradle 6.1.1<br>
+<br>
+
 <B>My Position, version 1.3.6,</B> 2020-02-27<br>
- - GPS handling as background service.
- - Fix values for min. distance and polling time 
- - Help incorporated.
- - Docs revised.
- - Compiled with Android Studio 3.6 and Gradle 5.6.4.
- - Code shrinked.
+ - GPS handling as background service<br>
+ - Fix values for min. distance and polling time<br> 
+ - Help incorporated<br>
+ - Docs revised<br>
+ - Compiled with Android Studio 3.6 and Gradle 5.6.4<br>
+ - Code shrinked<br>
 <br>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>
- - Compiled with Android Studio 3.3 and Gradle 4.10.1.
- - Removed background service for GPS first fix function.
- - Instead direct GPS position request.
- - Some code cleaning.
+ - Compiled with Android Studio 3.3 and Gradle 4.10.1<br>
+ - Removed background service for GPS first fix function<br>
+ - Instead direct GPS position request<br>
+ - Some code cleaning<br>
 <br>
 
 <B>My Position, version 1.3.4,</B> 2018-09-19<br>
- - Added option to select a time interval to query the position.
- - GPS update function as background service.
- - Compiled for Android 8.1 (Oreo)
+ - Added option to select a time interval to query the position<br>
+ - GPS update function as background service<br>
+ - Compiled for Android 8.1 (Oreo)<br>
 <br>
 
 <B>My Position, version 1.3.3,</B> 2017-10-31<br>
- - Code adapted and compiled under Android Studio 3.0.
+ - Code adapted and compiled under Android Studio 3.0<br>
 <br>
 
 <B>My Position, version 1.3.2</B>, 2017-09-26<br>
-  - Code adapted and compiled for Android 7.1.
-  - Write system log only in debug version.
-  - Showing height and coordinates without irrelevant decimal places.
+  - Code adapted and compiled for Android 7.1<br>
+  - Write system log only in debug version<br>
+  - Showing height and coordinates without irrelevant decimal places<br>
 <br>
 
 <B>My Position version 1.3.1</B>, 2017-09-12<br> 
-  - Icons in settings menu
-  - Write system log only in debug version
-  - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.
-  - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.
-  - Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction.
-  - Settings allow to switch between portrait and landscape mode. 
-  - Bug fix: Changed app settings are valid without restarting the app.
+  - Icons in settings menu<br>
+  - Write system log only in debug version<br>
+  - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96<br>
+  - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap<br>
+  - Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction<br>
+  - Settings allow to switch between portrait and landscape mode<br>
+  - Bug fix: Changed app settings are valid without restarting the app<br>
+<br>
  
 <B>My Position version 1.3.0</B>, 2017-04-11<br> 
-  - Code corrections and enhancements.
-  - Works without GApps.
-  - Interrupts GPS usage when app pauses or ends GPS usage when app terminates.
-  - Reverse geocoding for address info by Nominatim service of OpenStreetMap.
-  - Optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).
-  - Localization for German and English (default) of text and number formats.
-  - Country-specific representation of address info (at, ch, de, fr, it, rest of the world).
-  - App-Icon by wistein.
-  - Based on the following projects:
+  - Code corrections and enhancements<br>
+  - Works without GApps<br>
+  - Interrupts GPS usage when app pauses or ends GPS usage when app terminates<br>
+  - Reverse geocoding for address info by Nominatim service of OpenStreetMap<br>
+  - Optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service)<br>
+  - Localization for German and English (default) of text and number formats<br>
+  - Country-specific representation of address info (at, ch, de, fr, it, rest of the world)<br>
+  - App-Icon by wistein<br>
+  - Based on the following projects:<br>
+<br>
   
 <B>myLocation version 1.2</B> <BR>
 Changes and enhancements by GDR!<br>

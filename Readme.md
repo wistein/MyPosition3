@@ -40,6 +40,11 @@ This app is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 My Position copyright by wistein, Bonn, Germany, 2017-2020,<br>
 https://github.com/wistein/MyPosition3<BR>
 
+<B>My Position, version 1.3.8,</B> 2021-05-30<br>
+ - Use Code library mavenCentral instead of deprecated jCenter.
+ - Compiled with Android Studio 4.2.1 and Gradle 6.7.1.
+ - Compiled for SdkVersion 30
+<br>
 <B>My Position, version 1.3.7,</B> 2020-06-27<br>
  - Location handling corrected for coarse location.
  - Compiled with Android Studio 4.0 and Gradle 6.1.1.

@@ -26,9 +26,19 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 
 <h4>Historie</h4>
 
+<B>Mein Standort, Version 1.3.8a,</B> 05.06.2021<br>
+ - Kompiliert für SdkVersion 29, da 30 nicht installierbar in Android 11<br>
+<br>
+
+<B>Mein Standort, Version 1.3.8,</B> 30.05.2021<br>
+ - Verwendet die Code-Bibliothek mavenCentral anstelle der ausrangierten jCenter<br>
+ - Kompiliert mit Android Studio 4.2.1 und Gradle 6.7.1<br>
+ - Kompiliert für SdkVersion 30<br>
+<br>
+
 <B>Mein Standort, Version 1.3.7,</B> 27.06.2020<br>
  - Lokalisierung korrigiert für Netz-basierte Standortbestimmung.
- - Kompiled mit Android Studio 4.0 und Gradle 6.1.1.
+ - Kompiliert mit Android Studio 4.0 und Gradle 6.1.1.
  - Migriert zu AndroidX-Bibliotheken
 <br>
 

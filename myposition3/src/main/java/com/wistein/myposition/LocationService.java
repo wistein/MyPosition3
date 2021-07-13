@@ -26,7 +26,7 @@ import androidx.core.app.ActivityCompat;
  * licensed under the MIT License.
  * 
  * Adopted for MyPostion3 by wmstein since 2019-02-07,
- * last modification on 2020-06-26
+ * last modification on 2020-10-07
  */
 
 public class LocationService extends Service implements LocationListener
@@ -42,6 +42,7 @@ public class LocationService extends Service implements LocationListener
     private static final long MIN_TIME_BW_UPDATES = 10000; // (msec)
     private long fixTime;
     protected LocationManager locationManager;
+    // exactLocation determines whether a first GPS fix has occurred and therefore no further need for Network provider usage
     private boolean exactLocation = false;
 
     public LocationService(Context mContext)
@@ -77,7 +78,8 @@ public class LocationService extends Service implements LocationListener
             // if GPS is enabled get position using GPS Service
             if (checkGPS && canGetLocation)
             {
-                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
                 {
                     locationManager.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
@@ -103,7 +105,8 @@ public class LocationService extends Service implements LocationListener
                 // if Network is enabled and still no GPS fix achieved
                 if (checkNetwork && canGetLocation)
                 {
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
                     {
                         locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,

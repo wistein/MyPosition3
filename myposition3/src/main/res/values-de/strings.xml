@@ -1,12 +1,11 @@
 <!--
-  ~ Copyright (c) 2016. Wilhelm Stein, Bonn, Germany.
+  ~ Copyright (c) 2016-2024. Wilhelm Stein, Bonn, Germany.
   -->
 
 <resources>
-
     <string name="app_name">Mein Standort</string>
     <string name="title_activity_my_position">Mein Standort</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Einstellungen</string>
     <string name="title_activity_about_dialog">Info</string>
     <string name="title_activity_help_dialog">Hilfe</string>
     <string name="title_activity_converter">Konvertiere GPS-Koordinaten</string>
@@ -16,8 +15,6 @@
     <string name="menu_settings">Einstellungen</string>
     <string name="menu_about">App-Info</string>
     <string name="menu_help">Hilfe</string>
-    <string name="menu_toDegree">Dezimal → Grad</string>
-    <string name="menu_toDecimal">Grad → Dezimal</string>
     <string name="menu_converter">Konvertierung</string>
     <string name="last_fix_time">Letzte GPS-Abfrage: </string>
     <string name="geoloc">Koordinaten:</string>
@@ -44,13 +41,19 @@
     <string name="lati">Breite:</string>
     <string name="shlongi">Länge:</string>
     <string name="shlati">Breite:</string>
+    <string name="long1">Länge 1:</string>
+    <string name="lat1">Breite 1:</string>
+    <string name="long2">Länge 2:</string>
+    <string name="lat2">Breite 2:</string>
     <string name="height">Höhe:</string>
     <string name="degree">→ Grad:</string>
     <string name="decimal">→ Dezimal:</string>
     <string name="back_twice">Zum Beenden erneut drücken</string>
     <string name="no_provider">Kein Service-Provider verfügbar!</string>
+    <string name="dist">Abstand</string>
+    <string name="distm">Abstand (m):</string>
 
-    <string name="msg_text">Klicke auf den Link unten, um meine Position auf der OSM-Karte zu sehen: </string>
+    <string name="msg_text">Klicke auf den folgenden Link, um meine Position auf der OSM-Karte zu sehen: </string>
     <string name="invValue">Ungültiger Wert</string>
     <string name="email_string">Erforderlich für die zuverlässige Abfrage der Adressdaten per OSM-Nominatim-Reverse-Geocoder. Die Mail-Adresse wird vertraulich behandelt und nur verwendet, um bei Problemen zu kontaktieren. Siehe http://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail-Adresse für OSM-Geocoder</string>
@@ -59,11 +62,13 @@
     <string name="map_string">Ohne Häkchen wird die Position online in OpenStreetMap angezeigt. Mit Häkchen wird versucht, eine lokale Map-App zu nutzen, um die Position offline anzuzeigen. (Funktioniert eventuell nicht auf diesem Gerät, abhängig vom internen App-Management).</string>
     <string name="titel_map_string">Wie soll die Karte angezeigt werden?</string>
     <string name="screen_orientation">Ausrichtung in Landscape-Modus anstelle von Portrait-Modus.</string>
-    <string name="titel_screen_orientation">Landscape statt Portrait</string>
+    <string name="titel_screen_orientation">Landscape Modus benutzen</string>
     <string name="h_nn">Höhe über NN:</string>
     <string name="h_gps">Höhe des GPS:</string>
     <string name="h_corr">Höhenkorrektur:</string>
     <string name="t_noapp">Es ist keine passende App installiert.</string>
+    <string name="darkScreen">Nutze die App im dunklen Modus.</string>
+    <string name="titel_darkScreen">Dunklen Modus nutzen</string>
 
     <!-- Permissions -->
     <string name="perm_required">Berechtigungen benötigt</string>

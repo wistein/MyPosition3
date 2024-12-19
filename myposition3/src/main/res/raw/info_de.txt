@@ -23,36 +23,51 @@ Diese App wird angeboten in der Hoffnung, dass sie nützlich ist, aber ohne jedw
 Lizenziert unter der GNU GPLv2 oder neuer.<br>
 https://www.gnu.org/licenses/gpl-3.0<br>
 <br>
+Seit Version 1.3.0 bis zur aktuellen Version: Copyrighted wistein, 2017-2024,<br>
+https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>Mein Standort, Version 1.3.8a,</B> 05.06.2021<br>
- - Kompiliert für SdkVersion 29, da 30 nicht installierbar in Android 11<br>
+<B>My Position, version 1.4.0,</B> 28.09.2024,<br>
+ - Schnelleres Erkennen der aktuellen Position.<br>
+ - App wird nach Beenden komplett aus dem Arbeitsspeicher entfernt.<br>
+ - Veraltete Funktion ersetzt.<br>
+ - Code-Verbesserungen.<br>
+ - Doku-Update.<br>
+ - Kompiliert für SdkVersion 34.<br>
 <br>
 
-<B>Mein Standort, Version 1.3.8,</B> 30.05.2021<br>
- - Verwendet die Code-Bibliothek mavenCentral anstelle der ausrangierten jCenter<br>
- - Kompiliert mit Android Studio 4.2.1 und Gradle 6.7.1<br>
- - Kompiliert für SdkVersion 30<br>
+<B>Mein Standort, Version 1.3.9,</B> 25.09.2023,<br>
+ - Kalkulation der Distanz zwischen 2 Koordinaten hinzugefügt.<br>
+ - Buttons mit Icons in der Kalkulationsansicht.<br>
+ - Roll-Ansicht zur Anzeige der gesamten Kalkulation.<br>
+ - Keyboard beim Tippen eines Buttons ausschalten (verdeckt ansonsten Teile der Anzeige des Resultats).<br>
+ - Keyboard beim Tippen eines Eingabefelds einblenden.<br>
+ - Code-Verbesserungen.<br>
+ - Kompiliert für SdkVersion 33.<br>
 <br>
 
-<B>Mein Standort, Version 1.3.7,</B> 27.06.2020<br>
- - Lokalisierung korrigiert für Netz-basierte Standortbestimmung.
- - Kompiliert mit Android Studio 4.0 und Gradle 6.1.1.
- - Migriert zu AndroidX-Bibliotheken
+<B>Mein Standort, Version 1.3.8a,</B> 13.07.2021,<br>
+ - Kompiliert für SdkVersion 29: Ok unter Android 11.<br>
+<B>Mein Standort, Version 1.3.8,</B> 30.05.2021,<br>
+ - Verwendet die Code-Bibliothek mavenCentral anstelle der ausrangierten jCenter.<br>
+ - Kompiliert für SdkVersion 30, Problem: Installtion unter Android 11 nicht möglich.<br>
 <br>
 
-<B>Mein Standort, Version 1.3.6,</B> 27.02.2020<br>
+<B>Mein Standort, Version 1.3.7,</B> 27.06.2020,<br>
+ - Lokalisierung korrigiert für Netz-basierte Standortbestimmung.<br>
+ - Migriert zu AndroidX-Bibliotheken.<br>
+<br>
+
+<B>Mein Standort, Version 1.3.6,</B> 27.02.2020,<br>
  - GPS-Funktionen als Hintergrund-Service.<br>
  - Feste Werte für min. Distanz (10 m) und min. Abfrageintervall (10 sec). <br>
  - Hilfe hinzugefügt.<br>
  - Doku überarbeitet.<br>
- - Kompiliert mit Android Studio 3.6 und Gradle 5.6.4.<br>
- - Code komprimiert
+ - Code komprimiert.<br>
 <br>
 
-<B>Mein Standort, Version 1.3.5,</B> 04.02.2019<br>
- - Kompiliert mit Android Studio 3.3 und Gradle 4.10.1.<br>
+<B>Mein Standort, Version 1.3.5,</B> 04.02.2019,<br>
  - GPS-First-Fix-Funktion entfernt.<br>
  - Statt dessen direkte GPS-Positionsabfrage.<br>
  - Einige Code-Bereinigungen.<br>
@@ -87,6 +102,8 @@ https://www.gnu.org/licenses/gpl-3.0<br>
 <br>
 
 <B>Mein Standort, Version 1.3.0</B>, 11.04.2017,<br>
+Copyright 2017 by wistein,<br>
+Lizenziert unter der GNU GPLv2 oder neuer.<br>
  - umfasst Code-Korrekturen und Ergänzungen,<br>
  - funktioniert ohne Google Apps (GApps),<br>
  - unterbricht bzw. beendet GPS-Nutzung bei App-Unterbrechung oder -Beendung,<br> 
@@ -98,11 +115,13 @@ https://www.gnu.org/licenses/gpl-3.0<br>
  - App-Icon von wistein.<br>
 <br>
 
-Basiert auf myLocation Version 1.2,<br>
+<B>myLocation version 1.2</B> <BR>
+Änderungen durch GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
+<br>
+Basiert auf
+<B>myLocation Version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 Lizenziert unter der GNU GPLv2.<br>
-<br>
-Verwendet einige Änderungen durch GDR!<br>
-https://github.com/gjedeer/mylocation/<br>
 <br>

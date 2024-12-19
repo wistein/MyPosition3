@@ -1,28 +1,21 @@
-/*
- * Copyright (c) 2016. Wilhelm Stein, Bonn, Germany.
+package com.wistein.myposition
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+
+/*******************************************************************
+ * Dummy activity to reenter MyPositionActivity for location request
+ * Created and copyright by wmstein on 2019-08-12,
+ * converted to Kotlin on 2024-09-30,
+ * last edited on 2024-09-30.
  */
-
-package com.wistein.myposition;
-
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
-/**************************************************************************************
- * Dummy to reenter MyPositionActivity for location request
- * Created by wmstein on 2019-08-12
- */
-public class DummyActivity extends AppCompatActivity
-{
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        exit();
+class DummyActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exit()
     }
 
-    public void exit()
-    {
-        super.finish();
+    private fun exit() {
+        super.finish()
     }
-    
 }

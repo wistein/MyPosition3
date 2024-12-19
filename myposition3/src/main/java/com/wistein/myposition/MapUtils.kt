@@ -1,66 +1,67 @@
-package com.wistein.myposition;
+package com.wistein.myposition
 
-/* 
- * This file is (c) OsmAnd developers, GPLv3 
+import kotlin.math.ceil
+
+/********************************************************************************
+ * This file is contains an extract of MapUtils.java (c) OsmAnd developers, GPLv3
  * https://github.com/osmandapp/Osmand/blob/9bb03894a57cc80c2f9ad935ba007d2c406abd2c/OsmAnd-java/src/net/osmand/util/MapUtils.java
  *
- * This MapUtils class includes:
- * - Function to create a short link string
- * 
+ * This extract of MapUtils class from OsmAnd includes:
+ * - Method to create a short link string (createShortLinkString)
+ * - Subroutine to interleave the bits of 2 numbers (interleaveBits)
+ *
  * Adopted by wistein for MyPosition3
- * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-02-03
+ * last edited in Java on 2024-09-30,
+ * converted to Kotlin on 2024-09-30,
+ * last edited on 2024-09-30.
  */
-
-class MapUtils
-{
+internal object MapUtils {
     /**
      * This array is a lookup table that translates 6-bit positive integer
      * index values into their "Base64 Alphabet" equivalents as specified
      * in Table 1 of RFC 2045.
      */
-    private static final char[] intToBase64 = {
+    private val intToBase64 = charArrayOf(
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
         'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', '~'
-    };
+    )
 
-    static String createShortLinkString(double latitude, double longitude, int zoom)
-    {
-        long lat = (long) (((latitude + 90d) / 180d) * (1L << 32));
-        long lon = (long) (((longitude + 180d) / 360d) * (1L << 32));
-        long code = interleaveBits(lon, lat);
-        StringBuilder str = new StringBuilder();
+    @JvmStatic
+    fun createShortLinkString(latitude: Double, longitude: Double, zoom: Int): String {
+        val lat = (((latitude + 90.0) / 180.0) * (1L shl 32)).toLong()
+        val lon = (((longitude + 180.0) / 360.0) * (1L shl 32)).toLong()
+        val code = interleaveBits(lon, lat)
+        val str = StringBuilder()
+
         // add eight to the zoom level, which approximates an accuracy of one pixel in a tile.
-        for (int i = 0; i < Math.ceil((zoom + 8) / 3d); i++)
-        {
-            str.append(intToBase64[(int) ((code >> (58 - 6 * i)) & 0x3f)]);
+        var i = 0
+        while (i < ceil((zoom + 8) / 3.0)) {
+            str.append(intToBase64[((code shr (58 - 6 * i)) and 0x3fL).toInt()])
+            i++
         }
-        // append characters onto the end of the string to represent
-        // partial zoom levels (characters themselves have a granularity of 3 zoom levels).
-        for (int j = 0; j < (zoom + 8) % 3; j++)
-        {
-            str.append('-');
+
+        // append characters onto the end of the string to represent partial zoom
+        //   levels (characters themselves have a granularity of 3 zoom levels).
+        (0 until (zoom + 8) % 3).forEach { j ->
+            str.append('-')
         }
-        return str.toString();
+        return str.toString()
     }
 
     /**
-     * interleaves the bits of two 32-bit numbers. the result is known as a Morton code.
+     * Interleaves the bits of two 32-bit numbers.
+     * The result is known as a Morton code.
      */
-    private static long interleaveBits(long x, long y)
-    {
-        long c = 0;
-        for (byte b = 31; b >= 0; b--)
-        {
-            c = (c << 1) | ((x >> b) & 1);
-            c = (c << 1) | ((y >> b) & 1);
+    private fun interleaveBits(x: Long, y: Long): Long {
+        var c: Long = 0
+        for (b in 31 downTo 0) {
+            c = (c shl 1) or ((x shr b.toInt()) and 1L)
+            c = (c shl 1) or ((y shr b.toInt()) and 1L)
         }
-        return c;
+        return c
     }
 
 }
-
-

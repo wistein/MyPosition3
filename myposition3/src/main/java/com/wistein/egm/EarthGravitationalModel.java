@@ -1,27 +1,8 @@
-/*
- *    Derived from:
- *    GeoTools - The Open Source Java GIS Toolkit
- *    http://geotools.org
- *
- *    (C) 2006-2008, Open Source Geospatial Foundation (OSGeo)
- *
- *    This library is free software; you can redistribute it and/or
- *    modify it under the terms of the GNU Lesser General Public
- *    License as published by the Free Software Foundation;
- *    version 2.1 of the License.
- *
- *    This library is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *    Lesser General Public License for more details.
- *
- *    This file is derived from NGA/NASA software available for unlimited distribution.
- *    See http://earth-info.nima.mil/GandG/wgs84/gravitymod/.
- */
 package com.wistein.egm;
 
+import android.content.Context;
+
 import com.wistein.myposition.R;
-import com.wistein.myposition.myPosition;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,42 +11,40 @@ import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 
-/**
+/******************
+ *    Derived from:
+ *    GeoTools - The Open Source Java GIS Toolkit
+ *    https://geotools.org
+ * <p>
+ *    (C) 2006-2008, Open Source Geospatial Foundation (OSGeo)
+ * <p>
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    version 2.1 of the License.
+ * <p>
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ * <p>
+ *    The original file is derived from NGA/NASA software available for unlimited distribution.
+ *    See https://earth-info.nima.mil/GandG/wgs84/gravitymod/.
+ * <p>
  * Transforms vertical coordinates using coefficients from the
- * http://earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+ * https://earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
  * Earth Gravitational Model.
- * 
- * Aknowledgement
- * This class is an adaption of Fortran code
- * http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/clenqt.for 
- * from the National Geospatial-Intelligence Agency and available in public domain. 
- * The normalized geopotential coefficients file bundled in this module is an adaptation of
- * http://earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/egm180.nor
- * file, with some spaces trimmed.
  *
  * @author Pierre Cardinal
  * @author Martin Desruisseaux
  * @version $Id$
  * @since 2.3
- * Code adaptation for use by MyPositionActivity by wm.stein
- * Last edited on 2019-05-18
+ *
+ * Code adaptation for use by MyPositionActivity by wm.stein on 2019-05-18.
+ * Last edited on 2024-11-19.
  */
-public final class EarthGravitationalModel extends VerticalTransform 
+public final class EarthGravitationalModel extends VerticalTransform
 {
-    /**
-     * Pre-computed values of some square roots.
-     */
-    private static final double SQRT_03 = 1.7320508075688772935274463415059,
-            SQRT_05 = 2.2360679774997896964091736687313,
-            SQRT_13 = 3.6055512754639892931192212674705,
-            SQRT_17 = 4.1231056256176605498214098559741,
-            SQRT_21 = 4.5825756949558400065880471937280;
-
-    /**
-     * The default value for {@link #nmax}.
-     */
-    private static final int DEFAULT_ORDER = 180;
-
     /**
      * Maximum degree and order attained.
      */
@@ -120,19 +99,10 @@ public final class EarthGravitationalModel extends VerticalTransform
     private final double[] cr, sr, s11, s12;
 
     /**
-     * Creates a model with the default maximum degree and order.
+     * Creates a model with the specified maximum degree (180) and order.
      */
-    public EarthGravitationalModel() 
+    public EarthGravitationalModel()
 	{
-        this(DEFAULT_ORDER);
-    }
-
-    /**
-     * Creates a model with the specified maximum degree and order.
-     */
-    private EarthGravitationalModel(final int nmax) 
-	{
-        this.nmax = nmax;
         /*
          * WGS84 model values.
          * NOTE: The Fortran program gives 3.9860015e+14 for 'rkm' constant. This value has been
@@ -145,6 +115,7 @@ public final class EarthGravitationalModel extends VerticalTransform
          *      the same value based on the recommendations of the IAG Special Commission SC3,
          *      Fundamental Constants [Bursa, 1995b, p. 381]."
          */
+        nmax = 180;
         semiMajor = 6378137.0;
         esq = 0.00669437999013;
         c2 = 108262.9989050e-8;
@@ -171,8 +142,8 @@ public final class EarthGravitationalModel extends VerticalTransform
      * Tip (used in some place in this class):
      * locatingArray(n+1) == locatingArray(n) + n + 1.
      */
-    private static int locatingArray(final int n) 
-	{
+    private int locatingArray(final int n)
+    {
         return ((n + 1) * n) >> 1;
     }
 
@@ -191,9 +162,9 @@ public final class EarthGravitationalModel extends VerticalTransform
      *
      * @throws IOException if the file can't be read or has an invalid content.
      */
-    public void load() throws IOException 
+    public void load(Context context) throws IOException
 	{
-        final InputStream stream = myPosition.getAppContext().getResources().openRawResource(R.raw.egm180);
+        final InputStream stream = context.getResources().openRawResource(R.raw.egm180);
         final LineNumberReader in;
         in = new LineNumberReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
         String line;
@@ -256,12 +227,14 @@ public final class EarthGravitationalModel extends VerticalTransform
             c2n[i] = sign * (3 * esqi) / ((2 * i + 1) * (2 * i + 3)) * (1 - i + (5 * i * c2 / esq));
         }
         /* all nmax */
+        double SQRT_05 = 2.2360679774997896964091736687313;
         cnmGeopCoef[3] += c2n[1] / SQRT_05;
-        /* all nmax */
         cnmGeopCoef[10] += c2n[2] / 3;
-        /* all nmax */
+        double SQRT_13 = 3.6055512754639892931192212674705;
         cnmGeopCoef[21] += c2n[3] / SQRT_13;
+        double SQRT_17 = 4.1231056256176605498214098559741;
         if (nmax > 6) cnmGeopCoef[36] += c2n[4] / SQRT_17;
+        double SQRT_21 = 4.5825756949558400065880471937280;
         if (nmax > 9) cnmGeopCoef[55] += c2n[5] / SQRT_21;
 
 		/*
@@ -292,11 +265,9 @@ public final class EarthGravitationalModel extends VerticalTransform
      * @param latitude  The geodetic latitude, in decimal degrees.
      * @param height    The height above the ellipsoid in metres.
      * @return The value to add in order to get the height above the geoid (in metres).
-     * @throws Exception if the offset can't be computed for the specified coordinates.
      */
     public double heightOffset(final double longitude, final double latitude, final double height)
-            throws Exception 
-	{
+    {
         /*
          * Note: no need to ensure that longitude is in [-180..+180°] range, because its value
          * is used only in trigonometric functions (sin / cos), which roll it as we would expect.
@@ -344,6 +315,10 @@ public final class EarthGravitationalModel extends VerticalTransform
             previousSht = sht;
             sht = (-as[i] * y * f1 * sht) + (s11[i] * cr[i]) + (s12[i] * sr[i]);
         }
+        /*
+         * Pre-computed values of some square roots.
+         */
+        double SQRT_03 = 1.7320508075688772935274463415059;
         return ((s11[0] + s12[0]) * f1 + (previousSht * SQRT_03 * y * f2)) * rkm /
                 (semiMajor * (gravn - (height * 0.3086e-5)));
     }

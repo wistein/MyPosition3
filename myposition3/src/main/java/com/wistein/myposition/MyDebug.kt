@@ -1,14 +1,10 @@
-/*
- * Copyright (c) 2017. Wilhelm Stein, Bonn, Germany.
- */
-
-package com.wistein.myposition;
+package com.wistein.myposition
 
 /**
- * Global constant to control logging, should always be set to false in
- * released versions.
+ * Global constant to control logging.
+ * Should always be set to false for released versions.
  */
-class MyDebug
-{
-    static final boolean LOG = false;
+internal object MyDebug {
+    const val LOG: Boolean = false
+//    const val LOG: Boolean = true
 }

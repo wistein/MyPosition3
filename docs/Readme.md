@@ -9,8 +9,8 @@ The app simplifies the task of sharing your location data with your contacts.
 - Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed*) or by browser on OpenStreetMap.
 - It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info.**)
 - It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings and number formats (German, English).
-- Additionally, the app also includes a tool to help converting between WGS84 decimal GPS coordinate and DD MM SS coordinate format.
-- Runs on Android 5.0 or newer.
+- Additionally, the app also includes a tool to help converting between WGS84 decimal and DD MM SS GPS coordinates format and calculates the distance between 2 coordinates.
+- Runs on Android 7.1 or newer.
 
 *) To change the default from Google Maps to a preferred app,
 - open <i>Settings</i> on your phone, 
@@ -35,25 +35,47 @@ Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
  
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-### History:
-
-Current version copyright by wistein, 2021,<br>
+Since versions 1.3.0 to current version copyright by wistein, 2017-2024,<br>
 https://github.com/wistein/MyPosition3<BR>
 
-<B>My Position, version 1.3.8a,</B> 2021-06-05<br>
- - Compiled for SdkVersion 29 as 30 cannot be installed in Android 11<br>
+### History:
+
+<B>My Position, version 1.4.1,</B> 2024-12-19<br>
+- Minor layout refinements<br>
+- Code refinements<br>
+- Docs updated<br>
 <br>
 
+- <B>My Position, version 1.4.0,</B> 2024-09-28<br>
+- Faster reaction for getting the current position<br>
+- Closing the app also frees its memory space<br>
+- Most Java code transposed to Kotlin
+- Deprecated function replaced<br>
+- Code refinements<br>
+- Docs updated<br>
+- Compiled for SdkVersion 34<br>
+<br>
+
+<B>My Position, version 1.3.9,</B> 2023-09-25<br>
+- Added calculation for distance between 2 decimal coordinates<br>
+- Buttons with icons in calculations view<br>
+- ScrollView to show whole calculations view<br>
+- Switch off keyboard after distance calculation to show otherwise masked result<br>
+- Switch on keyboard when tapped a field.<br>
+- Code refinements<br>
+- Compiled for SdkVersion 33<br>
+<br>
+
+<B>My Position, version 1.3.8a,</B> 2021-07-13<br>
+ - Compiled for SdkVersion 29: Ok in Android 11<br>
 <B>My Position, version 1.3.8,</B> 2021-05-30<br>
  - Use Code library mavenCentral instead of deprecated jCenter<br>
- - Compiled with Android Studio 4.2.1 and Gradle 6.7.1<br>
- - Compiled for SdkVersion 30<br>
+ - Compiled for SdkVersion 30, Problem: Could not be installed in Android 11<br>
 <br>
 
 <B>My Position, version 1.3.7,</B> 2020-10-07<br>
  - Permission handling for Access Background Location<br>
  - Migrate Code to AndroidX<br>
- - Compiled with Android Studio 4.0.2 and Gradle 6.1.1<br>
 <br>
 
 <B>My Position, version 1.3.6,</B> 2020-02-27<br>
@@ -61,12 +83,10 @@ https://github.com/wistein/MyPosition3<BR>
  - Fix values for min. distance and polling time<br> 
  - Help incorporated<br>
  - Docs revised<br>
- - Compiled with Android Studio 3.6 and Gradle 5.6.4<br>
  - Code shrinked<br>
 <br>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>
- - Compiled with Android Studio 3.3 and Gradle 4.10.1<br>
  - Removed background service for GPS first fix function<br>
  - Instead direct GPS position request<br>
  - Some code cleaning<br>
@@ -90,17 +110,19 @@ https://github.com/wistein/MyPosition3<BR>
 
 <B>My Position version 1.3.1</B>, 2017-09-12<br> 
   - Icons in settings menu<br>
-  - Write system log only in debug version<br>
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96<br>
   - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap<br>
-  - Optionally you may set a toast message about height values with height above sea-level, GPS-height and height correction<br>
-  - Settings allow to switch between portrait and landscape mode<br>
-  - Bug fix: Changed app settings are valid without restarting the app<br>
+  - New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
+  - New Option: Switch between portrait and landscape mode.<br>
+  - Some improvements to display details.<br>
+  - Press back twice to exit.<br>
+  - Bug fixes: Changed app settings are now valid without restarting the app<br>
 <br>
  
 <B>My Position version 1.3.0</B>, 2017-04-11<br> 
+Copyright 2017 by wistein,<br>
   - Code corrections and enhancements<br>
-  - Works without GApps<br>
+  - Works without Google Apps GApps<br>
   - Interrupts GPS usage when app pauses or ends GPS usage when app terminates<br>
   - Reverse geocoding for address info by Nominatim service of OpenStreetMap<br>
   - Optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service)<br>
@@ -119,4 +141,4 @@ License: GNU GPLv2
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 License: GNU GPLv2
- 
+<BR>

@@ -7,7 +7,7 @@ Mit der App ist es einfach, die momentanen <b>Positionsdaten</b> mittels E-Mail 
 <br><br>
 Deine <b>Position</b> kann <b>auf einer Karte angezeigt</b> werden; offline mittels installierter Karten-App (falls eine geeignete Karten-App installiert und unter App-Einstellungen der Standard für die Kartendarstellung - Google Maps - geändert ist *) oder online im Internet-Browser auf <b>OpenStreetMap</b>.
 <br><br>
-Zusätzlich beinhaltet die App einen <b>Konverter zur Umrechnung</b> von Dezimalgraden in Grad-Minuten-Sekunden Format und umgekehrt. 
+Zusätzlich beinhaltet die App einen <b>Konverter zur Umrechnung</b> von Dezimalgraden in Grad-Minuten-Sekunden-Format und umgekehrt und einen Distanzrechner für 2 Koordinaten.
 <br><br>
 <h3>2. Einrichtung</h3>
 Vor der ersten Verwendung solltest Du die <b>Einstellungen</b>-Seite aufrufen und eine gültige <b>E-Mail-Adresse</b> für den Nominatim Reverse Geocoding Service von OpenStreetMap eingeben. Das ist zwar optional, aber für einen auf Dauer zuverlässigen Dienst und aus Sicherheitsgründen zum Schutz gegen Missbrauch gefordert. (Für Details siehe http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).

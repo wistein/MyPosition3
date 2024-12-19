@@ -1,90 +1,88 @@
-package com.wistein.myposition;
+package com.wistein.myposition
 
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License version 2 as
- *  published by the Free Software Foundation
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceFragmentCompat
+
+/***********************************************************************
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * SettingsActivity.java
  * Class for handling and displaying preferences
-
- * Based on
- * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
- * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
- * Info url:
- * http://code.google.com/p/mylocation/
- * http://kirostudio.com
- * http://blog.mypapit.net/
+ * Based on
+ * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
+ * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
  * Adopted by wistein for MyPosition3
  * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-05-21
+ * last edited on 2024-10-03
  */
+class SettingsActivity : AppCompatActivity() {
+    private var editor: SharedPreferences.Editor? = null
 
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+    @SuppressLint("SourceLockedOrientationActivity")
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener
-{
-    private boolean screenOrientL; // option for screen orientation
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        pref.registerOnSharedPreferenceChangeListener(this);
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
-
-        if (screenOrientL)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+        val prefs = myPosition.getPrefs()
         // addPreferencesFromResource(R.xml.preference);
+        supportFragmentManager.beginTransaction().replace(
+            android.R.id.content,
+            MyPreferenceFragment()
+        ).commit()
 
-        PreferenceManager.setDefaultValues(SettingsActivity.this, R.xml.preference, false);
-    }
+        editor = prefs.edit()
 
-    public static class MyPreferenceFragment extends PreferenceFragment
-    {
-        @Override
-        public void onCreate(final Bundle savedInstanceState)
+        // Option for screen orientation
+        val screenOrientL = prefs.getBoolean("screen_Orientation", false)
+
+        requestedOrientation = if (screenOrientL) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
+        // Option for dark screen background
+        val darkScreen = prefs.getBoolean("dark_Screen", false)
+        if (darkScreen)
         {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preference);
+            setTheme(R.style.AppTheme_Dark)
+        }
+        else
+        {
+            setTheme(R.style.AppTheme_Light)
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
+    override fun onPause() {
+        super.onPause()
+
+        editor!!.commit()
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
-    {
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
+    class MyPreferenceFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootkey: String?) {
+            setPreferencesFromResource(R.xml.preference, rootkey)
+        }
+    }
+
+    public override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
 }

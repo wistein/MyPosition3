@@ -26,36 +26,56 @@ FOR A PARTICULAR PURPOSE.<br>
 Licensed under GNU GPLv2 or later.<br>
 https://www.gnu.org/licenses/gpl-3.0<br>
 <br>
+Since version 1.3.0 to current version copyright by wistein, 2017-2024,<br>
+https://github.com/wistein/MyPosition3<BR>
 
 <h4>History</h4>
 
-<B>My Position, version 1.3.8a,</B> 2021-06-05<br>
- - Compiled for SdkVersion 29 as 30 cannot be installed in Android 11<br>
+<B>My Position, version 1.4.0,</B> 2024-09-28,<br>
+ - Faster reaction for getting the current position.<br>
+ - Closing the app also frees its memory space.<br>
+ - Deprecated function replaced.<br>
+ - Code refinements.<br>
+ - Docs updated.<br>
+ - Compiled for SdkVersion 34.<br>
 <br>
 
-<B>My Position, version 1.3.8,</B> 2021-05-30<br>
- - Use Code library mavenCentral instead of deprecated jCenter<br>
- - Compiled with Android Studio 4.2.1 and Gradle 6.7.1<br>
- - Compiled for SdkVersion 30<br>
+<B>My Position, version 1.3.9,</B> 2023-09-25,<br>
+ - Added calculation for distance between 2 decimal coordinates.<br>
+ - Buttons with icons in calculations view.<br>
+ - ScrollView to show whole calculations view.<br>
+ - Switch off keyboard when tapped a button (could cover parts of the result).<br>
+ - Switch on keyboard when tapped a field.<br>
+ - Code refinements.<br>
+ - Compiled for SdkVersion 33.<br>
 <br>
 
-<B>My Position, version 1.3.7,</B> 2020-06-27<br>
- - Location handling corrected for coarse location<br>
- - Compiled with Android Studio 4.0 and Gradle 6.1.1<br>
- - Migrated to AndroidX libraries<br>
+<B>My Position, version 1.3.8a,</B> 2021-07-13<br>
+ - Compiled for SdkVersion 29: Ok in Android 11.<br>
+<B>My Position, version 1.3.8,</B> 2021-05-30,<br>
+ - Use Code library mavenCentral instead of deprecated jCenter.<br>
+ - Compiled for SdkVersion 30, Problem: Could not be installed in Android 11.<br>
 <br>
 
-<B>My Position, version 1.3.6,</B> 2020-02-27<br>
+<B>My Position, version 1.3.8,</B> 2021-05-30,<br>
+ - Use Code library mavenCentral instead of deprecated jCenter.<br>
+ - Compiled for SdkVersion 30.<br>
+<br>
+
+<B>My Position, version 1.3.7,</B> 2020-06-27,<br>
+ - Location handling corrected for coarse location.<br>
+ - Migrated to AndroidX libraries.<br>
+<br>
+
+<B>My Position, version 1.3.6,</B> 2020-02-27,<br>
  - GPS handling as background service.<br>
  - Fix values for min. distance (10 m) and min. polling time (10 sec).<br> 
  - Help incorporated.<br>
  - Docs revised.<br>
- - Compiled with Android Studio 3.6 and Gradle 5.6.4<br>
- - Code shrinked<br>
+ - Code shrunk.<br>
 <br>
 
-<B>My Position, version 1.3.5,</B> 2019-02-04<br>
- - Compiled with Android Studio 3.3 and Gradle 4.10.1.<br>
+<B>My Position, version 1.3.5,</B> 2019-02-04,<br>
  - Removed background service for GPS first fix function.<br>
  - Instead direct GPS position request.<br>
  - Some code cleaning.<br>
@@ -86,25 +106,29 @@ https://www.gnu.org/licenses/gpl-3.0<br>
  - Changed Option: GPS-update parameter "Distance" instead of "Time interval".<br>  
  - Some improvements to display details.<br>
  - Press back twice to exit.<br>
- - Bug fixes: Changed app settings are now valid without restarting the app et al.<br>  
+ - Bug fixes: Changed app settings are now valid without restarting the app.<br>
 <br>
 
 <B>My Position, version 1.3.0,</B> 2017-04-11,<br>
- - Includes code corrections and enhancements.<br>
+Copyright 2017 by wistein,<br>
+License: GNU GPLv2 or later.<BR>
+ - Code corrections and enhancements.<br>
  - Works without Google Apps (GApps).<br>
  - Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
- - Uses Reverse Geocoding by Nominatim service of OpenStreetMap.<br>
- - Uses optionally your provided email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
+ - Reverse Geocoding for address info by Nominatim service of OpenStreetMap.<br>
+ - Optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service).<br>
  - Localization for German and English (default) of text and number formats.<br>
  - Country-specific representation of address info (at, ch, de, fr, it, rest of the world).<br>
  - App-Icon by wistein.<br>
 <br>
 
-Based on myLocation version 1.2,<br>
+<B>myLocation version 1.2</B> <BR>
+Changes and enhancements by GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
+<br>
+Based on
+<B>myLocation version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
-Licensed under GNU GPLv2.<br>
-<br>
-Uses some changes and enhancements by GDR!<br>
-https://github.com/gjedeer/mylocation/<br>
+License: GNU GPLv2<BR>
 <br>

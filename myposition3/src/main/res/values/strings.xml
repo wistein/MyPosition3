@@ -1,9 +1,8 @@
 <!--
-  ~ Copyright (c) 2016. Wilhelm Stein, Bonn, Germany.
+  ~ Copyright (c) 2016-2024. Wilhelm Stein, Bonn, Germany.
   -->
 
 <resources>
-
     <string name="app_name">My Position</string>
     <string name="title_activity_my_position">My Position</string>
     <string name="title_activity_settings">Settings</string>
@@ -14,8 +13,6 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_viewmap">View Map</string>
     <string name="menu_getpos">Request position</string>
-    <string name="menu_toDegree">Decimal → Degree</string>
-    <string name="menu_toDecimal">Degree → Decimal</string>
     <string name="menu_converter">Converter</string>
     <string name="menu_about">About</string>
     <string name="menu_help">Help</string>
@@ -44,13 +41,19 @@
     <string name="lati">Latitude:</string>
     <string name="shlongi">Lon.:</string>
     <string name="shlati">Lat.:</string>
+    <string name="long1">Longitude 1:</string>
+    <string name="lat1">Latitude 1:</string>
+    <string name="long2">Longitude 2:</string>
+    <string name="lat2">Latitude 2:</string>
     <string name="height">Height:</string>
     <string name="degree">→ Degree:</string>
     <string name="decimal">→ Decimal:</string>
     <string name="back_twice">Press again to exit</string>
     <string name="no_provider">No Service Provider available!</string>
+    <string name="dist">Distance</string>
+    <string name="distm">Distance (m):</string>
 
-    <string name="msg_text">Click on the link below to see my position on the OSM map: </string>
+    <string name="msg_text">Click on the following link to see my position on the OSM map: </string>
     <string name="invValue">Invalid value</string>
     <string name="email_string">Necessary for reliable query of address data per OSM Nominatim Reverse Geocoder. The mail address will be treated confidential and only used to contact you in case of service problems. See http://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail Address for OSM Geocoder</string>
@@ -59,11 +62,13 @@
     <string name="map_string">When not tagged the position is shown online in OpenStreetMap. When tagged it tries to use a local map app to show the position offline. (Eventually does not work on your device as it depends on Android\'s app management).</string>
     <string name="titel_map_string">How to Show the Map?</string>
     <string name="screen_orientation">Show screen in landscape mode instead of portrait mode.</string>
-    <string name="titel_screen_orientation">Landscape Instead of Portrait</string>
+    <string name="titel_screen_orientation">Use landscape mode</string>
     <string name="h_nn">Height above Sea-level:</string>
     <string name="h_gps">Height from GPS:</string>
     <string name="h_corr">Height correction:</string>
     <string name="t_noapp">There is no suitable app installed.</string>
+    <string name="darkScreen">Set the screen to dark mode.</string>
+    <string name="titel_darkScreen">Use dark mode</string>
 
     <!-- Permissions -->
     <string name="perm_required">Permissions Required</string>

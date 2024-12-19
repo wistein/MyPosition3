@@ -9,7 +9,7 @@ Your <b>location</b> may also be shown <b>on a map</b> either local (if a suitab
 <br><br>
 It shows a country-specific representation of address info and introduces localized strings and number formats (German, English). 
 <br><br>
-Additionally, this application also includes a <b>tool</b> to help <b>converting</b> between WGS84 decimal coordinate format and degree-minutes-seconds coordinate format.
+Additionally, this application also includes a <b>tool</b> to help <b>converting</b> between WGS84 decimal coordinate format and degree-minutes-seconds coordinate format and a calculator for the distance between 2 coordinates.
 <br><br>
 <h3>2. Set up</h3>
 Before initial use you should look at the <b>Settings</b> page and set up a <b>valid email address</b> for the Nominatim Reverse Geocoding service of OpenStreetMap. This is optional, but for a reliable service and for the reason of protection against abuse it is demanded. Especially, when the service is used on a regular basis (for details see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).

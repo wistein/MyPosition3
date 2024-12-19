@@ -1,48 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.wistein.myposition"
-          xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Permission needed for network location provider -->
+    <!-- Permission needed for location providers -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- Permission needed for GPS location provider -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- Permission needed for background location requests when compiling for API29 -->
-	<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
     <!-- Permissions needed for reverse geocoding -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     
     <application
-        android:icon="@drawable/ic_launcher"
         android:name=".myPosition"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:allowBackup="false"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:theme="@style/AppTheme">
-
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings">
-        </activity>
-
-        <activity
-            android:name=".AboutDialog"
-            android:label="@string/title_activity_about_dialog">
-        </activity>
-
-        <activity
-            android:name=".HelpDialog"
-            android:label="@string/title_activity_help_dialog">
-        </activity>
-
-        <activity
-            android:name=".ConverterActivity"
-            android:label="@string/title_activity_converter">
-        </activity>
+        android:fullBackupContent="false"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.AppCompat"
+        tools:ignore="DataExtractionRules,GoogleAppIndexingWarning">
 
         <activity
             android:name=".MyPositionActivity"
+            android:exported="true"
             android:label="@string/title_activity_my_position">
 
             <intent-filter>
@@ -52,17 +32,37 @@
         </activity>
 
         <activity
-            android:name=".DummyActivity"
+            android:name="com.wistein.myposition.ConverterActivity"
+            android:label="@string/title_activity_converter">
+        </activity>
+
+        <activity
+            android:name="com.wistein.myposition.SettingsActivity"
+            android:label="@string/title_activity_settings">
+        </activity>
+
+        <activity
+            android:name="com.wistein.myposition.AboutDialog"
+            android:label="@string/title_activity_about_dialog">
+        </activity>
+
+        <activity
+            android:name="com.wistein.myposition.HelpDialog"
+            android:label="@string/title_activity_help_dialog">
+        </activity>
+
+        <activity
+            android:name="com.wistein.myposition.DummyActivity"
             android:label="@string/title_activity_dummy"
-            android:parentActivityName=".MyPositionActivity"
-            android:theme="@style/Theme.AppCompat">
+            android:parentActivityName=".MyPositionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MyPositionActivity"/>
         </activity>
 
-        <service android:name=".LocationService"
-                 android:exported="false">
+        <service
+            android:name="com.wistein.myposition.LocationService"
+            android:exported="false">
         </service>
 
     </application>

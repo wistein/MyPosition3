@@ -16,6 +16,15 @@
         />
 
     <CheckBoxPreference
+        android:id="@+id/checkBoxDark"
+        android:key="dark_Screen"
+        android:title="@string/titel_darkScreen"
+        android:icon="@drawable/ic_dark_portrait_48dp"
+        android:onClick="checkBoxDark"
+        android:summary="@string/darkScreen"
+        />
+
+    <CheckBoxPreference
         android:key="screen_Orientation"
         android:title="@string/titel_screen_orientation"
         android:icon="@drawable/ic_rot_portr_landsc_black_48dp"

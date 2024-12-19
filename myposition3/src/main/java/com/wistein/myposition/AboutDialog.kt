@@ -1,6 +1,20 @@
-package com.wistein.myposition;
+package com.wistein.myposition
 
-/*
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.os.Bundle
+import android.text.util.Linkify
+import android.widget.TextView
+import com.wistein.myposition.Utils.fromHtml
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.util.Locale
+
+/**********************************************************************
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2 as
  *  published by the Free Software Foundation
@@ -13,116 +27,84 @@ package com.wistein.myposition;
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *  
- ******************
+ *
  * AboutDialog.java
  * Custom class for displaying the About Dialog
  *
  * Based on
- * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
+ * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
- *
- * Info url :
- * http://code.google.com/p/mylocation/
- * http://kirostudio.com
- * http://blog.mypapit.net/
  *
  * Adopted by wistein for MyPosition3
  * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2019-05-21
+ * last edited in Java on 2024-09-30,
+ * converted to Kotlin on 2024-09-30,
+ * Last edited on 2024-11-19.
  */
+class AboutDialog : Activity() {
+    @SuppressLint("SourceLockedOrientationActivity")
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.util.Linkify;
-import android.widget.TextView;
+        val prefs = myPosition.getPrefs()
+        val screenOrientL = prefs.getBoolean("screen_Orientation", false)
+        val darkScreen = prefs.getBoolean("dark_Screen", false)
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Locale;
-
-public class AboutDialog extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener
-{
-    private boolean screenOrientL; // option for screen orientation
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        pref.registerOnSharedPreferenceChangeListener(this);
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
-
-        if (screenOrientL)
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else
-        {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        requestedOrientation = if (screenOrientL) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        String language = Locale.getDefault().toString().substring(0, 2);
-        setContentView(R.layout.activity_about_dialog);
-
-        TextView tv = findViewById(R.id.info_head);
-        if (language.equals("de"))
+        if (darkScreen)
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head_de)));
+            setTheme(R.style.AppTheme_Dark)
         }
         else
         {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_head)));
+            setTheme(R.style.AppTheme_Light)
         }
-        tv.setLinkTextColor(Color.BLUE);
-        Linkify.addLinks(tv, Linkify.WEB_URLS);
 
-        tv = findViewById(R.id.info_text);
-        if (language.equals("de"))
-        {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info_de)));
+        val language = Locale.getDefault().toString().substring(0, 2)
+        setContentView(R.layout.activity_about_dialog)
+
+        var tv = findViewById<TextView>(R.id.info_head)
+        if (language == "de") {
+            tv.text =
+                fromHtml(readRawTextFile(R.raw.info_head_de, this))
+        } else {
+            tv.text =
+                fromHtml(readRawTextFile(R.raw.info_head, this))
         }
-        else
-        {
-            tv.setText(Utils.fromHtml(readRawTextFile(R.raw.info)));
+        tv.setLinkTextColor(Color.BLUE)
+        Linkify.addLinks(tv, Linkify.WEB_URLS)
+
+        tv = findViewById(R.id.info_text)
+        if (language == "de") {
+            tv.text =
+                fromHtml(readRawTextFile(R.raw.info_de, this))
+        } else {
+            tv.text =
+                fromHtml(readRawTextFile(R.raw.info, this))
         }
-        tv.setLinkTextColor(Color.BLUE);
-        Linkify.addLinks(tv, Linkify.WEB_URLS);
+        tv.setLinkTextColor(Color.BLUE)
+        Linkify.addLinks(tv, Linkify.WEB_URLS)
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-    }
-
-    private static String readRawTextFile(int id)
-    {
-        InputStream inputStream = myPosition.getAppContext().getResources().openRawResource(id);
-        InputStreamReader in = new InputStreamReader(inputStream);
-        BufferedReader buf = new BufferedReader(in);
-        String line;
-        StringBuilder text = new StringBuilder();
-        try
-        {
-            while ((line = buf.readLine()) != null) text.append(line);
-        } catch (IOException e)
-        {
-            return null;
+    companion object {
+        private fun readRawTextFile(id: Int, context: Context): String? {
+            val inputStream = context.resources.openRawResource(id)
+            val `in` = InputStreamReader(inputStream)
+            val buf = BufferedReader(`in`)
+            var line: String?
+            val text = StringBuilder()
+            try {
+                while ((buf.readLine().also { line = it }) != null) text.append(line)
+            } catch (_: IOException) {
+                return null
+            }
+            return text.toString()
         }
-        return text.toString();
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences pref, String key)
-    {
-        screenOrientL = pref.getBoolean("screen_Orientation", false);
     }
 
 }

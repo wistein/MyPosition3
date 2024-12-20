@@ -7,7 +7,8 @@ It introduces localized strings and considers localized number formats for Germa
 There are two GPS coordinate formats supported: <br>
 WGS84 Decimal coordinates and <br>
 DD MM SS coordinates. <br>
-Additionally, this application also includes a tool to help converting between WGS84 decimal GPS coordinate and DD MM SS coordinate format.<br>
+Additionally, this application also includes a tool to help converting between WGS84 decimal GPS and DD MM SS coordinates format and calculates the distance between 2 coordinates.<br>
+Runs on Android 7.1 or newer.<br>
 <br>
 
 <h4>Legal and License</h4>
@@ -31,7 +32,19 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>History</h4>
 
-<B>My Position, version 1.4.0,</B> 2024-09-28,<br>
+<B>My Position, version 1.4.2,</B> 2024-12-20<br>
+ - Some code cleaning.<br>
+ - Docs updated.<br>
+<br>
+
+<B>My Position, version 1.4.1,</B> 2024-12-19<br>
+ - Minor layout refinements.<br>
+ - Most Java code transposed to Kotlin.<br>
+ - Code refinements.<br>
+ - Docs updated.<br>
+<br>
+
+<B>My Position, version 1.4.0,</B> 2024-09-28<br>
  - Faster reaction for getting the current position.<br>
  - Closing the app also frees its memory space.<br>
  - Deprecated function replaced.<br>
@@ -40,7 +53,7 @@ https://github.com/wistein/MyPosition3<BR>
  - Compiled for SdkVersion 34.<br>
 <br>
 
-<B>My Position, version 1.3.9,</B> 2023-09-25,<br>
+<B>My Position, version 1.3.9,</B> 2023-09-25<br>
  - Added calculation for distance between 2 decimal coordinates.<br>
  - Buttons with icons in calculations view.<br>
  - ScrollView to show whole calculations view.<br>
@@ -57,17 +70,17 @@ https://github.com/wistein/MyPosition3<BR>
  - Compiled for SdkVersion 30, Problem: Could not be installed in Android 11.<br>
 <br>
 
-<B>My Position, version 1.3.8,</B> 2021-05-30,<br>
+<B>My Position, version 1.3.8,</B> 2021-05-30<br>
  - Use Code library mavenCentral instead of deprecated jCenter.<br>
  - Compiled for SdkVersion 30.<br>
 <br>
 
-<B>My Position, version 1.3.7,</B> 2020-06-27,<br>
+<B>My Position, version 1.3.7,</B> 2020-06-27<br>
  - Location handling corrected for coarse location.<br>
  - Migrated to AndroidX libraries.<br>
 <br>
 
-<B>My Position, version 1.3.6,</B> 2020-02-27,<br>
+<B>My Position, version 1.3.6,</B> 2020-02-27<br>
  - GPS handling as background service.<br>
  - Fix values for min. distance (10 m) and min. polling time (10 sec).<br> 
  - Help incorporated.<br>
@@ -75,29 +88,29 @@ https://github.com/wistein/MyPosition3<BR>
  - Code shrunk.<br>
 <br>
 
-<B>My Position, version 1.3.5,</B> 2019-02-04,<br>
+<B>My Position, version 1.3.5,</B> 2019-02-04<br>
  - Removed background service for GPS first fix function.<br>
  - Instead direct GPS position request.<br>
  - Some code cleaning.<br>
 <br>
 
-<B>My Position, version 1.3.4,</B> 2018-09-25,<br>
+<B>My Position, version 1.3.4,</B> 2018-09-25<br>
  - Added option to select a time interval to query the position.<br>
  - GPS first fix function as background service.<br>
  - Compiled for Android 8.1 (Oreo).<br>
 <br>
 
-<B>My Position, version 1.3.3,</B> 2017-10-31,<br>
+<B>My Position, version 1.3.3,</B> 2017-10-31<br>
  - Code adapted and compiled under Android Studio 3.0.<br>
 <br>
 
-<B>My Position, version 1.3.2,</B> 2017-09-26,<br>
+<B>My Position, version 1.3.2,</B> 2017-09-26<br>
  - Code adapted and compiled for Android 7.1.<br>
  - Write system log only in debug version.<br>
  - Showing height and coordinates without irrelevant decimal places.<br>
 <br>
 
-<B>My Position, version 1.3.1,</B> 2017-09-12,<br>
+<B>My Position, version 1.3.1,</B> 2017-09-12<br>
  - Icons in settings menu<br>
  - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96.<br>
  - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap.<br> 
@@ -109,7 +122,7 @@ https://github.com/wistein/MyPosition3<BR>
  - Bug fixes: Changed app settings are now valid without restarting the app.<br>
 <br>
 
-<B>My Position, version 1.3.0,</B> 2017-04-11,<br>
+<B>My Position, version 1.3.0,</B> 2017-04-11<br>
 Copyright 2017 by wistein,<br>
 License: GNU GPLv2 or later.<BR>
  - Code corrections and enhancements.<br>

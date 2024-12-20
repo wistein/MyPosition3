@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -43,8 +44,9 @@ import kotlin.math.sqrt
  * Copyright 2019-2023, Wilhelm Stein, Germany
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2024-11-21.
+ * Last edited on 2024-12-20
  */
+@Suppress("KotlinConstantConditions")
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private var tvDecimalLat: EditText? = null
     private var tvDecimalLon: EditText? = null
@@ -67,6 +69,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (MyDebug.LOG) Log.i(caTag, "71, onCreate") // is set true in debug mode
         val prefs = myPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
@@ -134,7 +137,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         tvDecimalLon1!!.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
         tvDecimalLat2!!.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
         tvDecimalLon2!!.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDistRes!!.setText(DecimalFormat("#.##").format(0.000000))
+        tvDistRes!!.text = DecimalFormat("#.##").format(0.000000)
 
         // initially calculate the current coordinates in degrees
         this.toDegree()
@@ -157,6 +160,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy()
     {
         super.onDestroy()
+        if (MyDebug.LOG) Log.i(caTag, "162, onDestroy")
         tvDecimalLat!!.clearFocus()
         tvDecimalLon!!.clearFocus()
         tvDegreeLat!!.clearFocus()
@@ -315,6 +319,8 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     companion object {
+        val caTag: String = "ConverterAct"
+
         fun hideKeyboard(activity: Activity) {
             val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
 

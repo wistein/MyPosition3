@@ -1,6 +1,5 @@
 package com.wistein.myposition
 
-import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import androidx.work.Worker
@@ -19,11 +18,12 @@ import java.net.URL
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2024-10-03
+ * last edited on 2024-12-20
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
     override fun doWork(): Result {
+        val rTag: String = "RetrvAddrRun"
         var xmlString: String
         val url: URL
 
@@ -54,23 +54,21 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     sb.append(line).append('\n')
                 }
             } catch (e: IOException) {
-                if (MyDebug.LOG) Log.e(
-                    ContentValues.TAG,
-                    "59, Problem converting Stream to String: $e"
+                if (MyDebug.LOG) Log.e(rTag, // is true for debug version
+                    "58, Problem converting Stream to String: $e"
                 )
             } finally {
                 try {
                     iStream.close()
                 } catch (e: IOException) {
-                    if (MyDebug.LOG) Log.e(ContentValues.TAG, "64, Problem closing InputStream: $e")
+                    if (MyDebug.LOG) Log.e(rTag,
+                        "65, Problem closing InputStream: $e")
                 }
             }
             xmlString = sb.toString()
 
             // Log gzip-content of url
-            if (MyDebug.LOG) Log.d(
-                ContentValues.TAG,
-                "70, xmlString: $xmlString"
+            if (MyDebug.LOG) Log.d(rTag, "71, xmlString: $xmlString"
             )
 
             // parse the XML content
@@ -326,7 +324,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 addresslines = msg.toString()
             }
         } catch (e: IOException) {
-            if (MyDebug.LOG) Log.e(ContentValues.TAG, "333, Problem with address handling: $e")
+            if (MyDebug.LOG) Log.e(rTag, "327, Problem with address handling: $e")
             addresslines = R.string.unknownAddr.toString()
         }
         return Result.success()

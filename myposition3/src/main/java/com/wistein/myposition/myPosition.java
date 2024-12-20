@@ -10,11 +10,11 @@ import androidx.preference.PreferenceManager;
 /**
  * Created by wmstein for myposition3 on 31.12.2016.
  * Copyright (c) 2016-2024, Wilhelm Stein, Bonn, Germany.
- * Last edited on 2024-11-19
+ * Last edited on 2024-12-20
  */
 public class myPosition extends Application
 {
-    private static final String TAG = "myPosition";
+    private static final String TAG = "MyPosition3, myPosition";
 
     private static SharedPreferences prefs;
 
@@ -26,7 +26,7 @@ public class myPosition extends Application
         // Support to debug "A resource failed to call ..." (close, dispose or similar)
         if (MyDebug.LOG)
         {
-            Log.i(TAG, "36, StrictMode.setVmPolicy");
+            Log.i(TAG, "29, StrictMode.setVmPolicy");
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(StrictMode.getVmPolicy())
                 .detectLeakedClosableObjects()
                 .build());
@@ -37,8 +37,7 @@ public class myPosition extends Application
             prefs = PreferenceManager.getDefaultSharedPreferences(this);
         } catch (Exception e)
         {
-            if (MyDebug.LOG)
-                Log.e(TAG, e.toString());
+            if (MyDebug.LOG) Log.e(TAG, "40, " + e);
         }
     }
 

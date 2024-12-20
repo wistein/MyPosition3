@@ -7,7 +7,8 @@ Die App kann in Deutsch oder Englisch verwendet werden und zeigt auch die Zahlen
 Es werden zwei GPS-Koordinatenformate unterstützt: <br>
 WGS84 Dezimal-Koordinaten und <br>
 GG-MM-SS-Koordinaten. <br>
-Zusätzlich bietet sie die Möglichkeit, Koordinaten zwischen WGS84-Dezimal- und Grad-Darstellung umzurechnen.<br>
+Zusätzlich bietet sie die Möglichkeit, Koordinaten zwischen WGS84-Dezimal- und Grad-Darstellung umzurechnen und die Entfernung zwischen 2 Koordinaten zu bestimmen.<br>
+Die App benötigt Android 7.1 oder neuer.<br>
 <br>
 
 <h4>Haftungsausschluss und Lizenz</h4> 
@@ -28,7 +29,19 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>My Position, version 1.4.0,</B> 28.09.2024,<br>
+<B>Mein Standort, Version 1.4.2,</B> 20.12.2024<br>
+ - Some code cleaning.<br>
+ - Docs updated.<br>
+<br>
+
+<B>Mein Standort, Version 1.4.1,</B> 19.12.2024<br>
+ - Minor layout refinements.<br>
+ - Most Java code transposed to Kotlin.<br>
+ - Code refinements.<br>
+ - Docs updated.<br>
+<br>
+
+<B>Mein Standort, Version 1.4.0,</B> 28.09.2024,<br>
  - Schnelleres Erkennen der aktuellen Position.<br>
  - App wird nach Beenden komplett aus dem Arbeitsspeicher entfernt.<br>
  - Veraltete Funktion ersetzt.<br>

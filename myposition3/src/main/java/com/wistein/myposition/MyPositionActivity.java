@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,13 +64,14 @@ import java.util.TimeZone;
  * <p>
  * Adopted by wistein for MyPosition3
  * Copyright 2019-2024, Wilhelm Stein, Bonn, Germany
- * last edited on 2024-11-19
+ * last edited on 2024-12-20
  */
 public class MyPositionActivity
     extends AppCompatActivity
     implements OnClickListener,
                PermissionsDialogFragment.PermissionsGrantedCallback
 {
+    private static final String TAG = "MyPositionAct";
     private TextView tvDecimalCoord;
     private TextView tvDegreeCoord;
     public TextView tvLocation;
@@ -118,6 +120,8 @@ public class MyPositionActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        if (MyDebug.LOG) Log.i(TAG, "124, onCreate");
 
         prefs = myPosition.getPrefs();
 
@@ -197,6 +201,8 @@ public class MyPositionActivity
     {
         super.onResume();
 
+        if (MyDebug.LOG) Log.i(TAG, "204, onResume");
+
         messageHeader = getString(R.string.msg_text);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
         darkScreen = prefs.getBoolean("dark_Screen", false);
@@ -265,6 +271,7 @@ public class MyPositionActivity
     {
         super.onPause();
 
+        if (MyDebug.LOG) Log.i(TAG, "274, onPause");
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("permLoc_Given", permLocGiven);
         editor.apply();
@@ -273,6 +280,8 @@ public class MyPositionActivity
     public void onStop()
     {
         super.onStop();
+
+        if (MyDebug.LOG) Log.i(TAG, "284, onStop");
 
         // Stop location service with permissions check
         modePerm = 2;
@@ -286,8 +295,9 @@ public class MyPositionActivity
     {
         super.onDestroy();
 
-
+        if (MyDebug.LOG) Log.i(TAG, "298, onDestroy");
     }
+
     public boolean onCreateOptionsMenu(Menu menu)
     {
         getMenuInflater().inflate(R.menu.activity_my_location, menu);
@@ -378,7 +388,7 @@ public class MyPositionActivity
                     {
                         locationService.stopListener();
                         if (MyDebug.LOG)
-                            Toast.makeText(this, "Stop locationService", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, TAG +"Stop locationService", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -501,7 +511,7 @@ public class MyPositionActivity
             WorkManager.getInstance(getApplicationContext()).enqueue(retrieveAddrWorkRequest);
 
             // format for TextView tvMessage, delayed for getting the result of WorkRequest
-            Handler m2Handler = new Handler();
+            final Handler m2Handler = new Handler();
             final Runnable r2 = new Runnable()
             {
                 String addresslines1;

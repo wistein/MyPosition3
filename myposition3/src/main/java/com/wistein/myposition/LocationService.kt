@@ -1,3 +1,5 @@
+@file:Suppress("KotlinConstantConditions")
+
 package com.wistein.myposition
 
 import android.Manifest
@@ -24,7 +26,7 @@ import androidx.core.app.ActivityCompat
  * Adopted for MyPosition3 by wmstein since 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2024-09-30.
+ * last edited on 2024-12-20.
  */
 class LocationService : Service, LocationListener {
     var mContext: Context? = null
@@ -43,7 +45,7 @@ class LocationService : Service, LocationListener {
     //   and therefore no further need for Network provider usage
     private var exactLocation = false
 
-    // Default constructor demanded for service declaration in AndroidManifest.xml
+    /** Default constructor() demanded by service declaration in AndroidManifest.xml */
     constructor()
 
     constructor(mContext: Context?) {
@@ -122,7 +124,7 @@ class LocationService : Service, LocationListener {
                 }
             }
         } catch (e: Exception) {
-            if (MyDebug.LOG) Log.e(TAG, e.toString())
+            if (MyDebug.LOG) Log.e(TAG, "127, $e")
         }
     }
 
@@ -145,7 +147,7 @@ class LocationService : Service, LocationListener {
                 locationManager = null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "StopListener: $e")
+            Log.e(TAG, "150, StopListener: $e")
         }
     }
 
@@ -210,7 +212,7 @@ class LocationService : Service, LocationListener {
     }
 
     companion object {
-        private const val TAG = "LocationSrv"
+        private const val TAG = "MyPosition3, LocationSrv"
         private const val MIN_DISTANCE_FOR_UPDATES: Long = 5 // (m)
         private const val MIN_TIME_BW_UPDATES: Long = 2000 // (msec)
     }

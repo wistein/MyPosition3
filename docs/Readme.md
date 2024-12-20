@@ -40,8 +40,14 @@ https://github.com/wistein/MyPosition3<BR>
 
 ### History:
 
+<B>My Position, version 1.4.2,</B> 2024-12-20<br>
+- Some code cleaning<br>
+- Docs updated<br>
+<br>
+
 <B>My Position, version 1.4.1,</B> 2024-12-19<br>
 - Minor layout refinements<br>
+- Most Java code transposed to Kotlin<br>
 - Code refinements<br>
 - Docs updated<br>
 <br>
@@ -49,7 +55,7 @@ https://github.com/wistein/MyPosition3<BR>
 - <B>My Position, version 1.4.0,</B> 2024-09-28<br>
 - Faster reaction for getting the current position<br>
 - Closing the app also frees its memory space<br>
-- Most Java code transposed to Kotlin
+- Most Java code transposed to Kotlin<br>
 - Deprecated function replaced<br>
 - Code refinements<br>
 - Docs updated<br>
@@ -61,7 +67,7 @@ https://github.com/wistein/MyPosition3<BR>
 - Buttons with icons in calculations view<br>
 - ScrollView to show whole calculations view<br>
 - Switch off keyboard after distance calculation to show otherwise masked result<br>
-- Switch on keyboard when tapped a field.<br>
+- Switch on keyboard when tapped a field<br>
 - Code refinements<br>
 - Compiled for SdkVersion 33<br>
 <br>
@@ -112,10 +118,10 @@ https://github.com/wistein/MyPosition3<BR>
   - Icons in settings menu<br>
   - Height data is corrected according to World Geodetic System WGS84 and Earth Gravitational Model EGM96<br>
   - Your Position may be shown either local by a suitable mapping app or online by OpenStreetMap<br>
-  - New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction.<br>
+  - New Option: Set a toast message about height values with height above sea-level, GPS-height and height correction<br>
   - New Option: Switch between portrait and landscape mode.<br>
-  - Some improvements to display details.<br>
-  - Press back twice to exit.<br>
+  - Some improvements to display details<br>
+  - Press back twice to exit<br>
   - Bug fixes: Changed app settings are now valid without restarting the app<br>
 <br>
  

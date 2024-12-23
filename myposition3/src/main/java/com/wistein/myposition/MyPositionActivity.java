@@ -64,7 +64,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted by wistein for MyPosition3
  * Copyright 2019-2024, Wilhelm Stein, Bonn, Germany
- * last edited on 2024-12-20
+ * last edited on 2024-12-22
  */
 public class MyPositionActivity
     extends AppCompatActivity
@@ -84,8 +84,8 @@ public class MyPositionActivity
     private boolean darkScreen;        // Option for dark screen background
     private boolean showToast;         // option to show toast with height info
 
-    // mapLocal is option to select local app (true) or online map (false)
-    // when true and GAPPS are present MyPosition3 shows location even online on Google Maps,
+    // mapLocal is option to select local app (true) or online map (false).
+    // When GAPPS are present MyPosition3 shows location always even online on Google Maps,
     //   without GAPPS MyPosition3 uses a local mapping app to show the location
     private boolean mapLocal;
 
@@ -119,13 +119,10 @@ public class MyPositionActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-
-        if (MyDebug.LOG) Log.i(TAG, "124, onCreate");
+        if (MyDebug.LOG) Log.i(TAG, "122, onCreate");
 
         prefs = myPosition.getPrefs();
 
-        emailString = prefs.getString("email_String", "");
         darkScreen = prefs.getBoolean("dark_Screen", false);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
 
@@ -147,6 +144,8 @@ public class MyPositionActivity
             setTheme(R.style.AppTheme_Light);
         }
 
+        super.onCreate(savedInstanceState); // put here for setTheme(...) to work
+
         setContentView(R.layout.activity_my_location);
         ScrollView baseLayout = findViewById(R.id.baseLayout);
         assert baseLayout != null;
@@ -159,41 +158,42 @@ public class MyPositionActivity
         }
 
         // new onBackPressed logic
+        final Handler m1Handler = new Handler();
+        final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true)
         {
-            final Handler m1Handler = new Handler();
-            final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
-
             @Override
             public void handleOnBackPressed()
             {
                 if (doubleBackToExitPressedTwice)
                 {
-
                     finishAndRemoveTask();
                 }
+                else
+                {
+                    doubleBackToExitPressedTwice = true;
 
-                doubleBackToExitPressedTwice = true;
+                    Toast t = new Toast(getApplicationContext());
+                    LayoutInflater inflater = getLayoutInflater();
 
-                Toast t = new Toast(getApplicationContext());
-                LayoutInflater inflater = getLayoutInflater();
+                    @SuppressLint("InflateParams")
+                    View toastView = inflater.inflate(R.layout.toast_view, null);
+                    TextView textView = toastView.findViewById(R.id.toast);
+                    textView.setText(R.string.back_twice);
 
-                @SuppressLint("InflateParams")
-                View toastView = inflater.inflate(R.layout.toast_view, null);
-                TextView textView = toastView.findViewById(R.id.toast);
-                textView.setText(R.string.back_twice);
+                    t.setView(toastView);
+                    t.setDuration(Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+                    t.show();
 
-                t.setView(toastView);
-                t.setDuration(Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-                t.show();
-
-                m1Handler.postDelayed(r1,1500);
+                    m1Handler.postDelayed(r1, 1500);
+                }
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
     }
-    // end of onCreate
+    // End of onCreate
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -209,7 +209,9 @@ public class MyPositionActivity
         mapLocal = prefs.getBoolean("map_Local", false);
         showToast = prefs.getBoolean("show_Toast", false);
         permLocGiven = prefs.getBoolean("permLoc_Given", false);
+        emailString = prefs.getString("email_String", "");
 
+        if (MyDebug.LOG) Log.i(TAG, "214, onResume, darkScreen: " + darkScreen);
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -264,14 +266,14 @@ public class MyPositionActivity
         permissionCaptureFragment();
         registerRelativeFixTime();
     }
-    // end of onResume()
+    // End of onResume()
 
     @Override
     public void onPause()
     {
         super.onPause();
 
-        if (MyDebug.LOG) Log.i(TAG, "274, onPause");
+        if (MyDebug.LOG) Log.i(TAG, "276, onPause");
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("permLoc_Given", permLocGiven);
         editor.apply();
@@ -281,7 +283,7 @@ public class MyPositionActivity
     {
         super.onStop();
 
-        if (MyDebug.LOG) Log.i(TAG, "284, onStop");
+        if (MyDebug.LOG) Log.i(TAG, "286, onStop");
 
         // Stop location service with permissions check
         modePerm = 2;
@@ -295,7 +297,7 @@ public class MyPositionActivity
     {
         super.onDestroy();
 
-        if (MyDebug.LOG) Log.i(TAG, "298, onDestroy");
+        if (MyDebug.LOG) Log.i(TAG, "300, onDestroy");
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -345,7 +347,8 @@ public class MyPositionActivity
             else
             {
                 // use browser or other web app to show location in OpenStreetMap
-                String urlView = "https://www.openstreetmap.org/?mlat=" + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
+                String urlView = "https://www.openstreetmap.org/?mlat="
+                    + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
             }
 
@@ -387,8 +390,7 @@ public class MyPositionActivity
                     if (permLocGiven)
                     {
                         locationService.stopListener();
-                        if (MyDebug.LOG)
-                            Toast.makeText(this, TAG +"Stop locationService", Toast.LENGTH_SHORT).show();
+                        if (MyDebug.LOG) Log.i(TAG, "393, Stop locationService");
                     }
                 }
             }
@@ -451,7 +453,8 @@ public class MyPositionActivity
             String language = Locale.getDefault().toString().substring(0, 2);
 
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
+            if (language.equals("de") || language.equals("es") || language.equals("fr")
+                || language.equals("it") || language.equals("nl") || language.equals("pt"))
             {
                 lattemp = lattemp.replace('.', ',');
                 lontemp = lontemp.replace('.', ',');
@@ -477,9 +480,8 @@ public class MyPositionActivity
             sb = new StringBuilder(getString(R.string.posnotknown));
         }
 
-        // get reverse geocoding
-        // formatted string for message
-        //String addresslines1;
+        // Get reverse geocoding formatted string for message
+        // String addresslines1;
         if (locationService.canGetLocation() && (lat != 0 || lon != 0))
         {
             final String time_header = this.getString(R.string.last_fix_time) + " ";
@@ -487,7 +489,8 @@ public class MyPositionActivity
             String relative_date = getString(R.string.unknownFix);
             if (fixTime > 0)
             {
-                relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                relative_date = DateUtils.getRelativeTimeSpanString(fixTime,
+                    System.currentTimeMillis(), 0, 0).toString();
             }
             tvDecimalCoord.setText(sb.toString());
             tvDegreeCoord.setText(toDegree(lat, lon));
@@ -495,11 +498,10 @@ public class MyPositionActivity
             tvUpdatedTime.setText(uTime);
 
             // call reverse geocoding
-            String urlString = "https://nominatim.openstreetmap.org/reverse?email=" + emailString + "&format=xml&lat="
+            String urlString = "https://nominatim.openstreetmap.org/reverse?email="
+                + emailString + "&format=xml&lat="
                 + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
 
-
-            // Trial with WorkManager
             WorkRequest retrieveAddrWorkRequest =
                 new OneTimeWorkRequest.Builder(RetrieveAddrRunner.class)
                     .setInputData(new Data.Builder()
@@ -508,9 +510,11 @@ public class MyPositionActivity
                                  )
                     .build();
 
-            WorkManager.getInstance(getApplicationContext()).enqueue(retrieveAddrWorkRequest);
+            WorkManager.getInstance(getApplicationContext())
+                .enqueue(retrieveAddrWorkRequest);
 
-            // format for TextView tvMessage, delayed for getting the result of WorkRequest
+            // format for TextView tvMessage,
+            // delayed for getting the result of WorkRequest
             final Handler m2Handler = new Handler();
             final Runnable r2 = new Runnable()
             {
@@ -552,7 +556,7 @@ public class MyPositionActivity
             tvMessage.setText(addresslines);
         }
     }
-    // end of getLoc
+    // End of getLoc()
 
     private double correctHeight(double lat, double lon, double gpsHeight)
     {
@@ -625,7 +629,7 @@ public class MyPositionActivity
         else
             directionEW = west;
 
-        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
         if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
@@ -693,7 +697,7 @@ public class MyPositionActivity
 
     // Show message to share
     private String getMessage(double lat, double lon, double height, double uncertainty,
-                                     String messageHeader, String adrlines)
+                              String messageHeader, String adrlines)
     {
         StringBuilder message = new StringBuilder();
         String geoLoc = getApplicationContext().getString(R.string.geoloc);
@@ -713,7 +717,7 @@ public class MyPositionActivity
         @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
 
         String language = Locale.getDefault().toString().substring(0, 2);
-        // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
         if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             tempLat = tempLat.replace('.', ',');
@@ -776,9 +780,9 @@ public class MyPositionActivity
 
         return message.toString();
     }
-    // end of getMessage
+    // End of getMessage
 
-    // updates fixtime display every second
+    // Updates fixtime display every second
     private void registerRelativeFixTime()
     {
         final Handler handler = new Handler();

@@ -33,12 +33,20 @@
 
         <activity
             android:name="com.wistein.myposition.ConverterActivity"
-            android:label="@string/title_activity_converter">
+            android:label="@string/title_activity_converter"
+            android:parentActivityName=".MyPositionActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MyPositionActivity"/>
         </activity>
 
         <activity
             android:name="com.wistein.myposition.SettingsActivity"
-            android:label="@string/title_activity_settings">
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MyPositionActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MyPositionActivity"/>
         </activity>
 
         <activity

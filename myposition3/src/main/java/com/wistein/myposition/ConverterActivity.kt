@@ -48,19 +48,19 @@ import kotlin.math.sqrt
  */
 @Suppress("KotlinConstantConditions")
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
-    private var tvDecimalLat: EditText? = null
-    private var tvDecimalLon: EditText? = null
-    private var tvDegreeLat: EditText? = null
-    private var tvMinuteLat: EditText? = null
-    private var tvSecondLat: EditText? = null
-    private var tvDegreeLon: EditText? = null
-    private var tvMinuteLon: EditText? = null
-    private var tvSecondLon: EditText? = null
-    private var tvDecimalLat1: EditText? = null
-    private var tvDecimalLon1: EditText? = null
-    private var tvDecimalLat2: EditText? = null
-    private var tvDecimalLon2: EditText? = null
-    private var tvDistRes: TextView? = null
+    private val tvDecimalLat: EditText by lazy { findViewById(R.id.latDecimal) }
+    private val tvDecimalLon: EditText by lazy { findViewById(R.id.lonDecimal) }
+    private val tvDegreeLat: EditText by lazy { findViewById(R.id.degreelat) }
+    private val tvMinuteLat: EditText by lazy { findViewById(R.id.minutelat) }
+    private val tvSecondLat: EditText by lazy { findViewById(R.id.secondlat) }
+    private val tvDegreeLon: EditText by lazy { findViewById(R.id.degreelon) }
+    private val tvMinuteLon: EditText by lazy { findViewById(R.id.minutelon) }
+    private val tvSecondLon: EditText by lazy { findViewById(R.id.secondlon) }
+    private val tvDecimalLat1: EditText by lazy { findViewById(R.id.latDec1) }
+    private val tvDecimalLon1: EditText by lazy { findViewById(R.id.lonDec1) }
+    private val tvDecimalLat2: EditText by lazy { findViewById(R.id.latDec2) }
+    private val tvDecimalLon2: EditText by lazy { findViewById(R.id.lonDec2) }
+    private val tvDistRes: TextView by lazy { findViewById(R.id.distRes) }
 
     var lat: Double = 0.0
     var lon: Double = 0.0
@@ -93,23 +93,6 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
         supportActionBar!!.setTitle(R.string.title_activity_converter)
 
-        tvDecimalLat = findViewById(R.id.latDecimal)
-        tvDecimalLon = findViewById(R.id.lonDecimal)
-
-        tvDegreeLat = findViewById(R.id.degreelat)
-        tvMinuteLat = findViewById(R.id.minutelat)
-        tvSecondLat = findViewById(R.id.secondlat)
-
-        tvDegreeLon = findViewById(R.id.degreelon)
-        tvMinuteLon = findViewById(R.id.minutelon)
-        tvSecondLon = findViewById(R.id.secondlon)
-
-        tvDecimalLat1 = findViewById(R.id.latDec1)
-        tvDecimalLon1 = findViewById(R.id.lonDec1)
-        tvDecimalLat2 = findViewById(R.id.latDec2)
-        tvDecimalLon2 = findViewById(R.id.lonDec2)
-        tvDistRes = findViewById(R.id.distRes)
-
         val buttonCalc1 = findViewById<Button>(R.id.buttonCalc1)
         val buttonCalc2 = findViewById<Button>(R.id.buttonCalc2)
         val buttonCalc3 = findViewById<Button>(R.id.buttonCalc3)
@@ -131,13 +114,13 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         lon = tlon.toDouble()
 
         // fill in the current decimal coordinates in all appropriate fields
-        tvDecimalLat!!.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon!!.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDecimalLat1!!.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon1!!.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDecimalLat2!!.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon2!!.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDistRes!!.text = DecimalFormat("#.##").format(0.000000)
+        tvDecimalLat.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
+        tvDecimalLon.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
+        tvDecimalLat1.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
+        tvDecimalLon1.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
+        tvDecimalLat2.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
+        tvDecimalLon2.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
+        tvDistRes.text = DecimalFormat("#.##").format(0.000000)
 
         // initially calculate the current coordinates in degrees
         this.toDegree()
@@ -150,10 +133,13 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
         if (viewID == R.id.buttonCalc1) {
             this.toDegree()
+            view.invalidate()
         } else if (viewID == R.id.buttonCalc2) {
             this.toDecimal()
+            view.invalidate()
         } else if (viewID == R.id.buttonCalc3) {
             this.sDistance()
+            view.invalidate()
         }
     }
 
@@ -161,39 +147,55 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     {
         super.onDestroy()
         if (MyDebug.LOG) Log.i(caTag, "162, onDestroy")
-        tvDecimalLat!!.clearFocus()
-        tvDecimalLon!!.clearFocus()
-        tvDegreeLat!!.clearFocus()
-        tvMinuteLat!!.clearFocus()
-        tvSecondLat!!.clearFocus()
-        tvDegreeLon!!.clearFocus()
-        tvMinuteLon!!.clearFocus()
-        tvSecondLon!!.clearFocus()
-        tvDecimalLat1!!.clearFocus()
-        tvDecimalLon1!!.clearFocus()
-        tvDecimalLat2!!.clearFocus()
-        tvDecimalLon2!!.clearFocus()
 
-        tvDecimalLat = null
-        tvDecimalLon = null
-        tvDegreeLat = null
-        tvMinuteLat = null
-        tvSecondLat = null
-        tvDegreeLon = null
-        tvMinuteLon = null
-        tvSecondLon = null
-        tvDecimalLat1 = null
-        tvDecimalLon1 = null
-        tvDecimalLat2 = null
-        tvDecimalLon2 = null
+        tvDecimalLat.clearFocus()
+        tvDecimalLat.invalidate()
+
+        tvDecimalLon.clearFocus()
+        tvDecimalLon.invalidate()
+
+        tvDecimalLon.clearFocus()
+        tvDecimalLon.invalidate()
+
+        tvDegreeLat.clearFocus()
+        tvDegreeLat.invalidate()
+
+        tvMinuteLat.clearFocus()
+        tvMinuteLat.invalidate()
+
+        tvSecondLat.clearFocus()
+        tvSecondLat.invalidate()
+
+        tvDegreeLon.clearFocus()
+        tvDegreeLon.invalidate()
+
+        tvMinuteLon.clearFocus()
+        tvMinuteLon.invalidate()
+
+        tvSecondLon.clearFocus()
+        tvSecondLon.invalidate()
+
+        tvDecimalLat1.clearFocus()
+        tvDecimalLat1.invalidate()
+
+        tvDecimalLon1.clearFocus()
+        tvDecimalLon1.invalidate()
+
+        tvDecimalLat2.clearFocus()
+        tvDecimalLat2.invalidate()
+
+        tvDecimalLon2.clearFocus()
+        tvDecimalLon2.invalidate()
+
+        tvDistRes.invalidate()
     }
 
     private fun toDegree() {
         // Switch off keyboard
         hideKeyboard(this)
         try {
-            var lattemp = (tvDecimalLat!!.text.toString())
-            var lontemp = (tvDecimalLon!!.text.toString())
+            var lattemp = (tvDecimalLat.text.toString())
+            var lontemp = (tvDecimalLon.text.toString())
             lattemp = lattemp.replace(',', '.')
             lontemp = lontemp.replace(',', '.')
             val latitemp = lattemp.toDouble()
@@ -201,15 +203,15 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
             var convert = LatLonConvert(latitemp)
 
-            tvDegreeLat!!.setText(DecimalFormat("#").format(convert.degree))
-            tvMinuteLat!!.setText(DecimalFormat("#").format(convert.minute))
-            tvSecondLat!!.setText(DecimalFormat("#.##").format(convert.second))
+            tvDegreeLat.setText(DecimalFormat("#").format(convert.degree))
+            tvMinuteLat.setText(DecimalFormat("#").format(convert.minute))
+            tvSecondLat.setText(DecimalFormat("#.##").format(convert.second))
 
             convert = LatLonConvert(longitemp)
 
-            tvDegreeLon!!.setText(DecimalFormat("#").format(convert.degree))
-            tvMinuteLon!!.setText(DecimalFormat("#").format(convert.minute))
-            tvSecondLon!!.setText(DecimalFormat("#.##").format(convert.second))
+            tvDegreeLon.setText(DecimalFormat("#").format(convert.degree))
+            tvMinuteLon.setText(DecimalFormat("#").format(convert.minute))
+            tvSecondLon.setText(DecimalFormat("#.##").format(convert.second))
         } catch (_: NumberFormatException) {
             Toast.makeText(
                 applicationContext, getString(R.string.degree)
@@ -222,9 +224,9 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         // Switch off keyboard
         hideKeyboard(this)
         try {
-            var deglattemp = (tvDegreeLat!!.text.toString())
-            var minlattemp = (tvMinuteLat!!.text.toString())
-            var seclattemp = (tvSecondLat!!.text.toString())
+            var deglattemp = (tvDegreeLat.text.toString())
+            var minlattemp = (tvMinuteLat.text.toString())
+            var seclattemp = (tvSecondLat.text.toString())
 
 
             // for correct calculation replace ',' with '.' for German locale
@@ -238,11 +240,11 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
                 seclattemp.toDouble()
             )
             var tvtemp: String? = DecimalFormat("#.#####").format(convert.decimal)
-            tvDecimalLat!!.setText(tvtemp)
+            tvDecimalLat.setText(tvtemp)
 
-            var deglontemp = (tvDegreeLon!!.text.toString())
-            var minlontemp = (tvMinuteLon!!.text.toString())
-            var seclontemp = (tvSecondLon!!.text.toString())
+            var deglontemp = (tvDegreeLon.text.toString())
+            var minlontemp = (tvMinuteLon.text.toString())
+            var seclontemp = (tvSecondLon.text.toString())
 
             // for correct calculation replace ',' with '.' for German locale
             deglontemp = deglontemp.replace(',', '.')
@@ -256,7 +258,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
             )
 
             tvtemp = DecimalFormat("#.#####").format(convert.decimal)
-            tvDecimalLon!!.setText(tvtemp)
+            tvDecimalLon.setText(tvtemp)
         } catch (_: NumberFormatException) {
             Toast.makeText(
                 applicationContext, getString(R.string.decimal)
@@ -270,13 +272,13 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         // Switch off keyboard
         hideKeyboard(this)
 
-        var latDec1Temp = tvDecimalLat1!!.text.toString()
+        var latDec1Temp = tvDecimalLat1.text.toString()
         latDec1Temp = latDec1Temp.replace(',', '.')
-        var lonDec1Temp = tvDecimalLon1!!.text.toString()
+        var lonDec1Temp = tvDecimalLon1.text.toString()
         lonDec1Temp = lonDec1Temp.replace(',', '.')
-        var latDec2Temp = tvDecimalLat2!!.text.toString()
+        var latDec2Temp = tvDecimalLat2.text.toString()
         latDec2Temp = latDec2Temp.replace(',', '.')
-        var lonDec2Temp = tvDecimalLon2!!.text.toString()
+        var lonDec2Temp = tvDecimalLon2.text.toString()
         lonDec2Temp = lonDec2Temp.replace(',', '.')
 
         val latiDec1 = latDec1Temp.toDouble()
@@ -286,7 +288,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
         val dist = FlatEarthDist.distance(latiDec1, loniDec1, latiDec2, loniDec2)
         val distRes = DecimalFormat("#.##").format(dist)
-        tvDistRes!!.text = distRes
+        tvDistRes.text = distRes
     }
 
     /***********************************************************************

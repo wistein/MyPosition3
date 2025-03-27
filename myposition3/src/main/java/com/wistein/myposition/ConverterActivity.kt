@@ -75,7 +75,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         if (MyDebug.DLOG) Log.i(TAG, "78, onCreate") // is set true in debug mode
-        val prefs = myPosition.getPrefs()
+        val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
 

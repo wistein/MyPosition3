@@ -15,7 +15,7 @@ import java.lang.Exception
  * converted to Kotlin on 2025-02-05,
  * last edited on 2025-02-21
  */
-class myPosition : Application() {
+class MyPosition : Application() {
     override fun onCreate() {
         super.onCreate()
 
@@ -38,7 +38,7 @@ class myPosition : Application() {
     // End of onCreate()
 
     companion object {
-        private const val TAG = "myPosition"
+        private const val TAG = "MyPosition"
         private var prefs: SharedPreferences? = null
 
         @JvmStatic

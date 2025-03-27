@@ -136,7 +136,7 @@ public class MyPositionActivity
     {
         if (MyDebug.DLOG) Log.i(TAG, "137, onCreate");
 
-        prefs = myPosition.getPrefs();
+        prefs = MyPosition.getPrefs();
 
         darkScreen = prefs.getBoolean("dark_Screen", false);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
@@ -255,7 +255,7 @@ public class MyPositionActivity
     {
         if (MyDebug.DLOG) Log.i(TAG, "255, onResume");
 
-        prefs = myPosition.getPrefs();
+        prefs = MyPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
         darkScreen = prefs.getBoolean("dark_Screen", false);

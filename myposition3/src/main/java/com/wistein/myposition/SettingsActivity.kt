@@ -36,7 +36,7 @@ import androidx.preference.PreferenceFragmentCompat
 @Suppress("KotlinConstantConditions")
 class SettingsActivity : AppCompatActivity() {
     private var TAG = "MyPosSettingsAct"
-    private var prefs = myPosition.getPrefs()
+    private var prefs = MyPosition.getPrefs()
     private var screenOrientL: Boolean = false
     private var darkScreen: Boolean = false
 

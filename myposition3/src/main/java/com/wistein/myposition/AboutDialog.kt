@@ -44,7 +44,7 @@ class AboutDialog : Activity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val prefs = myPosition.getPrefs()
+        val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
 

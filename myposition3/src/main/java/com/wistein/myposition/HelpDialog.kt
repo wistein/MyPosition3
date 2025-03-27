@@ -31,10 +31,10 @@ import java.util.Locale
  * HelpDialog.java
  * Custom class for displaying the Help Dialog
  *
- * Copyright 2019, Wilhelm Stein, Germany
+ * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2024-11-19.
+ * last edited on 2025-02-21.
  */
 class HelpDialog : Activity() {
     @SuppressLint("SourceLockedOrientationActivity")
@@ -42,7 +42,7 @@ class HelpDialog : Activity() {
         super.onCreate(savedInstanceState)
 
         val prefs = myPosition.getPrefs()
-        val screenOrientL = prefs!!.getBoolean("screen_Orientation", false)
+        val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
 
         requestedOrientation = if (screenOrientL) {

@@ -14,11 +14,11 @@ import java.net.URL
 /***************************************************************************************
  * Worker to get and parse address info from Nominatim Reverse Geocoder of OpenStreetMap
  *
- * Copyright 2018-2023 wmstein
+ * Copyright 2018-2025 wistein
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2024-12-20
+ * last edited on 2025-02-21
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -54,21 +54,19 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     sb.append(line).append('\n')
                 }
             } catch (e: IOException) {
-                if (MyDebug.LOG) Log.e(rTag, // is true for debug version
-                    "58, Problem converting Stream to String: $e"
+                if (MyDebug.DLOG) Log.e(rTag, "57, Problem converting Stream to String: $e"
                 )
             } finally {
                 try {
                     iStream.close()
                 } catch (e: IOException) {
-                    if (MyDebug.LOG) Log.e(rTag,
-                        "65, Problem closing InputStream: $e")
+                    if (MyDebug.DLOG) Log.e(rTag, "63, Problem closing InputStream: $e")
                 }
             }
             xmlString = sb.toString()
 
             // Log gzip-content of url
-            if (MyDebug.LOG) Log.d(rTag, "71, xmlString: $xmlString"
+            if (MyDebug.DLOG) Log.d(rTag, "69, xmlString: $xmlString"
             )
 
             // parse the XML content
@@ -324,7 +322,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 addresslines = msg.toString()
             }
         } catch (e: IOException) {
-            if (MyDebug.LOG) Log.e(rTag, "327, Problem with address handling: $e")
+            if (MyDebug.DLOG) Log.e(rTag, "325, Problem with address handling: $e")
             addresslines = R.string.unknownAddr.toString()
         }
         return Result.success()

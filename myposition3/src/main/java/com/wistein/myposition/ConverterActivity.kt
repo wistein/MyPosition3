@@ -9,11 +9,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import java.text.DecimalFormat
-import java.util.StringTokenizer
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -40,36 +40,41 @@ import kotlin.math.sqrt
  * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
- * Adopted and enhanced by wistein for MyPosition3
- * Copyright 2019-2023, Wilhelm Stein, Germany
+ * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2024-12-20
+ * Last edited on 2025-02-21
  */
 @Suppress("KotlinConstantConditions")
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
-    private val tvDecimalLat: EditText by lazy { findViewById(R.id.latDecimal) }
-    private val tvDecimalLon: EditText by lazy { findViewById(R.id.lonDecimal) }
-    private val tvDegreeLat: EditText by lazy { findViewById(R.id.degreelat) }
-    private val tvMinuteLat: EditText by lazy { findViewById(R.id.minutelat) }
-    private val tvSecondLat: EditText by lazy { findViewById(R.id.secondlat) }
-    private val tvDegreeLon: EditText by lazy { findViewById(R.id.degreelon) }
-    private val tvMinuteLon: EditText by lazy { findViewById(R.id.minutelon) }
-    private val tvSecondLon: EditText by lazy { findViewById(R.id.secondlon) }
-    private val tvDecimalLat1: EditText by lazy { findViewById(R.id.latDec1) }
-    private val tvDecimalLon1: EditText by lazy { findViewById(R.id.lonDec1) }
-    private val tvDecimalLat2: EditText by lazy { findViewById(R.id.latDec2) }
-    private val tvDecimalLon2: EditText by lazy { findViewById(R.id.lonDec2) }
-    private val tvDistRes: TextView by lazy { findViewById(R.id.distRes) }
+    private lateinit var tvDecimalLat: EditText
+    private lateinit var tvDecimalLon: EditText
+    private lateinit var tvDegreeLat: EditText
+    private lateinit var tvMinuteLat: EditText
+    private lateinit var tvSecondLat: EditText
+    private lateinit var tvDegreeLon: EditText
+    private lateinit var tvMinuteLon: EditText
+    private lateinit var tvSecondLon: EditText
+    private lateinit var tvDecimalLat1: EditText
+    private lateinit var tvDecimalLon1: EditText
+    private lateinit var tvDecimalLat2: EditText
+    private lateinit var tvDecimalLon2: EditText
+
+    private lateinit var tvDistRes: TextView
+
+    private lateinit var buttonCalc1: Button
+    private lateinit var buttonCalc2: Button
+    private lateinit var buttonCalc3: Button
 
     var lat: Double = 0.0
     var lon: Double = 0.0
 
+    private lateinit var convLayout: ScrollView
+
     @SuppressLint("SourceLockedOrientationActivity")
     public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        if (MyDebug.LOG) Log.i(caTag, "71, onCreate") // is set true in debug mode
+        if (MyDebug.DLOG) Log.i(TAG, "78, onCreate") // is set true in debug mode
         val prefs = myPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
@@ -89,13 +94,32 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
             setTheme(R.style.AppTheme_Light)
         }
 
+        super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_converter)
+        convLayout = findViewById(R.id.converterLayout)
 
         supportActionBar!!.setTitle(R.string.title_activity_converter)
 
-        val buttonCalc1 = findViewById<Button>(R.id.buttonCalc1)
-        val buttonCalc2 = findViewById<Button>(R.id.buttonCalc2)
-        val buttonCalc3 = findViewById<Button>(R.id.buttonCalc3)
+        tvDecimalLat = findViewById(R.id.latDecimal)
+        tvDecimalLon = findViewById(R.id.lonDecimal)
+        tvDegreeLat = findViewById(R.id.degreelat)
+        tvMinuteLat = findViewById(R.id.minutelat)
+        tvSecondLat = findViewById(R.id.secondlat)
+        tvDegreeLon = findViewById(R.id.degreelon)
+        tvMinuteLon = findViewById(R.id.minutelon)
+        tvSecondLon = findViewById(R.id.secondlon)
+        tvDecimalLat1 = findViewById(R.id.latDec1)
+        tvDecimalLon1 = findViewById(R.id.lonDec1)
+        tvDecimalLat2 = findViewById(R.id.latDec2)
+        tvDecimalLon2 = findViewById(R.id.lonDec2)
+
+        tvDistRes = findViewById(R.id.distRes)
+
+        buttonCalc1 = findViewById(R.id.buttonCalc1)
+        buttonCalc2 = findViewById(R.id.buttonCalc2)
+        buttonCalc3 = findViewById(R.id.buttonCalc3)
+
         buttonCalc1.isClickable = true
         buttonCalc2.isClickable = true
         buttonCalc3.isClickable = true
@@ -103,23 +127,16 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         buttonCalc2.setOnClickListener(this)
         buttonCalc3.setOnClickListener(this)
 
-        @Suppress("DEPRECATION")
-        val coordinates = intent.getSerializableExtra("Coordinate") as String?
-
-        val token = StringTokenizer(coordinates, ", ")
-
-        val tlat = token.nextToken()
-        val tlon = token.nextToken()
-        lat = tlat.toDouble()
-        lon = tlon.toDouble()
+        lat = intent.getDoubleExtra("Latitude", 0.0)
+        lon = intent.getDoubleExtra("Longitude", 0.0)
 
         // fill in the current decimal coordinates in all appropriate fields
-        tvDecimalLat.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDecimalLat1.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon1.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
-        tvDecimalLat2.setText(DecimalFormat("#.#####").format(tlat.toDouble()))
-        tvDecimalLon2.setText(DecimalFormat("#.#####").format(tlon.toDouble()))
+        tvDecimalLat.setText(DecimalFormat("#.#####").format(lat))
+        tvDecimalLon.setText(DecimalFormat("#.#####").format(lon))
+        tvDecimalLat1.setText(DecimalFormat("#.#####").format(lat))
+        tvDecimalLon1.setText(DecimalFormat("#.#####").format(lon))
+        tvDecimalLat2.setText(DecimalFormat("#.#####").format(lat))
+        tvDecimalLon2.setText(DecimalFormat("#.#####").format(lon))
         tvDistRes.text = DecimalFormat("#.##").format(0.000000)
 
         // initially calculate the current coordinates in degrees
@@ -133,58 +150,35 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
         if (viewID == R.id.buttonCalc1) {
             this.toDegree()
-            view.invalidate()
         } else if (viewID == R.id.buttonCalc2) {
             this.toDecimal()
-            view.invalidate()
         } else if (viewID == R.id.buttonCalc3) {
             this.sDistance()
-            view.invalidate()
         }
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        if (MyDebug.LOG) Log.i(caTag, "162, onDestroy")
+        if (MyDebug.DLOG) Log.i(TAG, "164, onDestroy")
 
-        tvDecimalLat.clearFocus()
+        // All following instructions don't prohibit memory leak of ConverterActivity
+        buttonCalc1.setOnClickListener(null)
+        buttonCalc2.setOnClickListener(null)
+        buttonCalc3.setOnClickListener(null)
+
+        convLayout.invalidate()
         tvDecimalLat.invalidate()
-
-        tvDecimalLon.clearFocus()
         tvDecimalLon.invalidate()
-
-        tvDecimalLon.clearFocus()
-        tvDecimalLon.invalidate()
-
-        tvDegreeLat.clearFocus()
         tvDegreeLat.invalidate()
-
-        tvMinuteLat.clearFocus()
         tvMinuteLat.invalidate()
-
-        tvSecondLat.clearFocus()
         tvSecondLat.invalidate()
-
-        tvDegreeLon.clearFocus()
         tvDegreeLon.invalidate()
-
-        tvMinuteLon.clearFocus()
         tvMinuteLon.invalidate()
-
-        tvSecondLon.clearFocus()
         tvSecondLon.invalidate()
-
-        tvDecimalLat1.clearFocus()
         tvDecimalLat1.invalidate()
-
-        tvDecimalLon1.clearFocus()
         tvDecimalLon1.invalidate()
-
-        tvDecimalLat2.clearFocus()
         tvDecimalLat2.invalidate()
-
-        tvDecimalLon2.clearFocus()
         tvDecimalLon2.invalidate()
 
         tvDistRes.invalidate()
@@ -321,7 +315,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     companion object {
-        val caTag: String = "ConverterAct"
+        const val TAG: String = "ConverterAct"
 
         fun hideKeyboard(activity: Activity) {
             val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager

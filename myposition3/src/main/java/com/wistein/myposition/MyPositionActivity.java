@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,17 +26,16 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-
+import com.google.android.material.snackbar.Snackbar;
 import com.wistein.egm.EarthGravitationalModel;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -62,64 +65,76 @@ import java.util.TimeZone;
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  * <p>
- * Adopted by wistein for MyPosition3
- * Copyright 2019-2024, Wilhelm Stein, Bonn, Germany
- * last edited on 2024-12-22
+ * Adopted 2019 by wistein for MyPosition3
+ * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
+ * last edited on 2025-02-21
  */
 public class MyPositionActivity
     extends AppCompatActivity
-    implements OnClickListener,
-               PermissionsDialogFragment.PermissionsGrantedCallback
+    implements OnClickListener
 {
     private static final String TAG = "MyPositionAct";
+
     private TextView tvDecimalCoord;
     private TextView tvDegreeCoord;
     public TextView tvLocation;
     public TextView tvMessage;
     private TextView tvUpdatedTime;
+
+    private ImageView shareLocation;
+    private ImageView shareDecimal;
+    private ImageView shareDegree;
+    private ImageView shareMessage;
+
     public static String addresslines; // formatted string for Address field
     private String messageHeader = ""; // 1st line in mail message
+
+    // Preferences
+    private SharedPreferences prefs;
     private String emailString = "";   // mail address for OSM query
     private boolean screenOrientL;     // option for screen orientation
     private boolean darkScreen;        // Option for dark screen background
-    private boolean showToast;         // option to show toast with height info
-
-    // mapLocal is option to select local app (true) or online map (false).
-    // When GAPPS are present MyPosition3 shows location always even online on Google Maps,
-    //   without GAPPS MyPosition3 uses a local mapping app to show the location
+    private boolean showHtToast;       // option to show toast with height info
+    // the option mapLocal works only without GAPPS. It lets you select where to show the map,
+    //   either on a local mapping app (true) or online (false).
+    // But when GAPPS are present MyPosition3 shows the location always online on Google Maps.
     private boolean mapLocal;
 
-    private SharedPreferences prefs;
+    /**
+     * Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
+     * public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
 
-    /* Permission Handling
-     * variable 'modePerm' controls Permission dispatcher mode:
-     * 1 = use location service
-     * 2 = end location service
+     * Full screen gesture mode (introduced with Android Q)
+     * public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
      */
-    private int modePerm;
+    // Classic three-button navigation (Back, Home, Recent Apps)
+    public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
 
-    /* Permission Handling
-     * variable 'permLocGiven' contains the initial location permission state that
-     * controls stopping the location listener after permission has been changed:
-     * - Stop listener if permission was denied after listener start
-     * - don't stop listener if permission was allowed later and listener has not been started
-     */
-    private boolean permLocGiven;
+    LocationService locationService;
+
+    // 'locationDispatcherMode' controls location permission dispatcher:
+    //1 = use location service
+    //2 = end location service
+    private int locationDispatcherMode;
+
+    private boolean locServiceOn = false; // Service control flag
+    private boolean locationPermGranted;  // Foreground location permission state
 
     // Location info handling
     private double lat, lon, uncertainty;
     private double height = 0;
     private long fixTime = 0; // GPS fix time
     private final String strTime = "10"; // option to set GPS polling time, default 10 sec
-    LocationService locationService;
 
-    public boolean doubleBackToExitPressedTwice = false;
+    private boolean doubleBackToExitPressedTwice = false;
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    private ScrollView baseLayout;
+
+    @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        if (MyDebug.LOG) Log.i(TAG, "122, onCreate");
+        if (MyDebug.DLOG) Log.i(TAG, "137, onCreate");
 
         prefs = myPosition.getPrefs();
 
@@ -147,71 +162,108 @@ public class MyPositionActivity
         super.onCreate(savedInstanceState); // put here for setTheme(...) to work
 
         setContentView(R.layout.activity_my_location);
-        ScrollView baseLayout = findViewById(R.id.baseLayout);
-        assert baseLayout != null;
-        try
+        baseLayout = findViewById(R.id.baseLayout);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
+
+        // Part of location permissions handling:
+        //   Set flag locationPermGranted from self permissions
+        locationPermGranted = isFineLocPermGranted();
+        if (MyDebug.DLOG) Log.i(TAG, "171, onCreate, locationPermGranted: "
+            + locationPermGranted);
+
+        // If not yet location permission is granted prepare and query for them
+        if (!locationPermGranted)
         {
-            Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
-        } catch (NullPointerException e)
-        {
-            // do nothing
+            // Reset background location permission status in case it was set previously
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("has_asked_background", false);
+            editor.commit();
+
+            // Query foreground location permission first
+            PermissionsForegroundDialogFragment.newInstance().show(getSupportFragmentManager(),
+                PermissionsForegroundDialogFragment.class.getName());
         }
 
-        // new onBackPressed logic
-        final Handler m1Handler = new Handler();
+        // New onBackPressed logic
+        // Use only if 2 or 3 button Navigation bar is present.
+        if (getNavBarMode() == 0 || getNavBarMode() == 1)
+        {
+            OnBackPressedCallback callback = getOnBackPressedCallback();
+            getOnBackPressedDispatcher().addCallback(this, callback);
+        }
+    }
+    // End of onCreate()
+
+    public int getNavBarMode() {
+        Resources resources = this.getResources();
+
+        @SuppressLint("DiscouragedApi")
+        int resourceId = resources.getIdentifier("config_navBarInteractionMode",
+            "integer", "android");
+
+        // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
+        int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
+            NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
+        if (MyDebug.DLOG) Log.i(TAG, "206, NavBarMode = " + iMode);
+        return iMode;
+    }
+
+    private OnBackPressedCallback getOnBackPressedCallback()
+    {
+        final Handler m1Handler = new Handler(Looper.getMainLooper());
         final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true)
+        return new OnBackPressedCallback(true)
         {
             @Override
             public void handleOnBackPressed()
             {
                 if (doubleBackToExitPressedTwice)
                 {
-                    finishAndRemoveTask();
+                    m1Handler.removeCallbacks(r1);
+                    finish();
+                    remove();
                 }
                 else
                 {
                     doubleBackToExitPressedTwice = true;
-
-                    Toast t = new Toast(getApplicationContext());
-                    LayoutInflater inflater = getLayoutInflater();
-
-                    @SuppressLint("InflateParams")
-                    View toastView = inflater.inflate(R.layout.toast_view, null);
-                    TextView textView = toastView.findViewById(R.id.toast);
-                    textView.setText(R.string.back_twice);
-
-                    t.setView(toastView);
-                    t.setDuration(Toast.LENGTH_SHORT);
-                    t.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
-                    t.show();
-
+                    showSnackbarBlue(getString(R.string.back_twice));
                     m1Handler.postDelayed(r1, 1500);
                 }
             }
         };
-        getOnBackPressedDispatcher().addCallback(this, callback);
     }
-    // End of onCreate
 
-    @SuppressLint("SourceLockedOrientationActivity")
+    // Test for foreground location self permission
+    private boolean isFineLocPermGranted()
+    {
+        return ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // Test for background location self permission
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private boolean isBackLocPermGranted()
+    {
+        return ContextCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
     public void onResume()
     {
-        super.onResume();
+        if (MyDebug.DLOG) Log.i(TAG, "255, onResume");
 
-        if (MyDebug.LOG) Log.i(TAG, "204, onResume");
-
+        prefs = myPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
         darkScreen = prefs.getBoolean("dark_Screen", false);
         mapLocal = prefs.getBoolean("map_Local", false);
-        showToast = prefs.getBoolean("show_Toast", false);
-        permLocGiven = prefs.getBoolean("permLoc_Given", false);
+        showHtToast = prefs.getBoolean("show_Toast", false);
         emailString = prefs.getString("email_String", "");
 
-        if (MyDebug.LOG) Log.i(TAG, "214, onResume, darkScreen: " + darkScreen);
+        if (MyDebug.DLOG) Log.i(TAG, "264, onResume, darkScreen: " + darkScreen);
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -230,6 +282,33 @@ public class MyPositionActivity
             setTheme(R.style.AppTheme_Light);
         }
 
+        super.onResume(); // put here for setTheme(...) to work
+
+        // Get location self permission state
+        locationPermGranted = isFineLocPermGranted();
+
+        // Get flag 'has_asked_background'
+        boolean hasAskedBackgroundLocation = prefs.getBoolean("has_asked_background", false);
+        if (MyDebug.DLOG) Log.i(TAG, "290, hasAskedBackgroundLocation: "
+            + hasAskedBackgroundLocation);
+
+        // After granting the foreground location permission
+        //   asked only once the permission for background location
+        if (locationPermGranted && !hasAskedBackgroundLocation
+            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        {
+            PermissionsBackgroundDialogFragment.newInstance().show(getSupportFragmentManager(),
+                PermissionsBackgroundDialogFragment.class.getName());
+
+            // Query result of BackgroundDialog
+            if (MyDebug.DLOG) Log.i(TAG, "302, isBackLocPermGranted: " + isBackLocPermGranted());
+
+            // Store flag 'hasAskedBackground = true' in SharedPreferences
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("has_asked_background", true);
+            editor.commit();
+        }
+
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
@@ -238,10 +317,10 @@ public class MyPositionActivity
         tvLocation = findViewById(R.id.tvLocation);
         tvMessage = findViewById(R.id.tvMessage);
 
-        ImageView shareLocation = findViewById(R.id.shareLocation);
-        ImageView shareDecimal = findViewById(R.id.shareDecimal);
-        ImageView shareDegree = findViewById(R.id.shareDegree);
-        ImageView shareMessage = findViewById(R.id.shareMessage);
+        shareLocation = findViewById(R.id.shareLocation);
+        shareDecimal = findViewById(R.id.shareDecimal);
+        shareDegree = findViewById(R.id.shareDegree);
+        shareMessage = findViewById(R.id.shareMessage);
 
         shareLocation.setClickable(true);
         shareDecimal.setClickable(true);
@@ -253,51 +332,48 @@ public class MyPositionActivity
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
 
-        // check initial location permission state
-        permLocGiven = isPermissionGranted();
-
-        // store location permission state
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("permLoc_Given", permLocGiven);
-        editor.apply();
+        if (MyDebug.DLOG) Log.i(TAG, "333, onResume, locationPermGranted: " + locationPermGranted);
 
         // Get location with permissions check
-        modePerm = 1; // get location
-        permissionCaptureFragment();
+        locationDispatcherMode = 1; // get location
+        locationDispatcher();
         registerRelativeFixTime();
     }
     // End of onResume()
 
+    @SuppressLint("ApplySharedPref")
     @Override
     public void onPause()
     {
         super.onPause();
-
-        if (MyDebug.LOG) Log.i(TAG, "276, onPause");
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("permLoc_Given", permLocGiven);
-        editor.apply();
     }
 
     public void onStop()
     {
         super.onStop();
 
-        if (MyDebug.LOG) Log.i(TAG, "286, onStop");
+        if (MyDebug.DLOG) Log.i(TAG, "353, onStop");
 
         // Stop location service with permissions check
-        modePerm = 2;
-        permissionCaptureFragment();
+        locationDispatcherMode = 2;
+        locationDispatcher();
 
         // Stop RetrieveAddrRunner
         WorkManager.getInstance(this).cancelAllWork();
+
+        shareLocation.setOnClickListener(null);
+        shareDecimal.setOnClickListener(null);
+        shareDegree.setOnClickListener(null);
+        shareMessage.setOnClickListener(null);
+
+        baseLayout.invalidate();
     }
 
     public void onDestroy()
     {
         super.onDestroy();
 
-        if (MyDebug.LOG) Log.i(TAG, "300, onDestroy");
+        if (MyDebug.DLOG) Log.i(TAG, "374, onDestroy");
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -314,7 +390,7 @@ public class MyPositionActivity
         if (id == R.id.menu_getpos)
         {
             // Get location with permissions check
-            modePerm = 1; // get location
+            locationDispatcherMode = 1; // get location
 
             // call DummyActivity to reenter MyPositionActivity to get the new position
             intent = new Intent(MyPositionActivity.this, DummyActivity.class);
@@ -362,57 +438,56 @@ public class MyPositionActivity
         }
         else if (id == R.id.menu_converter)
         {
+            locationDispatcherMode = 2;
+            locationDispatcher();
+            if (MyDebug.DLOG) Log.i(TAG, "441, Start ConverterAct");
+
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
-            intent.putExtra("Coordinate", lat + "," + lon);
+            intent.putExtra("Latitude", lat);
+            intent.putExtra("Longitude", lon);
             startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
         }
 
         return super.onOptionsItemSelected(item);
     }
-    // end of onOptionsItemSelected()
+    // End of onOptionsItemSelected()
 
     // Part of location permission handling
-    @Override
-    public void permissionCaptureFragment()
+    public void locationDispatcher()
     {
-        if (isPermissionGranted())
+        if (locationPermGranted)
         {
-            switch (modePerm)
+            switch (locationDispatcherMode)
             {
                 case 1 ->
-                { // get location
-                    if (permLocGiven) // location permission state after start
-                        getLoc();
+                {
+                    // get location data
+                    getLoc();
                 }
                 case 2 ->
-                { // stop location service
-                    if (permLocGiven)
+                {
+                    // stop location service
+                    if (locServiceOn)
                     {
-                        locationService.stopListener();
-                        if (MyDebug.LOG) Log.i(TAG, "393, Stop locationService");
+                        locationService.stopListener(); // .stopListener(this)
+                        Intent sIntent = new Intent(this, LocationService.class);
+                        stopService(sIntent);
+                        locServiceOn = false;
+                        if (MyDebug.DLOG) Log.i(TAG, "475, Stop locationService");
                     }
                 }
             }
         }
-        else
-        {
-            if (modePerm == 1)
-                PermissionsDialogFragment.newInstance().show(getSupportFragmentManager(), PermissionsDialogFragment.class.getName());
-        }
-    }
-
-    // if API level > 23 test for permissions granted
-    private boolean isPermissionGranted()
-    {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     // get the location data
     public void getLoc()
     {
         locationService = new LocationService(this);
+        Intent sIntent = new Intent(this, LocationService.class);
+        startService(sIntent);
+        locServiceOn = true;
 
         StringBuilder sb;
         if (locationService.canGetLocation())
@@ -515,7 +590,7 @@ public class MyPositionActivity
 
             // format for TextView tvMessage,
             // delayed for getting the result of WorkRequest
-            final Handler m2Handler = new Handler();
+            final Handler m2Handler = new Handler(Looper.getMainLooper());
             final Runnable r2 = new Runnable()
             {
                 String addresslines1;
@@ -583,7 +658,7 @@ public class MyPositionActivity
 
         nnHeight = gpsHeight + corrHeight;
 
-        if (showToast)
+        if (showHtToast)
         {
             @SuppressLint("DefaultLocale") String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
             @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", gpsHeight);
@@ -718,7 +793,8 @@ public class MyPositionActivity
 
         String language = Locale.getDefault().toString().substring(0, 2);
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
+        if (language.equals("de") || language.equals("es") || language.equals("fr")
+            || language.equals("it") || language.equals("nl") || language.equals("pt"))
         {
             tempLat = tempLat.replace('.', ',');
             tempLon = tempLon.replace('.', ',');
@@ -785,7 +861,7 @@ public class MyPositionActivity
     // Updates fixtime display every second
     private void registerRelativeFixTime()
     {
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
         final String time_header = this.getString(R.string.last_fix_time) + " ";
         handler.postDelayed(new Runnable()
         {
@@ -795,13 +871,26 @@ public class MyPositionActivity
                 String relative_date = getString(R.string.unknownFix);
                 if (fixTime > 0)
                 {
-                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime, System.currentTimeMillis(), 0, 0).toString();
+                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime,
+                        System.currentTimeMillis(), 0, 0).toString();
                 }
                 String uTime = time_header + relative_date;
                 tvUpdatedTime.setText(uTime);
                 handler.postDelayed(this, Integer.parseInt(strTime) * 1000L);
             }
         }, Integer.parseInt(strTime) * 1000L);
+    }
+
+    private void showSnackbarBlue(String str) // bold cyan text
+    {
+        baseLayout = findViewById(R.id.baseLayout);
+        Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_LONG);
+        TextView tv = sB.getView().findViewById(R.id.snackbar_text);
+        tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        tv.setTextColor(Color.CYAN);
+        sB.show();
     }
 
 }

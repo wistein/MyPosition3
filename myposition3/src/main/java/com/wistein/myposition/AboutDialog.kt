@@ -28,18 +28,16 @@ import java.util.Locale
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * AboutDialog.java
+ * AboutDialog.kt
  * Custom class for displaying the About Dialog
  *
- * Based on
- * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
+ * Based on AboutDialog.java from MyLocation 1.1c of mypapit@gmail.com (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
- * Adopted by wistein for MyPosition3
- * Copyright 2019, Wilhelm Stein, Germany
+ * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2024-11-19.
+ * Last edited on 2025-02-21.
  */
 class AboutDialog : Activity() {
     @SuppressLint("SourceLockedOrientationActivity")

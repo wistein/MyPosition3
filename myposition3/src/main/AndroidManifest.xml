@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Last edited 2025-02-21 -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permission needed for location providers -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
     <!-- Permissions needed for reverse geocoding -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -16,14 +19,18 @@
         android:label="@string/app_name"
         android:allowBackup="false"
         android:fullBackupContent="false"
+        android:requestLegacyExternalStorage="true"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat"
-        tools:ignore="DataExtractionRules,GoogleAppIndexingWarning">
+        android:enableOnBackInvokedCallback="true"
+        tools:ignore="DataExtractionRules,GoogleAppIndexingWarning"
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".MyPositionActivity"
             android:exported="true"
-            android:label="@string/title_activity_my_position">
+            android:label="@string/title_activity_my_position"
+            tools:targetApi="tiramisu">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -70,6 +77,7 @@
 
         <service
             android:name="com.wistein.myposition.LocationService"
+            android:foregroundServiceType="location"
             android:exported="false">
         </service>
 

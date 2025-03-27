@@ -35,13 +35,22 @@ Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
  
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Since versions 1.3.0 to current version copyright by wistein, 2017-2024,<br>
+Since versions 1.3.0 to current version copyright by wistein, 2017-2025,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
 
-<B>My Position, version 1.4.2,</B> 2024-12-20<br>
+<B>My Position, version 1.4.3,</B> 2025-03-27<br>
+- Background location added<br>
+- Permissions handling revised and adapted<br>
 - Some code cleaning<br>
+- Deprecated functions replaced<br>
+- Docs updated<br>
+<br>
+
+<B>My Position, version 1.4.2,</B> 2024-12-28<br>
+- Some code cleaning<br>
+- Deprecated code replaced<br>
 - Docs updated<br>
 <br>
 

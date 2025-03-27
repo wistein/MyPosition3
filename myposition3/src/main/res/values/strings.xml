@@ -1,6 +1,6 @@
-<!--
-  ~ Copyright (c) 2016-2024. Wilhelm Stein, Bonn, Germany.
-  -->
+<!-- strings.xml
+     English strings
+     last edited on 2025-02-22 -->
 
 <resources>
     <string name="app_name">My Position</string>
@@ -28,7 +28,7 @@
     <string name="unknownCoord">Unknown coordinates</string>
     <string name="posnotknown">Position not known yet…</string>
     <string name="unknownFix">Unknown</string>
-    <string name="message">Message</string>
+    <string name="message">Message (Text suggestion)</string>
     <string name="decCoord">Decimal Coordinates</string>
     <string name="degCoord">Degree Coordinates</string>
     <string name="myPos">My current position: </string>
@@ -71,12 +71,12 @@
     <string name="titel_darkScreen">Use dark mode</string>
 
     <!-- Permissions -->
-    <string name="perm_required">Permissions Required</string>
+    <string name="dialog_fine_location_title">Permissions Required</string>
+    <string name="dialog_fine_location_message">For the app\'s purpose to determine the current location, location permission is necessary. </string>
+    <string name="dialog_background_loc_title">Permission wanted</string>
+    <string name="dialog_background_loc_message">Location data is more precise when the optional permission \'Allow all the time\' is granted.</string>
+    <string name="grant_perm_later">You may grant the optional Background location permission for \'My Location\' in the phone settings.</string>
     <string name="app_settings">App Settings</string>
-    <string name="perm_hint">In order to determine the current location, access to location data is necessary.</string>
-    <string name="perm_hint1">Please enable missing permissions for the app in the phone settings.</string>
     <string name="cancel">Cancel</string>
-    <string name="perm_declined">Permissions declined</string>
-    <string name="retry">Retry</string>
 
 </resources>

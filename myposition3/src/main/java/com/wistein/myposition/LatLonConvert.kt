@@ -4,10 +4,10 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.round
 
-/***************************************************************************
- * Java Class: LatLonConvert
+/******************************************************************************
+ * Kotlin Class: LatLonConvert
  *
- * This Java class is part of a collection of classes developed for the
+ * The original Java class is part of a collection of classes developed for the
  * reading and processing of oceanographic and meteorological data collected
  * since 1970 by environmental buoys and stations.  This dataset is
  * maintained by the National Oceanographic Data Center and is publicly
@@ -39,11 +39,10 @@ import kotlin.math.round
  * -----------  ----   ---    ---------------------------------------
  * 17 Dec 2001  1.40   JDT	  Version accompanying final deliverable.
  *
- * Adopted by wistein for MyPosition3
- * Copyright 2019, Wilhelm Stein, Germany
+ * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2024-11-19.
+ * last edited on 2025-02-21.
  */
 internal class LatLonConvert {
     // declare local variables used throughout the class

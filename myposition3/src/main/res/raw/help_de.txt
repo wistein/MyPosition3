@@ -40,7 +40,7 @@ Wenn <b>Mein Standort</b> beendet wird, wird GPS abgeschaltet (falls GPS nicht n
 <br><br>
 ___________
 <br>
-*) Zur Änderung der Standort-Standardeinstellung von `Google Maps´ zu einer bevorzugten Karten-App, gehe unter Einstellungen zu Apps, wähle unter App-Berechtigungen `Standort` und setze den Eintrag von Google Maps zurück.
+*) Zur Änderung der Standort-Standardeinstellung von `Google Maps´ zu einer bevorzugten Karten-App, gehe unter Einstellungen zu `Standort` und setze den Eintrag von Google Maps zurück. (Die Prozedur ist ggf. auf Geräten und versionsabhängig unterschiedlich).
 <br><br>
 In `Mein Standort´ öffne die Kartendarstellung. Wähle die bevorzugte Karten-App aus und starte sie testweise mit `nur diesmal´. 
 <br><br>

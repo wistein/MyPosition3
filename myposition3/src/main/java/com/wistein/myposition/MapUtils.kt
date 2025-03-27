@@ -3,17 +3,17 @@ package com.wistein.myposition
 import kotlin.math.ceil
 
 /********************************************************************************
- * This file is contains an extract of MapUtils.java (c) OsmAnd developers, GPLv3
+ * This file uses an extract of MapUtils.java (c) OsmAnd developers, GPLv3
  * https://github.com/osmandapp/Osmand/blob/9bb03894a57cc80c2f9ad935ba007d2c406abd2c/OsmAnd-java/src/net/osmand/util/MapUtils.java
  *
  * This extract of MapUtils class from OsmAnd includes:
  * - Method to create a short link string (createShortLinkString)
  * - Subroutine to interleave the bits of 2 numbers (interleaveBits)
  *
- * Adopted by wistein for MyPosition3
+ * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2024-09-30.
+ * last edited on 2025-02-21.
  */
 internal object MapUtils {
     /**

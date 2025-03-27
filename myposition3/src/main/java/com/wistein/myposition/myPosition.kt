@@ -1,49 +1,49 @@
-package com.wistein.myposition;
+package com.wistein.myposition
 
-import android.app.Application;
-import android.content.SharedPreferences;
-import android.os.StrictMode;
-import android.util.Log;
-
-import androidx.preference.PreferenceManager;
+import android.app.Application
+import android.content.SharedPreferences
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
+import android.util.Log
+import androidx.preference.PreferenceManager
+import java.lang.Exception
 
 /**
  * Created by wmstein for myposition3 on 31.12.2016.
- * Copyright (c) 2016-2024, Wilhelm Stein, Bonn, Germany.
- * Last edited on 2024-12-20
+ * Copyright (c) 2016-2025, Wilhelm Stein, Bonn, Germany.
+ * Last edited in Java on 2025-02-05,
+ * converted to Kotlin on 2025-02-05,
+ * last edited on 2025-02-21
  */
-public class myPosition extends Application
-{
-    private static final String TAG = "MyPosition3, myPosition";
-
-    private static SharedPreferences prefs;
-
-    @Override
-    public void onCreate()
-    {
-        super.onCreate();
+class myPosition : Application() {
+    override fun onCreate() {
+        super.onCreate()
 
         // Support to debug "A resource failed to call ..." (close, dispose or similar)
-        if (MyDebug.LOG)
-        {
-            Log.i(TAG, "29, StrictMode.setVmPolicy");
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(StrictMode.getVmPolicy())
-                .detectLeakedClosableObjects()
-                .build());
+        if (MyDebug.DLOG) {
+            Log.i(TAG, "24, StrictMode.setVmPolicy")
+            StrictMode.setVmPolicy(
+                VmPolicy.Builder(StrictMode.getVmPolicy())
+                    .detectLeakedClosableObjects()
+                    .build()
+            )
         }
 
-        try
-        {
-            prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        } catch (Exception e)
-        {
-            if (MyDebug.LOG) Log.e(TAG, "40, " + e);
+        try {
+            prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        } catch (e: Exception) {
+            if (MyDebug.DLOG) Log.e(TAG, "35, $e")
         }
     }
+    // End of onCreate()
 
-    public static SharedPreferences getPrefs()
-    {
-        return prefs;
+    companion object {
+        private const val TAG = "myPosition"
+        private var prefs: SharedPreferences? = null
+
+        @JvmStatic
+        fun getPrefs(): SharedPreferences {
+            return prefs!!
+        }
     }
-
 }

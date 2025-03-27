@@ -1,11 +1,9 @@
 package com.wistein.myposition
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 
@@ -30,9 +28,10 @@ import androidx.preference.PreferenceFragmentCompat
  * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  *
- * Adopted by wistein for MyPosition3
- * Copyright 2019, Wilhelm Stein, Germany
- * last edited on 2024-12-22
+ * Adopted 2019 by wistein for MyPosition3,
+ * last edited in Java on 2024-09-30,
+ * converted to Kotlin on 2024-09-30,
+ * last edited on 2025-02-21
  */
 @Suppress("KotlinConstantConditions")
 class SettingsActivity : AppCompatActivity() {
@@ -45,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (MyDebug.LOG) Log.i(TAG, "48, onCreate");
+        if (MyDebug.DLOG) Log.i(TAG, "49, onCreate");
 
         // Option for screen orientation
         screenOrientL = prefs.getBoolean("screen_Orientation", false)
@@ -58,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Option for dark screen background
         darkScreen = prefs.getBoolean("dark_Screen", false)
-        if (MyDebug.LOG) Log.i(TAG, "61, darkScreen: $darkScreen");
+        if (MyDebug.DLOG) Log.i(TAG, "62, darkScreen: $darkScreen");
         if (darkScreen) {
             setTheme(R.style.AppTheme_Dark)
         } else {
@@ -69,32 +68,13 @@ class SettingsActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(
             android.R.id.content,
             MyPreferenceFragment()
-        )
-            .commit()
-/*
-        // Should restart the activity but has no function!
-        darkScreen = prefs.getBoolean("dark_Screen", false)
-        // Restart SettingsActivity to switch dark/light screen
-        if (darkScreenOld != darkScreen) {
-            if (MyDebug.LOG) Log.i(TAG, "84, darkScreenNew: $darkScreen");
-            var sIntent = intent
-            this@SettingsActivity.startActivity(sIntent)
-        }
-*/
-        // new onBackPressed logic
-        val callback = object : OnBackPressedCallback(true) {
-            @SuppressLint("UnsafeIntentLaunch")
-            override fun handleOnBackPressed() {
-                if (MyDebug.LOG) Log.i(TAG, "90, handleOnBackPressed")
-
-                val mIntent = Intent(this@SettingsActivity, MyPositionActivity::class.java)
-                mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(mIntent)
-            }
-        }
-        onBackPressedDispatcher.addCallback(this, callback)
+        ).commit()
     }
     // End of onCreate()
+
+    override fun onStop() {
+        super.onStop()
+    }
 
     class MyPreferenceFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootkey: String?) {

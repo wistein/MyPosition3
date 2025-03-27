@@ -21,23 +21,25 @@ Android SDK with
 ### build.gradle (MyPosition3)
 - buildscript:
   ext:
-    kotlin_version = '2.0.20' (or higher)
+    kotlin_version = '2.0.21' (or higher)
   repositories:
     mavenCentral()
     google()
   dependencies:
-    classpath 'com.android.tools.build:gradle:8.7.3' (or higher)
+    classpath 'com.android.tools.build:gradle:8.8.0' (or higher)
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
 ### build.gradle (mypostion3)
 - Compiled with SDK Ver. 35 for targetSdk 34 and minSdk 25.
 - JavaVersion.VERSION_17 (or current version)
 - External Libraries:
+  implementation 'androidx.appcompat:appcompat:1.7.0'
   implementation 'androidx.legacy:legacy-support-v4:1.0.0'
   implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')
   implementation 'androidx.work:work-runtime:2.10.0'
   implementation 'androidx.preference:preference-ktx:1.2.1'
   implementation 'androidx.core:core-ktx:1.15.0'
+  debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 
 ## Start the Project
 Get the project source by downloading the master.zip.

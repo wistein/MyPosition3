@@ -19,16 +19,30 @@ import androidx.core.app.ActivityCompat
  * LocationService provides the location data: latitude, longitude, height, uncertainty.
  * It is started and ended by MyPositionActivity.
  *
+ * You may adapt the constants within the companion object to your needs:
+ * - MIN_DISTANCE_FOR_UPDATES_GPS: Long = 2 (m)
+ * - MIN_DISTANCE_FOR_UPDATES_NET: Long = 10 (m)
+ * - MIN_TIME_BW_UPDATES_GPS:      Long = 1500 (msec)
+ * - MIN_TIME_BW_UPDATES_NET:      Long = 5000 (msec)
+ *
  * Based on LocationSrv created by anupamchugh on 28/11/16, published under
  * [](https://github.com/journaldev/journaldev/tree/master/Android/GPSLocationTracking)
  * licensed under the MIT License.
  *
- * Adopted for MyPosition3 by wmstein since 2019-02-07,
+ * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2024-12-20.
+ * last edited on 2025-02-21.
  */
 class LocationService : Service, LocationListener {
+    companion object {
+        private const val TAG = "MyPos3, LocSrv"
+        private const val MIN_DISTANCE_FOR_UPDATES_GPS: Long = 2
+        private const val MIN_DISTANCE_FOR_UPDATES_NET: Long = 10
+        private const val MIN_TIME_BW_UPDATES_GPS: Long = 1500
+        private const val MIN_TIME_BW_UPDATES_NET: Long = 5000
+    }
+
     var mContext: Context? = null
     var checkGPS: Boolean = false
     var checkNetwork: Boolean = false
@@ -42,11 +56,11 @@ class LocationService : Service, LocationListener {
     protected var locationManager: LocationManager? = null
 
     // exactLocation determines whether a first GPS fix has occurred
-    //   and therefore no further need for Network provider usage
+    //   and if true there is no further need for Network provider usage
     private var exactLocation = false
 
     /** Default constructor() demanded by service declaration in AndroidManifest.xml */
-    constructor()
+    constructor() // Deleting it produces a compilation error
 
     constructor(mContext: Context?) {
         this.mContext = mContext
@@ -66,7 +80,7 @@ class LocationService : Service, LocationListener {
             if (checkGPS || checkNetwork) {
                 this.canGetLocation = true
             } else {
-                Toast.makeText(mContext, getString(R.string.no_provider), Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext!!, getString(R.string.no_provider), Toast.LENGTH_SHORT).show()
             }
 
             // if GPS is enabled get position using GPS Service
@@ -78,8 +92,8 @@ class LocationService : Service, LocationListener {
                 ) {
                     locationManager!!.requestLocationUpdates(
                         LocationManager.GPS_PROVIDER,
-                        MIN_TIME_BW_UPDATES,
-                        MIN_DISTANCE_FOR_UPDATES.toFloat(), this
+                        MIN_TIME_BW_UPDATES_GPS,
+                        MIN_DISTANCE_FOR_UPDATES_GPS.toFloat(), this
                     )
                     if (locationManager != null) {
                         location =
@@ -105,8 +119,8 @@ class LocationService : Service, LocationListener {
                     ) {
                         locationManager!!.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_FOR_UPDATES.toFloat(), this
+                            MIN_TIME_BW_UPDATES_NET,
+                            MIN_DISTANCE_FOR_UPDATES_NET.toFloat(), this
                         )
 
                         if (locationManager != null) {
@@ -124,7 +138,7 @@ class LocationService : Service, LocationListener {
                 }
             }
         } catch (e: Exception) {
-            if (MyDebug.LOG) Log.e(TAG, "127, $e")
+            if (MyDebug.DLOG) Log.e(TAG, "127, $e")
         }
     }
 
@@ -144,10 +158,11 @@ class LocationService : Service, LocationListener {
                     return
                 }
                 locationManager!!.removeUpdates(this@LocationService)
+                stopSelf()
                 locationManager = null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "150, StopListener: $e")
+            Log.e(TAG, "151, StopListener: $e")
         }
     }
 
@@ -209,12 +224,6 @@ class LocationService : Service, LocationListener {
 
     override fun onProviderDisabled(s: String) {
         // do nothing
-    }
-
-    companion object {
-        private const val TAG = "MyPosition3, LocationSrv"
-        private const val MIN_DISTANCE_FOR_UPDATES: Long = 5 // (m)
-        private const val MIN_TIME_BW_UPDATES: Long = 2000 // (msec)
     }
 
 }

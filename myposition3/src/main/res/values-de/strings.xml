@@ -1,6 +1,6 @@
-<!--
-  ~ Copyright (c) 2016-2024. Wilhelm Stein, Bonn, Germany.
-  -->
+<!-- strings.xml
+     German strings
+     last edited on 2025-02-22 -->
 
 <resources>
     <string name="app_name">Mein Standort</string>
@@ -28,7 +28,7 @@
     <string name="unknownCoord">Unbekannte Koordinaten</string>
     <string name="posnotknown">Position noch nicht erfasst…</string>
     <string name="unknownFix">Unbekannt</string>
-    <string name="message">Mitteilung</string>
+    <string name="message">Mitteilung (Textvorschlag)</string>
     <string name="decCoord">Koordinaten (Dezimal)</string>
     <string name="degCoord">Koordinaten (Grad)</string>
     <string name="myPos">Meine aktuelle Position: </string>
@@ -71,11 +71,11 @@
     <string name="titel_darkScreen">Dunklen Modus nutzen</string>
 
     <!-- Permissions -->
-    <string name="perm_required">Berechtigungen benötigt</string>
-    <string name="perm_hint">Um Ortsangaben zu registrieren, sind Standortberechtigungen erforderlich. </string>
-    <string name="perm_hint1">Bitte erteile die fehlenden Berechtigungen für die App in den Smartphone-Einstellungen.</string>
+    <string name="dialog_fine_location_title">Berechtigungen benötigt</string>
+    <string name="dialog_fine_location_message">Für den Zweck der App, aktuelle Ortsangaben zu bestimmen, ist die Standortberechtigung erforderlich. </string>
+    <string name="dialog_background_loc_title">Berechtigung erwünscht</string>
+    <string name="dialog_background_loc_message">Ortsangaben sind präziser mit der optionalen Berechtigung \'Immer zulassen\'.</string>
+    <string name="grant_perm_later">Die optionale Berechtigung für \'Mein Standort\' kann ggf. in den Smartphone-Einstellungen gesetzt werden.</string>
     <string name="app_settings">App-Einstellungen</string>
     <string name="cancel">Abbrechen</string>
-    <string name="perm_declined">Berechtigungen abgelehnt</string>
-    <string name="retry">Wiederholen</string>
 </resources>

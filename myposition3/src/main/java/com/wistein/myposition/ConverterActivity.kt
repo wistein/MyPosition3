@@ -45,7 +45,6 @@ import kotlin.math.sqrt
  * converted to Kotlin on 2024-09-30,
  * Last edited on 2025-02-21
  */
-@Suppress("KotlinConstantConditions")
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
     private lateinit var tvDecimalLon: EditText

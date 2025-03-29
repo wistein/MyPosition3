@@ -12,7 +12,7 @@ It shows a country-specific representation of address info and introduces locali
 Additionally, this application also includes a <b>tool</b> to help <b>converting</b> between WGS84 decimal coordinate format and degree-minutes-seconds coordinate format and a calculator for the distance between 2 coordinates.
 <br><br>
 <h3>2. Set up</h3>
-Before initial use you should look at the <b>Settings</b> page and set up a <b>valid email address</b> for the Nominatim Reverse Geocoding service of OpenStreetMap. This is optional, but for a reliable service and for the reason of protection against abuse it is demanded. Especially, when the service is used on a regular basis (for details see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+Before initial use you should look at the <b>Settings</b> page and set up a <b>valid email address</b> for the Nominatim Reverse Geocoding service of OpenStreetMap. This is optional, but for a reliable service and for the reason of protection against abuse it is demanded. Especially, when the service is used on a regular basis (for details see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
 <br><br>
 The current <b>location</b> can be shown <b>on a map</b>. Untagged, it will show the position online on OpenStreetMap in your browser. Tagged, it tries to show the current position on an installed mapping app like Locus, OruxMaps or OSMAnd. But rather, determined by the default app geo-link settings of the smartphone, it will show the position on Google Maps. *)
 <br><br>

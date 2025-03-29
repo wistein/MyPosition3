@@ -2,7 +2,7 @@
 <b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
 The application simplifies the task of sharing your position data with your contacts.<br>
 Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed) or by browser on OpenStreetMap.<br>
-Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
+Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
 It introduces localized strings and considers localized number formats for German and English.<br>
 There are two GPS coordinate formats supported: <br>
 WGS84 Decimal coordinates and <br>
@@ -150,6 +150,6 @@ https://github.com/gjedeer/mylocation/<br>
 Based on
 <B>myLocation version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
-http://code.google.com/p/mylocation/<br>
+https://code.google.com/p/mylocation/<br>
 License: GNU GPLv2<BR>
 <br>

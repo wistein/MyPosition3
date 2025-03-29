@@ -1,7 +1,7 @@
 /*
  *    Derived from:
  *    GeoTools - The Open Source Java GIS Toolkit
- *    http://geotools.org
+ *    https://geotools.org
  *
  *    (C) 2006-2008, Open Source Geospatial Foundation (OSGeo)
  *

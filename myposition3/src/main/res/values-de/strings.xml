@@ -55,7 +55,7 @@
 
     <string name="msg_text">Klicke auf den folgenden Link, um meine Position auf der OSM-Karte zu sehen: </string>
     <string name="invValue">Ungültiger Wert</string>
-    <string name="email_string">Erforderlich für die zuverlässige Abfrage der Adressdaten per OSM-Nominatim-Reverse-Geocoder. Die Mail-Adresse wird vertraulich behandelt und nur verwendet, um bei Problemen zu kontaktieren. Siehe http://wiki.openstreetmap.org/wiki/Nominatim.</string>
+    <string name="email_string">Zwecks Verhinderung von Missbrauch und für eine zuverlässige Abfrage der Adressdaten beim OSM-Nominatim-Reverse-Geocoder. Siehe https://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail-Adresse für OSM-Geocoder</string>
     <string name="toast_string">Zeige kurze Popup-Meldung für neue Position mit Höhe über NN, GPS-Höhe und Höhenkorrekturwert.</string>
     <string name="titel_toast_string">Zeige Toast für Höhenwerte</string>

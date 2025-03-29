@@ -34,7 +34,7 @@ import java.util.Locale
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-02-21.
+ * last edited on 2025-03-29
  */
 class HelpDialog : Activity() {
     @SuppressLint("SourceLockedOrientationActivity")
@@ -60,34 +60,39 @@ class HelpDialog : Activity() {
             setTheme(R.style.AppTheme_Light)
         }
 
+        val dialog = intent.getStringExtra("dialog")
+
         val language = Locale.getDefault().toString().substring(0, 2)
-        setContentView(R.layout.activity_help_dialog)
 
-        var tv = findViewById<TextView>(R.id.help_head)
-        if (language == "de") {
-            tv.text =
-                fromHtml(readRawTextFile(R.raw.help_head_de, this))
-        } else {
-            tv.text =
-                fromHtml(readRawTextFile(R.raw.help_head, this))
+        setContentView(R.layout.activity_dialog)
+        val tvHead = findViewById<TextView>(R.id.help_head)
+        val tvText = findViewById<TextView>(R.id.help_text)
+        if (dialog == "help") {
+            if (language == "de") {
+                tvHead.text = fromHtml(readRawTextFile(R.raw.help_head_de, this))
+                tvText.text = fromHtml(readRawTextFile(R.raw.help_de, this))
+            } else {
+                tvHead.text = fromHtml(readRawTextFile(R.raw.help_head, this))
+                tvText.text = fromHtml(readRawTextFile(R.raw.help, this))
+            }
+            tvHead.setLinkTextColor(Color.BLUE)
+            Linkify.addLinks(tvHead, Linkify.WEB_URLS)
+            tvText.setLinkTextColor(Color.BLUE)
+            Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
-        tv.setLinkTextColor(Color.BLUE)
-        Linkify.addLinks(tv, Linkify.WEB_URLS)
-
-        tv = findViewById(R.id.help_text)
-        if (language == "de") {
-            tv.text =
-                fromHtml(readRawTextFile(R.raw.help_de, this))
-        } else {
-            tv.text =
-                fromHtml(readRawTextFile(R.raw.help, this))
+        else if (dialog == "about") {
+            if (language == "de") {
+                tvHead.text = fromHtml(readRawTextFile(R.raw.info_head_de, this))
+                tvText.text = fromHtml(readRawTextFile(R.raw.info_de, this))
+            } else {
+                tvHead.text = fromHtml(readRawTextFile(R.raw.info_head, this))
+                tvText.text = fromHtml(readRawTextFile(R.raw.info, this))
+            }
+            tvHead.setLinkTextColor(Color.BLUE)
+            Linkify.addLinks(tvHead, Linkify.WEB_URLS)
+            tvText.setLinkTextColor(Color.BLUE)
+            Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
-        tv.setLinkTextColor(Color.BLUE)
-        Linkify.addLinks(tv, Linkify.WEB_URLS)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
     }
 
     companion object {

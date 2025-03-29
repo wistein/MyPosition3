@@ -10,7 +10,7 @@ Deine <b>Position</b> kann <b>auf einer Karte angezeigt</b> werden; offline mitt
 Zusätzlich beinhaltet die App einen <b>Konverter zur Umrechnung</b> von Dezimalgraden in Grad-Minuten-Sekunden-Format und umgekehrt und einen Distanzrechner für 2 Koordinaten.
 <br><br>
 <h3>2. Einrichtung</h3>
-Vor der ersten Verwendung solltest Du die <b>Einstellungen</b>-Seite aufrufen und eine gültige <b>E-Mail-Adresse</b> für den Nominatim Reverse Geocoding Service von OpenStreetMap eingeben. Das ist zwar optional, aber für einen auf Dauer zuverlässigen Dienst und aus Sicherheitsgründen zum Schutz gegen Missbrauch gefordert. (Für Details siehe http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+Vor der ersten Verwendung solltest Du die <b>Einstellungen</b>-Seite aufrufen und eine gültige <b>E-Mail-Adresse</b> für den Nominatim Reverse Geocoding Service von OpenStreetMap eingeben. Das ist zwar optional, aber für einen auf Dauer zuverlässigen Dienst und aus Sicherheitsgründen zum Schutz gegen Missbrauch gefordert. (Für Details siehe https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
 <br><br>
 Die aktuelle <b>Position</b> lässt sich <b>auf einer Karte</b> darstellen. Standardmäßig wird die Position online auf der <b>OpenStreetMap</b>-Karte im Browser angezeigt. Mit gesetztem Haken wird versucht, die Position <b>offline</b> auf der Karte einer installierten Karten-App wie Locus, OruxMaps oder OSMAnd, etc. anzuzeigen. Standardmäßig wird aber hier die Position online auf Google Maps angezeigt, da dieses die voreingestellte App-Geo-Link-Einstellung des Smartphones ist. *)
 <br><br>

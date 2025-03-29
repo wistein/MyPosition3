@@ -18,12 +18,12 @@ import java.net.URL
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2025-02-21
+ * last edited on 2025-03-29
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
     override fun doWork(): Result {
-        val rTag: String = "RetrvAddrRun"
+        val rTag = "RetrvAddrRun"
         var xmlString: String
         val url: URL
 

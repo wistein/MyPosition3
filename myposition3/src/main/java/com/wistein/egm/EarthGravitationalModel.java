@@ -106,7 +106,7 @@ public final class EarthGravitationalModel extends VerticalTransform
         /*
          * WGS84 model values.
          * NOTE: The Fortran program gives 3.9860015e+14 for 'rkm' constant. This value has been
-         * modified in later programs. From http://cddis.gsfc.nasa.gov/926/egm96/doc/S11.HTML :
+         * modified in later programs. From https://cddis.gsfc.nasa.gov/926/egm96/doc/S11.HTML :
          *
          *     "We next need to consider the determination of GM, GM0, W0, U0. The value of GM0
          *      will be that adopted for the updated GM of the WGS84 ellipsoid. This value is

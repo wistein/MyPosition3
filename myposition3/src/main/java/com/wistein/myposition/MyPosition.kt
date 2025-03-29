@@ -13,7 +13,7 @@ import java.lang.Exception
  * Copyright (c) 2016-2025, Wilhelm Stein, Bonn, Germany.
  * Last edited in Java on 2025-02-05,
  * converted to Kotlin on 2025-02-05,
- * last edited on 2025-02-21
+ * last edited on 2025-03-29
  */
 class MyPosition : Application() {
     override fun onCreate() {

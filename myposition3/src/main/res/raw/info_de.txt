@@ -2,7 +2,7 @@
 <b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.<br>
 Die App erlaubt die Übermittlung der aktuellen Position an Deine Kontakte.<br>
 Dein Standort kann auf einer Karte angezeigt werden, entweder lokal (falls eine passende App installiert ist oder im Browser bei OpenStreetMap.<br>
-Mittels Abfrage des Reverse Geocoding von OpenStreetMap werden Adress-Informationen in zumeist landespezifischem Format angezeigt. Dazu wird, für einen zuverlässigen Dienst und als Vorbeugung gegen Missbrauch, Deine E-Mail-Adresse erwünscht und nur zu diesem Zweck verwendet (siehe http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br> 
+Mittels Abfrage des Reverse Geocoding von OpenStreetMap werden Adress-Informationen in zumeist landespezifischem Format angezeigt. Dazu wird, für einen zuverlässigen Dienst und als Vorbeugung gegen Missbrauch, Deine E-Mail-Adresse erwünscht und nur zu diesem Zweck verwendet (siehe https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br> 
 Die App kann in Deutsch oder Englisch verwendet werden und zeigt auch die Zahlenformate entsprechend an.<br>
 Es werden zwei GPS-Koordinatenformate unterstützt: <br>
 WGS84 Dezimal-Koordinaten und <br>
@@ -143,6 +143,6 @@ https://github.com/gjedeer/mylocation/<br>
 Basiert auf
 <B>myLocation Version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
-http://code.google.com/p/mylocation/<br>
+https://code.google.com/p/mylocation/<br>
 Lizenziert unter der GNU GPLv2.<br>
 <br>

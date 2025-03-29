@@ -67,7 +67,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-02-21
+ * last edited on 2025-03-29
  */
 public class MyPositionActivity
     extends AppCompatActivity
@@ -94,7 +94,7 @@ public class MyPositionActivity
     private String emailString = "";   // mail address for OSM query
     private boolean screenOrientL;     // option for screen orientation
     private boolean darkScreen;        // Option for dark screen background
-    private boolean showHtToast;       // option to show toast with height info
+    private boolean showHtMessage;     // option to show height info
     // the option mapLocal works only without GAPPS. It lets you select where to show the map,
     //   either on a local mapping app (true) or online (false).
     // But when GAPPS are present MyPosition3 shows the location always online on Google Maps.
@@ -260,7 +260,7 @@ public class MyPositionActivity
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
         darkScreen = prefs.getBoolean("dark_Screen", false);
         mapLocal = prefs.getBoolean("map_Local", false);
-        showHtToast = prefs.getBoolean("show_Toast", false);
+        showHtMessage = prefs.getBoolean("show_Toast", false);
         emailString = prefs.getString("email_String", "");
 
         if (MyDebug.DLOG) Log.i(TAG, "264, onResume, darkScreen: " + darkScreen);
@@ -399,11 +399,13 @@ public class MyPositionActivity
         if (id == R.id.menu_help)
         {
             intent = new Intent(MyPositionActivity.this, HelpDialog.class);
+            intent.putExtra("dialog", "help");
             startActivity(intent);
         }
         else if (id == R.id.menu_about)
         {
-            intent = new Intent(MyPositionActivity.this, AboutDialog.class);
+            intent = new Intent(MyPositionActivity.this, HelpDialog.class);
+            intent.putExtra("dialog", "about");
             startActivity(intent);
         }
         else if (id == R.id.menu_settings)
@@ -658,7 +660,7 @@ public class MyPositionActivity
 
         nnHeight = gpsHeight + corrHeight;
 
-        if (showHtToast)
+        if (showHtMessage)
         {
             @SuppressLint("DefaultLocale") String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
             @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", gpsHeight);
@@ -674,9 +676,10 @@ public class MyPositionActivity
             }
 
             String hToast = getString(R.string.h_nn) + " " + nntemp
-                + " \n " + getString(R.string.h_gps) + " " + gpstemp
-                + " \n " + getString(R.string.h_corr) + " " + corrtemp;
-            Toast.makeText(this, hToast, Toast.LENGTH_LONG).show();
+                    + " \n " + getString(R.string.h_gps) + " " + gpstemp
+                    + " \n " + getString(R.string.h_corr) + " " + corrtemp;
+//            showSnackbarBlue(hToast); // 3 lines message
+            showSnackbarHeight(hToast); // 3 lines message
         }
         return nnHeight;
     }
@@ -822,7 +825,7 @@ public class MyPositionActivity
         message.append(MapUtils.createShortLinkString(lat, lon, 15));
         message.append("?m");
 //        message.append("\n\nhttps://maps.google.com/maps?q=loc:" + lat + "," + lon + "&z=15");
-//        message.append("\n\nhttp://download.osmand.net/go?lat=" + lat + "&lon=" + lon + "&z=15");
+//        message.append("\n\nhttps://download.osmand.net/go?lat=" + lat + "&lon=" + lon + "&z=15");
         message.append("\n\n");
         message.append(geoLoc);
         message.append("\n   ");
@@ -886,10 +889,25 @@ public class MyPositionActivity
         baseLayout = findViewById(R.id.baseLayout);
         Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_LONG);
         TextView tv = sB.getView().findViewById(R.id.snackbar_text);
-        tv.setTextAlignment(TextView.TEXT_ALIGNMENT_CENTER);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         tv.setTextColor(Color.CYAN);
+        tv.setMaxLines(3);
+        sB.show();
+    }
+
+    // Blue height message with button to dismiss
+    private void showSnackbarHeight(String str)
+    {
+        baseLayout = findViewById(R.id.baseLayout);
+        Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_INDEFINITE);
+        TextView tv = sB.getView().findViewById(R.id.snackbar_text);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        tv.setTextColor(Color.CYAN);
+        tv.setMaxLines(3);
+        sB.setAction("Ok", View ->
+                sB.dismiss());
         sB.show();
     }
 

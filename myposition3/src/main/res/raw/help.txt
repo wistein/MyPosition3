@@ -41,7 +41,7 @@ If you leave <b>MyPosition</b> GPS is switched off (if not still in use by anoth
 <br><br>
 __________
 <br>
-*) To change the default from Google Maps to a preferred mapping app, open the settings on your phone, tap Location, find Maps and select Clear defaults. (This procedure may be different on devices an Android versions).
+*) To change the default from Google Maps to a preferred mapping app, open the settings on your phone, tap Location, find Maps and select Clear defaults. (The procedure may be different on devices from different manufacturers and Android versions).
 <br><br>
 Head back to My Position and call Show Map. Now you’ll be asked which application to use. Pick the one you prefer, and tap `This time´ to test it. Next time you may select ‘Always’ to make sure your preferred app opens by default.
 <br>

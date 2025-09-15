@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.wistein.myposition'
-    compileSdk 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.wistein.myposition"
         minSdkVersion 25
-        targetSdkVersion 34
-        versionCode 143
-        versionName "1.4.3"
+        targetSdkVersion 36
+        versionCode 145
+        versionName "1.4.5"
     }
 
     buildTypes {
@@ -25,12 +25,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = '17'
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     lint {
@@ -47,15 +43,15 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.work:work-runtime:2.10.0'
+    implementation 'androidx.work:work-runtime:2.10.4'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.core:core-ktx:1.15.0'
-    implementation 'androidx.activity:activity-ktx:1.10.1' // new
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.activity:activity-ktx:1.11.0' // new
     implementation 'androidx.annotation:annotation-jvm:1.9.1'
-    implementation 'androidx.fragment:fragment-ktx:1.8.6'
-    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.fragment:fragment-ktx:1.8.9'
+    implementation 'com.google.android.material:material:1.13.0'
 
 // Activate (uncomment) the following line when LeakCanary should run in debug builds.
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'

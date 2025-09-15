@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.wistein.myposition.MyPositionActivity.addresslines
+import com.wistein.myposition.MyPositionActivity.addressLines
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -319,11 +319,11 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append(postcode)
                     }
                 }
-                addresslines = msg.toString()
+                addressLines = msg.toString()
             }
         } catch (e: IOException) {
             if (MyDebug.DLOG) Log.e(rTag, "325, Problem with address handling: $e")
-            addresslines = R.string.unknownAddr.toString()
+            addressLines = R.string.unknownAddr.toString()
         }
         return Result.success()
     }

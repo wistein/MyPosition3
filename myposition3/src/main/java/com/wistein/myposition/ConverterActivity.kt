@@ -1,8 +1,11 @@
+@file:Suppress("KotlinConstantConditions")
+
 package com.wistein.myposition
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,9 +13,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import java.text.DecimalFormat
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -43,7 +51,7 @@ import kotlin.math.sqrt
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2025-02-21
+ * Last edited on 2025-07-08
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -95,10 +103,33 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
 
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) // SDK 35+
+        {
+            enableEdgeToEdge()
+        }
         setContentView(R.layout.activity_converter)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.converterLayout))
+        { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<MarginLayoutParams> {
+                topMargin = insets.top
+                leftMargin = insets.left
+                bottomMargin = insets.bottom
+                rightMargin = insets.right
+            }
+
+            // Return CONSUMED if you don't want the window insets to keep passing
+            // down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
+
         convLayout = findViewById(R.id.converterLayout)
 
         supportActionBar!!.setTitle(R.string.title_activity_converter)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         tvDecimalLat = findViewById(R.id.latDecimal)
         tvDecimalLon = findViewById(R.id.lonDecimal)

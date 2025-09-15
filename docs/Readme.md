@@ -40,6 +40,16 @@ https://github.com/wistein/MyPosition3<BR>
 
 ### History:
 
+<B>My Position, version 1.4.5,</B> 2025-09-16<br>
+- Some code improvements.<br>
+<br>
+
+<B>My Position, version 1.4.4,</B> 2025-07-08<br>
+- Code adapted for Android versions >= 15<br>
+- Docs updated<br>
+- Compiled for SdkVersion 36.<br>
+<br>
+
 <B>My Position, version 1.4.3,</B> 2025-03-27<br>
 - Background location added<br>
 - Permissions handling revised and adapted<br>

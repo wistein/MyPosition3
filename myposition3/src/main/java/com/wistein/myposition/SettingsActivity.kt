@@ -31,7 +31,7 @@ import androidx.preference.PreferenceFragmentCompat
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-02-21
+ * last edited on 2025-07-08
  */
 @Suppress("KotlinConstantConditions")
 class SettingsActivity : AppCompatActivity() {

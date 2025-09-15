@@ -1,4 +1,5 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/converterLayout"
     android:fillViewport="true"
@@ -27,7 +28,6 @@
                 android:text="@string/decCoord"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +55,6 @@
                 android:importantForAutofill="no"
                 android:inputType="number"
                 tools:ignore="LabelFor">
-
                 <requestFocus />
             </EditText>
 
@@ -313,6 +312,14 @@
                 tools:ignore="LabelFor" />
         </LinearLayout>
 
+        <!-- separating white line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:background="#5353FB"
+            android:paddingTop="1dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -366,6 +373,14 @@
                 android:inputType="number"
                 tools:ignore="LabelFor" />
         </LinearLayout>
+
+        <!-- separating white line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:background="#5353FB"
+            android:paddingTop="1dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

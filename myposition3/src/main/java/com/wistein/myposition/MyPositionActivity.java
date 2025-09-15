@@ -1,5 +1,7 @@
 package com.wistein.myposition;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
@@ -22,14 +24,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -67,7 +75,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-03-29
+ * last edited on 2025-09-15
  */
 public class MyPositionActivity
     extends AppCompatActivity
@@ -86,7 +94,7 @@ public class MyPositionActivity
     private ImageView shareDegree;
     private ImageView shareMessage;
 
-    public static String addresslines; // formatted string for Address field
+    public static String addressLines; // formatted string for Address field
     private String messageHeader = ""; // 1st line in mail message
 
     // Preferences
@@ -161,7 +169,26 @@ public class MyPositionActivity
 
         super.onCreate(savedInstanceState); // put here for setTheme(...) to work
 
+        // Use EdgeToEdge mode for Android 15+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) // Android 15+, SDK 35+
+        {
+            EdgeToEdge.enable(this);
+        }
+
         setContentView(R.layout.activity_my_location);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.baseLayout),
+                (v, windowInsets) -> {
+                    Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+                    ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                    mlp.topMargin = insets.top;
+                    mlp.bottomMargin = insets.bottom;
+                    mlp.leftMargin = insets.left;
+                    mlp.rightMargin = insets.right;
+                    v.setLayoutParams(mlp);
+                    return WindowInsetsCompat.CONSUMED;
+                });
+
         baseLayout = findViewById(R.id.baseLayout);
         Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
 
@@ -227,8 +254,8 @@ public class MyPositionActivity
                 else
                 {
                     doubleBackToExitPressedTwice = true;
-                    showSnackbarBlue(getString(R.string.back_twice));
-                    m1Handler.postDelayed(r1, 1500);
+                    showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
+                    m1Handler.postDelayed(r1, 2000);
                 }
             }
         };
@@ -283,6 +310,14 @@ public class MyPositionActivity
         }
 
         super.onResume(); // put here for setTheme(...) to work
+
+        // Load and show the data, set title in ActionBar
+        try {
+            Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.app_name));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (NullPointerException e) {
+            // nothing
+        }
 
         // Get location self permission state
         locationPermGranted = isFineLocPermGranted();
@@ -387,24 +422,42 @@ public class MyPositionActivity
         Intent intent;
         int id = item.getItemId();
 
+        if (id == android.R.id.home) // back button in actionBar
+        {
+            final Handler m1Handler = new Handler(Looper.getMainLooper());
+            final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
+            if (doubleBackToExitPressedTwice)
+            {
+                m1Handler.removeCallbacks(r1);
+                finish();
+            }
+            else
+            {
+                doubleBackToExitPressedTwice = true;
+                showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
+                m1Handler.postDelayed(r1, 2000);
+            }
+        }
         if (id == R.id.menu_getpos)
         {
             // Get location with permissions check
             locationDispatcherMode = 1; // get location
 
-            // call DummyActivity to reenter MyPositionActivity to get the new position
-            intent = new Intent(MyPositionActivity.this, DummyActivity.class);
+            // Re-enter MyPositionActivity to get the new position
+            intent = new Intent(MyPositionActivity.this, MyPositionActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
         if (id == R.id.menu_help)
         {
-            intent = new Intent(MyPositionActivity.this, HelpDialog.class);
+            intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "help");
             startActivity(intent);
         }
         else if (id == R.id.menu_about)
         {
-            intent = new Intent(MyPositionActivity.this, HelpDialog.class);
+            intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "about");
             startActivity(intent);
         }
@@ -448,7 +501,7 @@ public class MyPositionActivity
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
             intent.putExtra("Latitude", lat);
             intent.putExtra("Longitude", lon);
-            startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP));
         }
 
         return super.onOptionsItemSelected(item);
@@ -558,7 +611,7 @@ public class MyPositionActivity
         }
 
         // Get reverse geocoding formatted string for message
-        // String addresslines1;
+        // String addressLines1;
         if (locationService.canGetLocation() && (lat != 0 || lon != 0))
         {
             final String time_header = this.getString(R.string.last_fix_time) + " ";
@@ -595,21 +648,21 @@ public class MyPositionActivity
             final Handler m2Handler = new Handler(Looper.getMainLooper());
             final Runnable r2 = new Runnable()
             {
-                String addresslines1;
+                String addressLines1;
 
                 @Override
                 public void run()
                 {
-                    addresslines1 = "   " + addresslines; // addresslines is set by RetrieveAddrRunner
-                    addresslines1 = addresslines1.replace("\n", "\n   ");
+                    addressLines1 = "   " + addressLines; // addressLines is set by RetrieveAddrRunner
+                    addressLines1 = addressLines1.replace("\n", "\n   ");
 
-                    if (!Objects.equals(addresslines, ""))
+                    if (!Objects.equals(addressLines, ""))
                     {
                         try
                         {
-                            tvLocation.setText(addresslines);
+                            tvLocation.setText(addressLines);
                             tvMessage.setText(getMessage(lat, lon, height,
-                                uncertainty, messageHeader, addresslines1));
+                                uncertainty, messageHeader, addressLines1));
                         } catch (Exception e)
                         {
                             tvLocation.setText(getString(R.string.noAddr));
@@ -618,9 +671,9 @@ public class MyPositionActivity
                     }
                     else
                     {
-                        addresslines = getString(R.string.noAddr);
-                        tvLocation.setText(addresslines);
-                        tvMessage.setText(addresslines);
+                        addressLines = getString(R.string.noAddr);
+                        tvLocation.setText(addressLines);
+                        tvMessage.setText(addressLines);
                     }
                 }
             };
@@ -628,9 +681,9 @@ public class MyPositionActivity
         }
         else
         {
-            addresslines = getString(R.string.noAddr);
-            tvLocation.setText(addresslines);
-            tvMessage.setText(addresslines);
+            addressLines = getString(R.string.noAddr);
+            tvLocation.setText(addressLines);
+            tvMessage.setText(addressLines);
         }
     }
     // End of getLoc()
@@ -678,8 +731,8 @@ public class MyPositionActivity
             String hToast = getString(R.string.h_nn) + " " + nntemp
                     + " \n " + getString(R.string.h_gps) + " " + gpstemp
                     + " \n " + getString(R.string.h_corr) + " " + corrtemp;
-//            showSnackbarBlue(hToast); // 3 lines message
-            showSnackbarHeight(hToast); // 3 lines message
+            // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
+            showSnackbarHeight(hToast + "\n\n");
         }
         return nnHeight;
     }
@@ -905,8 +958,8 @@ public class MyPositionActivity
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         tv.setTextColor(Color.CYAN);
-        tv.setMaxLines(3);
-        sB.setAction("Ok", View ->
+        tv.setMaxLines(5);
+        sB.setAction("Ok\n", View ->
                 sB.dismiss());
         sB.show();
     }

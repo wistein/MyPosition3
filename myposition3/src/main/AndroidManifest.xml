@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Last edited 2025-02-21 -->
+<!-- Last edited 2025-09-16 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
@@ -7,7 +7,8 @@
     <!-- Permission needed for location providers -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
+        tools:ignore="BackgroundLocationPolicy" />
 
     <!-- Permissions needed for reverse geocoding -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -57,17 +58,7 @@
         </activity>
 
         <activity
-            android:name="com.wistein.myposition.HelpDialog"
-            android:label="@string/title_activity_help_dialog">
-        </activity>
-
-        <activity
-            android:name="com.wistein.myposition.DummyActivity"
-            android:label="@string/title_activity_dummy"
-            android:parentActivityName=".MyPositionActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="MyPositionActivity"/>
+            android:name="com.wistein.myposition.ShowTextDialog">
         </activity>
 
         <service

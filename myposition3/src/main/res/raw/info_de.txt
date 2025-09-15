@@ -29,24 +29,34 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>Mein Standort, Version 1.4.3,</B> 21.02.2025<br>
- - Hintergrund-Standortberechtigung hinzugefügt.<br>
- - Berechtigungsverwaltung überarbeitet.<br>
- - Some code cleaning.<br>
+<B>Mein Standort, Version 1.4.5,</B> 16.09.2025<br>
+ - Code-Verbesserungen.<br>
+<br>
+
+<B>Mein Standort, Version 1.4.4,</B> 08.07.2025<br>
+ - Code-Anpassungen für Android-Versionen >= 15.<br>
+ - Doku angepasst.<br>
+ - Kompiliert für SdkVersion 36.<br>
+<br>
+
+<B>My Position, version 1.4.3,</B> 21.02.2025<br>
+ - Positionsbestimmung im Hintergrund hinzugefügt.<br>
+ - Berechtigungen überarbeitet und angepasst.<br>
+ - Code Verbesserungen.<br>
  - Veraltete Funktionen ersetzt.<br>
- - Docs updated.<br>
+ - Doku-Update.<br>
 <br>
 
 <B>Mein Standort, Version 1.4.2,</B> 20.12.2024<br>
- - Some code cleaning.<br>
- - Docs updated.<br>
+ - Code Verbesserungen.<br>
+ - Doku-Update.<br>
 <br>
 
 <B>Mein Standort, Version 1.4.1,</B> 19.12.2024<br>
- - Minor layout refinements.<br>
- - Most Java code transposed to Kotlin.<br>
- - Code refinements.<br>
- - Docs updated.<br>
+ - Kleinere Verbesserungen am Layout.<br>
+ - Der meiste Java-Code nach Kotlin übersetzt.<br>
+ - Code Verbesserungen.<br>
+ - Doku-Update.<br>
 <br>
 
 <B>Mein Standort, Version 1.4.0,</B> 28.09.2024,<br>

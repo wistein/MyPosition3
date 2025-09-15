@@ -1,13 +1,20 @@
 package com.wistein.myposition
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.util.Linkify
+import android.view.MenuItem
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.wistein.myposition.Utils.fromHtml
 import java.io.BufferedReader
 import java.io.IOException
@@ -28,17 +35,21 @@ import java.util.Locale
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * HelpDialog.java
- * Custom class for displaying the Help Dialog
+ * ShowTextDialog.java
+ * Custom class for displaying the Help and Info Dialog
  *
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-03-29
+ * last edited on 2025-07-08
  */
-class HelpDialog : Activity() {
+class ShowTextDialog : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     public override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) // SDK 35+
+        {
+            enableEdgeToEdge()
+        }
         super.onCreate(savedInstanceState)
 
         val prefs = MyPosition.getPrefs()
@@ -65,10 +76,32 @@ class HelpDialog : Activity() {
         val language = Locale.getDefault().toString().substring(0, 2)
 
         setContentView(R.layout.activity_dialog)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.show_dialog))
+        { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the insets as a margin to the view. You can also update the view padding
+            // if that's more appropriate.
+            v.updateLayoutParams<MarginLayoutParams> {
+                topMargin = insets.top
+                leftMargin = insets.left
+                bottomMargin = insets.bottom
+                rightMargin = insets.right
+            }
+
+            // Return CONSUMED if you don't want the window insets to keep passing
+            // down to descendant views.
+            WindowInsetsCompat.CONSUMED
+        }
+
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         val tvHead = findViewById<TextView>(R.id.help_head)
         val tvText = findViewById<TextView>(R.id.help_text)
         if (dialog == "help") {
+            supportActionBar!!.setTitle(R.string.title_activity_help_dialog)
             if (language == "de") {
+                supportActionBar!!.setTitle(R.string.title_activity_help_dialog)
                 tvHead.text = fromHtml(readRawTextFile(R.raw.help_head_de, this))
                 tvText.text = fromHtml(readRawTextFile(R.raw.help_de, this))
             } else {
@@ -81,6 +114,7 @@ class HelpDialog : Activity() {
             Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
         else if (dialog == "about") {
+            supportActionBar!!.setTitle(R.string.title_activity_about_dialog)
             if (language == "de") {
                 tvHead.text = fromHtml(readRawTextFile(R.raw.info_head_de, this))
                 tvText.text = fromHtml(readRawTextFile(R.raw.info_de, this))
@@ -93,6 +127,16 @@ class HelpDialog : Activity() {
             tvText.setLinkTextColor(Color.BLUE)
             Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        val id = item.itemId
+        if (id == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {

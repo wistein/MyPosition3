@@ -30,11 +30,8 @@ https://github.com/wistein/MyPosition3<BR>
 <h4>Historie</h4>
 
 <B>Mein Standort, Version 1.4.5,</B> 16.09.2025<br>
- - Code-Verbesserungen.<br>
-<br>
-
-<B>Mein Standort, Version 1.4.4,</B> 08.07.2025<br>
  - Code-Anpassungen für Android-Versionen >= 15.<br>
+ - Code-Verbesserungen.<br>
  - Doku angepasst.<br>
  - Kompiliert für SdkVersion 36.<br>
 <br>

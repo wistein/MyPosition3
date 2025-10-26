@@ -4,10 +4,11 @@
  
 Share your location, easily.  
 The app simplifies the task of sharing your location data with your contacts.
+
 ### Features
 - My Position determines the current location with address data and GPS coordinates including height above sea-level. 
 - Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed*) or by browser on OpenStreetMap.
-- It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info.**)
+- It uses Reverse Geocoding by OpenStreetMap (OSM) query for showing address info. **)
 - It shows a country-specific representation of address info (at, ch, de, fr, it, rest of the world), introduces localized strings and number formats (German, English).
 - Additionally, the app also includes a tool to help converting between WGS84 decimal and DD MM SS GPS coordinates format and calculates the distance between 2 coordinates.
 - Runs on Android 7.1 or newer.
@@ -24,7 +25,6 @@ Next time you may select <i>Always</I> to make sure your preferred app opens by 
 
 **) To achieve OSM Reverse Geocoding by a more reliable service and for protection against abuse it optionally takes your provided email address  
 (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
-
  
 ### Permissions
 - Location (GPS and Network)
@@ -39,9 +39,9 @@ Since versions 1.3.0 to current version copyright by wistein, 2017-2025,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
-
-<B>My Position, version 1.4.5,</B> 2025-09-16<br>
+<B>My Position, version 1.4.5,</B> 2025-09-26<br>
 - Code adapted for Android versions >= 15<br>
+- App specific and permanent debug support for Emulator in Android Studio
 - Some code improvements.<br>
 - Docs updated<br>
 - Compiled for SdkVersion 36.<br>
@@ -143,6 +143,7 @@ https://github.com/wistein/MyPosition3<BR>
  
 <B>My Position version 1.3.0</B>, 2017-04-11<br> 
 Copyright 2017 by wistein,<br>
+  - Based on the code of myLocation 1.2 with the following changes:
   - Code corrections and enhancements<br>
   - Works without Google Apps GApps<br>
   - Interrupts GPS usage when app pauses or ends GPS usage when app terminates<br>
@@ -151,16 +152,13 @@ Copyright 2017 by wistein,<br>
   - Localization for German and English (default) of text and number formats<br>
   - Country-specific representation of address info (at, ch, de, fr, it, rest of the world)<br>
   - App-Icon by wistein<br>
-  - Based on the following projects:<br>
 <br>
-  
-<B>myLocation version 1.2</B> <BR>
-Changes and enhancements by GDR!<br>
-https://github.com/gjedeer/mylocation/<br>
-License: GNU GPLv2
 
-<B>myLocation version 1.2</B><br>
+Based on <br>
+<B>myLocation version 1.2</B> <BR>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
+Changes and enhancements by GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
 License: GNU GPLv2
 <BR>

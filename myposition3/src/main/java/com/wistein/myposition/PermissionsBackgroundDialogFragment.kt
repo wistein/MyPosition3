@@ -19,7 +19,7 @@ import androidx.fragment.app.DialogFragment
  * licensed under the MIT License.
  *
  * Adopted for MyPosition3 in Kotlin by wistein on 2025-02-19,
- * last edited on 2025-02-22
+ * last edited on 2025-10-26
  */
 class PermissionsBackgroundDialogFragment : DialogFragment() {
     private var context: Context? = null
@@ -35,7 +35,8 @@ class PermissionsBackgroundDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (MyDebug.DLOG) Log.i(TAG, "38, onCreate")
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "39, onCreate")
 
         setStyle(STYLE_NO_TITLE, R.style.PermissionsDialogFragmentStyle)
         isCancelable = false
@@ -62,7 +63,8 @@ class PermissionsBackgroundDialogFragment : DialogFragment() {
     { isGranted ->
         if (isGranted) {
             externalGrantNeeded = false
-            if (MyDebug.DLOG) Log.i(TAG, "65, permissionLauncherBackground granted: $isGranted")
+            if (IsRunningOnEmulator.DLOG)
+                Log.i(TAG, "67, permissionLauncherBackground granted: $isGranted")
             dismiss()
         } else {
             externalGrantNeeded = true
@@ -72,7 +74,8 @@ class PermissionsBackgroundDialogFragment : DialogFragment() {
 
     // Inform about optional background permission when denied
     private fun showAppSettingsBackgroundDialog() {
-        if (MyDebug.DLOG) Log.i(TAG, "75, AppSettingsBackgrDlg")
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "78, AppSettingsBackgrDlg")
 
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.dialog_background_loc_title))
@@ -88,7 +91,8 @@ class PermissionsBackgroundDialogFragment : DialogFragment() {
     override fun onDetach() {
         super.onDetach()
 
-        if (MyDebug.DLOG) Log.i(TAG, "91, onDetach")
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "95, onDetach")
 
         context = null
     }

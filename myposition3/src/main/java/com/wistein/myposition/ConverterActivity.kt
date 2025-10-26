@@ -51,7 +51,7 @@ import kotlin.math.sqrt
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2025-07-08
+ * Last edited on 2025-10-26
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -81,7 +81,8 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     @SuppressLint("SourceLockedOrientationActivity")
     public override fun onCreate(savedInstanceState: Bundle?) {
 
-        if (MyDebug.DLOG) Log.i(TAG, "78, onCreate") // is set true in debug mode
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "85, onCreate") // is set true in debug mode
         val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
         val darkScreen = prefs.getBoolean("dark_Screen", false)
@@ -190,7 +191,8 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     override fun onDestroy()
     {
         super.onDestroy()
-        if (MyDebug.DLOG) Log.i(TAG, "164, onDestroy")
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "195, onDestroy")
 
         // All following instructions don't prohibit memory leak of ConverterActivity
         buttonCalc1.setOnClickListener(null)

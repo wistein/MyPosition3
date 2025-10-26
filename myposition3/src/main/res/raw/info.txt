@@ -1,6 +1,6 @@
 <h4>Description</h4>
-<b>My Position</b> determines the current location with address data and GPS coordinates including height above sea-level.<br>
-The application simplifies the task of sharing your position data with your contacts.<br>
+<b>My Position</b> simplifies the task of sharing your position data with your contacts.<br>
+The application determines the current location with address data and GPS coordinates including height above sea-level.<br>
 Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed) or by browser on OpenStreetMap.<br>
 Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
 It introduces localized strings and considers localized number formats for German and English.<br>
@@ -32,8 +32,9 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>History</h4>
 
-<B>My Position, version 1.4.5,</B> 2025-09-16<br>
+<B>My Position, version 1.4.5,</B> 2025-09-26<br>
 - Code adapted for Android versions >= 15<br>
+- App specific and permanent debug support for Emulator in Android Studio
 - Some code improvements.<br>
 - Docs updated<br>
 - Compiled for SdkVersion 36.<br>
@@ -140,6 +141,7 @@ https://github.com/wistein/MyPosition3<BR>
 <B>My Position, version 1.3.0,</B> 2017-04-11<br>
 Copyright 2017 by wistein,<br>
 License: GNU GPLv2 or later.<BR>
+ - Based on the code of myLocation 1.2 with the following changes:
  - Code corrections and enhancements.<br>
  - Works without Google Apps (GApps).<br>
  - Interrupts GPS usage when app pauses or ends GPS usage when app terminates.<br>
@@ -150,13 +152,11 @@ License: GNU GPLv2 or later.<BR>
  - App-Icon by wistein.<br>
 <br>
 
+Based on <br>
 <B>myLocation version 1.2</B> <BR>
-Changes and enhancements by GDR!<br>
-https://github.com/gjedeer/mylocation/<br>
-<br>
-Based on
-<B>myLocation version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 https://code.google.com/p/mylocation/<br>
+Changes and enhancements by GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
 License: GNU GPLv2<BR>
 <br>

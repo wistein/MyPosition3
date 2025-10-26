@@ -24,6 +24,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
@@ -45,7 +49,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.work:work-runtime:2.10.4'
+    implementation 'androidx.work:work-runtime:2.11.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.core:core-ktx:1.17.0'
     implementation 'androidx.activity:activity-ktx:1.11.0' // new

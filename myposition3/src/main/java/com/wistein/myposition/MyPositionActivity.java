@@ -75,7 +75,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-09-15
+ * last edited on 2025-10-26
  */
 public class MyPositionActivity
     extends AppCompatActivity
@@ -142,7 +142,8 @@ public class MyPositionActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        if (MyDebug.DLOG) Log.i(TAG, "137, onCreate");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "146, onCreate");
 
         prefs = MyPosition.getPrefs();
 
@@ -195,8 +196,8 @@ public class MyPositionActivity
         // Part of location permissions handling:
         //   Set flag locationPermGranted from self permissions
         locationPermGranted = isFineLocPermGranted();
-        if (MyDebug.DLOG) Log.i(TAG, "171, onCreate, locationPermGranted: "
-            + locationPermGranted);
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "200, onCreate, locationPermGranted: " + locationPermGranted);
 
         // If not yet location permission is granted prepare and query for them
         if (!locationPermGranted)
@@ -231,7 +232,8 @@ public class MyPositionActivity
         // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
         int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
             NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
-        if (MyDebug.DLOG) Log.i(TAG, "206, NavBarMode = " + iMode);
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "236, NavBarMode = " + iMode);
         return iMode;
     }
 
@@ -280,7 +282,8 @@ public class MyPositionActivity
     @Override
     public void onResume()
     {
-        if (MyDebug.DLOG) Log.i(TAG, "255, onResume");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "286, onResume");
 
         prefs = MyPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
@@ -290,7 +293,8 @@ public class MyPositionActivity
         showHtMessage = prefs.getBoolean("show_Toast", false);
         emailString = prefs.getString("email_String", "");
 
-        if (MyDebug.DLOG) Log.i(TAG, "264, onResume, darkScreen: " + darkScreen);
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "297, onResume, darkScreen: " + darkScreen);
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -324,8 +328,8 @@ public class MyPositionActivity
 
         // Get flag 'has_asked_background'
         boolean hasAskedBackgroundLocation = prefs.getBoolean("has_asked_background", false);
-        if (MyDebug.DLOG) Log.i(TAG, "290, hasAskedBackgroundLocation: "
-            + hasAskedBackgroundLocation);
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "332, hasAskedBackgroundLocation: " + hasAskedBackgroundLocation);
 
         // After granting the foreground location permission
         //   asked only once the permission for background location
@@ -336,7 +340,8 @@ public class MyPositionActivity
                 PermissionsBackgroundDialogFragment.class.getName());
 
             // Query result of BackgroundDialog
-            if (MyDebug.DLOG) Log.i(TAG, "302, isBackLocPermGranted: " + isBackLocPermGranted());
+            if (IsRunningOnEmulator.DLOG)
+                Log.i(TAG, "344, isBackLocPermGranted: " + isBackLocPermGranted());
 
             // Store flag 'hasAskedBackground = true' in SharedPreferences
             SharedPreferences.Editor editor = prefs.edit();
@@ -367,7 +372,8 @@ public class MyPositionActivity
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
 
-        if (MyDebug.DLOG) Log.i(TAG, "333, onResume, locationPermGranted: " + locationPermGranted);
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "376, onResume, locationPermGranted: " + locationPermGranted);
 
         // Get location with permissions check
         locationDispatcherMode = 1; // get location
@@ -387,7 +393,8 @@ public class MyPositionActivity
     {
         super.onStop();
 
-        if (MyDebug.DLOG) Log.i(TAG, "353, onStop");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "397, onStop");
 
         // Stop location service with permissions check
         locationDispatcherMode = 2;
@@ -408,7 +415,8 @@ public class MyPositionActivity
     {
         super.onDestroy();
 
-        if (MyDebug.DLOG) Log.i(TAG, "374, onDestroy");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "419, onDestroy");
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -495,7 +503,8 @@ public class MyPositionActivity
         {
             locationDispatcherMode = 2;
             locationDispatcher();
-            if (MyDebug.DLOG) Log.i(TAG, "441, Start ConverterAct");
+            if (IsRunningOnEmulator.DLOG)
+                Log.i(TAG, "507, Start ConverterAct");
 
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
@@ -529,7 +538,8 @@ public class MyPositionActivity
                         Intent sIntent = new Intent(this, LocationService.class);
                         stopService(sIntent);
                         locServiceOn = false;
-                        if (MyDebug.DLOG) Log.i(TAG, "475, Stop locationService");
+                        if (IsRunningOnEmulator.DLOG)
+                            Log.i(TAG, "542, Stop locationService");
                     }
                 }
             }

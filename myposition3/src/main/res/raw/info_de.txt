@@ -1,6 +1,6 @@
 <h4>Beschreibung</h4>
-<b>Mein Standort</b> bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.<br>
-Die App erlaubt die Übermittlung der aktuellen Position an Deine Kontakte.<br>
+<b>Mein Standort</b> erlaubt die Übermittlung der aktuellen Position an Deine Kontakte.<br>
+Die App bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.<br>
 Dein Standort kann auf einer Karte angezeigt werden, entweder lokal (falls eine passende App installiert ist oder im Browser bei OpenStreetMap.<br>
 Mittels Abfrage des Reverse Geocoding von OpenStreetMap werden Adress-Informationen in zumeist landespezifischem Format angezeigt. Dazu wird, für einen zuverlässigen Dienst und als Vorbeugung gegen Missbrauch, Deine E-Mail-Adresse erwünscht und nur zu diesem Zweck verwendet (siehe https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br> 
 Die App kann in Deutsch oder Englisch verwendet werden und zeigt auch die Zahlenformate entsprechend an.<br>
@@ -29,8 +29,9 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>Mein Standort, Version 1.4.5,</B> 16.09.2025<br>
+<B>Mein Standort, Version 1.4.5,</B> 26.09.2025<br>
  - Code-Anpassungen für Android-Versionen >= 15.<br>
+ - App-spezifische Debug-Unterstützung dauerhaft für den Emulator in Android Studio
  - Code-Verbesserungen.<br>
  - Doku angepasst.<br>
  - Kompiliert für SdkVersion 36.<br>
@@ -143,13 +144,11 @@ Lizenziert unter der GNU GPLv2 oder neuer.<br>
  - App-Icon von wistein.<br>
 <br>
 
-<B>myLocation version 1.2</B> <BR>
-Änderungen durch GDR!<br>
-https://github.com/gjedeer/mylocation/<br>
-<br>
-Basiert auf
+Basiert auf <br>
 <B>myLocation Version 1.2</B><br>
 Copyright 2012 by Mohammad Hafiz Ismail<br>
 https://code.google.com/p/mylocation/<br>
+Änderungen durch GDR!<br>
+https://github.com/gjedeer/mylocation/<br>
 Lizenziert unter der GNU GPLv2.<br>
 <br>

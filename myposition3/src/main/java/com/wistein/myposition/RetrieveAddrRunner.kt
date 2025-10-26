@@ -18,7 +18,7 @@ import java.net.URL
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2025-03-29
+ * last edited on 2025-10-26
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -54,19 +54,22 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     sb.append(line).append('\n')
                 }
             } catch (e: IOException) {
-                if (MyDebug.DLOG) Log.e(rTag, "57, Problem converting Stream to String: $e"
+                if (IsRunningOnEmulator.DLOG)
+                    Log.e(rTag, "58, Problem converting Stream to String: $e"
                 )
             } finally {
                 try {
                     iStream.close()
                 } catch (e: IOException) {
-                    if (MyDebug.DLOG) Log.e(rTag, "63, Problem closing InputStream: $e")
+                    if (IsRunningOnEmulator.DLOG)
+                        Log.e(rTag, "65, Problem closing InputStream: $e")
                 }
             }
             xmlString = sb.toString()
 
             // Log gzip-content of url
-            if (MyDebug.DLOG) Log.d(rTag, "69, xmlString: $xmlString"
+            if (IsRunningOnEmulator.DLOG)
+                Log.d(rTag, "72, xmlString: $xmlString"
             )
 
             // parse the XML content
@@ -322,7 +325,8 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 addressLines = msg.toString()
             }
         } catch (e: IOException) {
-            if (MyDebug.DLOG) Log.e(rTag, "325, Problem with address handling: $e")
+            if (IsRunningOnEmulator.DLOG)
+                Log.e(rTag, "329, Problem with address handling: $e")
             addressLines = R.string.unknownAddr.toString()
         }
         return Result.success()

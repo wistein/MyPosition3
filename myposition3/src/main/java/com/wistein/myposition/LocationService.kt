@@ -32,7 +32,7 @@ import androidx.core.app.ActivityCompat
  * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-02-21.
+ * last edited on 2025-10-26.
  */
 class LocationService : Service, LocationListener {
     companion object {
@@ -138,7 +138,8 @@ class LocationService : Service, LocationListener {
                 }
             }
         } catch (e: Exception) {
-            if (MyDebug.DLOG) Log.e(TAG, "127, $e")
+            if (IsRunningOnEmulator.DLOG)
+                Log.e(TAG, "142, $e")
         }
     }
 

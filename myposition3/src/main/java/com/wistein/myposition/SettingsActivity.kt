@@ -31,9 +31,8 @@ import androidx.preference.PreferenceFragmentCompat
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-07-08
+ * last edited on 2025-10-26
  */
-@Suppress("KotlinConstantConditions")
 class SettingsActivity : AppCompatActivity() {
     private var TAG = "MyPosSettingsAct"
     private var prefs = MyPosition.getPrefs()
@@ -44,7 +43,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (MyDebug.DLOG) Log.i(TAG, "49, onCreate");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "47, onCreate");
 
         // Option for screen orientation
         screenOrientL = prefs.getBoolean("screen_Orientation", false)
@@ -57,7 +57,8 @@ class SettingsActivity : AppCompatActivity() {
 
         // Option for dark screen background
         darkScreen = prefs.getBoolean("dark_Screen", false)
-        if (MyDebug.DLOG) Log.i(TAG, "62, darkScreen: $darkScreen");
+        if (IsRunningOnEmulator.DLOG)
+            Log.i(TAG, "61, darkScreen: $darkScreen");
         if (darkScreen) {
             setTheme(R.style.AppTheme_Dark)
         } else {

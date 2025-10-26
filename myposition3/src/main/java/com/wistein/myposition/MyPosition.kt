@@ -13,15 +13,14 @@ import java.lang.Exception
  * Copyright (c) 2016-2025, Wilhelm Stein, Bonn, Germany.
  * Last edited in Java on 2025-02-05,
  * converted to Kotlin on 2025-02-05,
- * last edited on 2025-07-08
+ * last edited on 2025-10-26
  */
-@Suppress("KotlinConstantConditions")
 class MyPosition : Application() {
     override fun onCreate() {
         super.onCreate()
 
         // Support to debug "A resource failed to call ..." (close, dispose or similar)
-        if (MyDebug.DLOG) {
+        if (IsRunningOnEmulator.DLOG) {
             Log.i(TAG, "24, StrictMode.setVmPolicy")
             StrictMode.setVmPolicy(
                 VmPolicy.Builder(StrictMode.getVmPolicy())
@@ -33,7 +32,8 @@ class MyPosition : Application() {
         try {
             prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         } catch (e: Exception) {
-            if (MyDebug.DLOG) Log.e(TAG, "35, $e")
+            if (IsRunningOnEmulator.DLOG)
+                Log.e(TAG, "36, $e")
         }
     }
     // End of onCreate()

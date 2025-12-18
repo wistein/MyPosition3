@@ -1,22 +1,21 @@
 <!-- strings.xml
      English strings
-     last edited on 2025-02-22 -->
+     last edited on 2025-12-18 -->
 
 <resources>
+    <string name="location_attr_label" translatable="false">LocationCheck</string>
     <string name="app_name">My Position</string>
     <string name="title_activity_my_position">My Position</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_about_dialog">About</string>
     <string name="title_activity_help_dialog">Help</string>
     <string name="title_activity_converter">Convert GPS Coordinate</string>
-    <string name="title_activity_dummy">DummyActivity</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_viewmap">View Map</string>
     <string name="menu_getpos">Request position</string>
     <string name="menu_converter">Converter</string>
     <string name="menu_about">About</string>
     <string name="menu_help">Help</string>
-    <string name="last_fix_time">Last GPS fix: </string>
     <string name="geoloc">Coordinates:</string>
     <string name="uncert">Uncertainty:</string>
     <string name="unknownAddr">Unknown address</string>
@@ -27,7 +26,6 @@
     <string name="unknownLoc">Unknown location</string>
     <string name="unknownCoord">Unknown coordinates</string>
     <string name="posnotknown">Position not known yet…</string>
-    <string name="unknownFix">Unknown</string>
     <string name="message">Message (Text suggestion)</string>
     <string name="decCoord">Decimal Coordinates</string>
     <string name="degCoord">Degree Coordinates</string>
@@ -53,7 +51,7 @@
     <string name="dist">Distance</string>
     <string name="distm">Distance (m):</string>
 
-    <string name="msg_text">Click on the following link to see my position on the OSM map: </string>
+    <string name="msg_text">Use the following link to see my position on the OSM map: </string>
     <string name="invValue">Invalid value</string>
     <string name="email_string">To prevent misuse and for a reliable query of the address data in the OSM Nominatim Reverse Geocoder. See https://wiki.openstreetmap.org/wiki/Nominatim.</string>
     <string name="titel_email_string">Mail Address for OSM Geocoder</string>
@@ -73,9 +71,6 @@
     <!-- Permissions -->
     <string name="dialog_fine_location_title">Permissions Required</string>
     <string name="dialog_fine_location_message">For the app\'s purpose to determine the current location, location permission is necessary. </string>
-    <string name="dialog_background_loc_title">Permission wanted</string>
-    <string name="dialog_background_loc_message">Location data is more precise when the optional permission \'Allow all the time\' is granted.</string>
-    <string name="grant_perm_later">You may grant the optional Background location permission for \'My Location\' in the phone settings.</string>
     <string name="app_settings">App Settings</string>
     <string name="cancel">Cancel</string>
 

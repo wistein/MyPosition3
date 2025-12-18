@@ -29,9 +29,18 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
+<B>Mein Standort, Version 1.4.6,</B> 18-12-2025<br>
+- Code-Anpassungen für Android-Version 16.<br>
+- Positionsbestimmung im Hintergrund entfernt.<br>
+- Info über letzte GPS-FixTime entfernt.<br>
+- Code-Verbesserungen.<br>
+- Doku aktualisiert.<br>
+- Bugs entfernt.<br>
+<br>
+
 <B>Mein Standort, Version 1.4.5,</B> 26.09.2025<br>
- - Code-Anpassungen für Android-Versionen >= 15.<br>
- - App-spezifische Debug-Unterstützung dauerhaft für den Emulator in Android Studio
+ - Code-Anpassungen für Android-Version 15.<br>
+ - App-spezifische Debug-Unterstützung dauerhaft für den Emulator in Android Studio.<br>
  - Code-Verbesserungen.<br>
  - Doku angepasst.<br>
  - Kompiliert für SdkVersion 36.<br>

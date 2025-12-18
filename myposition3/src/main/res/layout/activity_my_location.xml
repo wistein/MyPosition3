@@ -68,19 +68,6 @@
             android:textStyle="bold"
             />
 
-        <TextView
-            android:id="@+id/tvUpdatedTime"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#333393"
-            android:gravity="center"
-            android:paddingBottom="2dip"
-            android:paddingTop="2dip"
-            android:text="@string/posnotknown"
-            android:textColor="#ffffff"
-            android:textSize="14sp"
-            />
-
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

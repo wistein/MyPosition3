@@ -108,9 +108,9 @@ class ShowTextDialog : AppCompatActivity() {
                 tvHead.text = fromHtml(readRawTextFile(R.raw.help_head, this))
                 tvText.text = fromHtml(readRawTextFile(R.raw.help, this))
             }
-            tvHead.setLinkTextColor(Color.BLUE)
+            tvHead.setLinkTextColor(Color.CYAN)
             Linkify.addLinks(tvHead, Linkify.WEB_URLS)
-            tvText.setLinkTextColor(Color.BLUE)
+            tvText.setLinkTextColor(Color.CYAN)
             Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
         else if (dialog == "about") {
@@ -122,9 +122,9 @@ class ShowTextDialog : AppCompatActivity() {
                 tvHead.text = fromHtml(readRawTextFile(R.raw.info_head, this))
                 tvText.text = fromHtml(readRawTextFile(R.raw.info, this))
             }
-            tvHead.setLinkTextColor(Color.BLUE)
+            tvHead.setLinkTextColor(Color.CYAN)
             Linkify.addLinks(tvHead, Linkify.WEB_URLS)
-            tvText.setLinkTextColor(Color.BLUE)
+            tvText.setLinkTextColor(Color.CYAN)
             Linkify.addLinks(tvText, Linkify.WEB_URLS)
         }
     }

@@ -14,14 +14,11 @@ Runs on Android 7.1 or newer.<br>
 <h4>Legal and License</h4>
 The app was carefully developed and thoroughly tested.<br>
 It respects your privacy and is ad-free.<br>
-There is no hidden functionality and the app uses internet access only for the 
-secured query of OpenStreetMap address data or showing your location in your browser. <br>
+There is no hidden functionality and the app uses internet access only for the secured query of OpenStreetMap address data or showing your location in your browser. <br>
 Your messages are sent by means of other apps like Mail or SMS.<br>
 <br>
 
-This app is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.<br>
+This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>
 <br>
 
 Licensed under GNU GPLv2 or later.<br>
@@ -32,11 +29,20 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>History</h4>
 
-<B>My Position, version 1.4.5,</B> 2025-09-26<br>
-- Code adapted for Android versions >= 15<br>
-- App specific and permanent debug support for Emulator in Android Studio
+<B>My Position, version 1.4.6,</B> 2025-12-18<br>
+- Code adapted for Android versions >= 16.<br>
+- Background location service removed.<br>
 - Some code improvements.<br>
-- Docs updated<br>
+- Docs updated.<br>
+- Bugs removed.<br>
+<br>
+
+<B>My Position, version 1.4.5,</B> 2025-09-26<br>
+- Code adapted for Android versions >= 15.<br>
+- App specific and permanent debug support for Emulator in Android Studio.<br>
+- Info about last FixTime removed.<br>
+- Some code improvements.<br>
+- Docs updated.<br>
 - Compiled for SdkVersion 36.<br>
 <br>
 

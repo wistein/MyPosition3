@@ -30,9 +30,9 @@ package com.wistein.egm;
  * themself if they know to maps two-dimensional coordinate systems.
  *
  * @author Martin Desruisseaux (IRD)
- * tutorial: https://docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
+ * tutorial link: docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
  * @since 2.0
- * Code adaptation for use by MyPositionActivity by wm.stein
+ * Code adaptation for use by MyPositionActivity by wistein
  */
 abstract class AbstractMathTransform 
 {

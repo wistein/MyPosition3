@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Last edited 2025-09-16 -->
+<!-- Last edited 2025-12-18 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
@@ -7,13 +7,16 @@
     <!-- Permission needed for location providers -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
-        tools:ignore="BackgroundLocationPolicy" />
 
     <!-- Permissions needed for reverse geocoding -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    
+
+    <!-- Attribution tag needed for event location since sdk >= 30 -->
+    <attribution
+        android:label="@string/location_attr_label"
+        android:tag="locationCheck" />
+
     <application
         android:name=".MyPosition"
         android:icon="@drawable/ic_launcher"
@@ -21,16 +24,16 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:requestLegacyExternalStorage="true"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat"
-        android:enableOnBackInvokedCallback="true"
         tools:ignore="DataExtractionRules,GoogleAppIndexingWarning"
-        tools:targetApi="tiramisu">
+        tools:targetApi="33">
 
         <activity
             android:name=".MyPositionActivity"
-            android:exported="true"
             android:label="@string/title_activity_my_position"
+            android:exported="true"
             tools:targetApi="tiramisu">
 
             <intent-filter>

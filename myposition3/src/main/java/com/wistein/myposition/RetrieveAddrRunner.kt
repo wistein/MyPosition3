@@ -54,24 +54,24 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     sb.append(line).append('\n')
                 }
             } catch (e: IOException) {
-                if (IsRunningOnEmulator.DLOG)
+                if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
                     Log.e(rTag, "58, Problem converting Stream to String: $e"
                 )
             } finally {
                 try {
                     iStream.close()
                 } catch (e: IOException) {
-                    if (IsRunningOnEmulator.DLOG)
+                    if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
                         Log.e(rTag, "65, Problem closing InputStream: $e")
                 }
             }
             xmlString = sb.toString()
-
+/*
             // Log gzip-content of url
-            if (IsRunningOnEmulator.DLOG)
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
                 Log.d(rTag, "72, xmlString: $xmlString"
             )
-
+*/
             // parse the XML content
             if (xmlString.contains("<addressparts>")) {
                 var sstart = xmlString.indexOf("<addressparts>") + 14
@@ -325,7 +325,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 addressLines = msg.toString()
             }
         } catch (e: IOException) {
-            if (IsRunningOnEmulator.DLOG)
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
                 Log.e(rTag, "329, Problem with address handling: $e")
             addressLines = R.string.unknownAddr.toString()
         }

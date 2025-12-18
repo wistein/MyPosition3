@@ -17,7 +17,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -75,7 +73,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-10-26
+ * last edited on 2025-11-11
  */
 public class MyPositionActivity
     extends AppCompatActivity
@@ -87,7 +85,6 @@ public class MyPositionActivity
     private TextView tvDegreeCoord;
     public TextView tvLocation;
     public TextView tvMessage;
-    private TextView tvUpdatedTime;
 
     private ImageView shareLocation;
     private ImageView shareDecimal;
@@ -114,24 +111,17 @@ public class MyPositionActivity
 
      * Full screen gesture mode (introduced with Android Q)
      * public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
-     */
+    */
     // Classic three-button navigation (Back, Home, Recent Apps)
     public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
 
     LocationService locationService;
-
-    // 'locationDispatcherMode' controls location permission dispatcher:
-    //1 = use location service
-    //2 = end location service
-    private int locationDispatcherMode;
-
     private boolean locServiceOn = false; // Service control flag
     private boolean locationPermGranted;  // Foreground location permission state
 
     // Location info handling
     private double lat, lon, uncertainty;
     private double height = 0;
-    private long fixTime = 0; // GPS fix time
     private final String strTime = "10"; // option to set GPS polling time, default 10 sec
 
     private boolean doubleBackToExitPressedTwice = false;
@@ -142,8 +132,8 @@ public class MyPositionActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "146, onCreate");
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "136, onCreate()");
 
         prefs = MyPosition.getPrefs();
 
@@ -196,8 +186,8 @@ public class MyPositionActivity
         // Part of location permissions handling:
         //   Set flag locationPermGranted from self permissions
         locationPermGranted = isFineLocPermGranted();
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "200, onCreate, locationPermGranted: " + locationPermGranted);
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "190, onCreate(), locationPermGranted: " + locationPermGranted);
 
         // If not yet location permission is granted prepare and query for them
         if (!locationPermGranted)
@@ -232,8 +222,8 @@ public class MyPositionActivity
         // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
         int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
             NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "236, NavBarMode = " + iMode);
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "226, NavBarMode = " + iMode);
         return iMode;
     }
 
@@ -270,20 +260,22 @@ public class MyPositionActivity
             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    // Test for background location self permission
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private boolean isBackLocPermGranted()
-    {
-        return ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
     @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
     public void onResume()
     {
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "286, onResume");
+        if (darkScreen)
+        {
+            setTheme(R.style.AppTheme_Dark);
+        }
+        else
+        {
+            setTheme(R.style.AppTheme_Light);
+        }
+        super.onResume(); // put here for setTheme(...) to work
+
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "278, onResume()");
 
         prefs = MyPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
@@ -293,8 +285,8 @@ public class MyPositionActivity
         showHtMessage = prefs.getBoolean("show_Toast", false);
         emailString = prefs.getString("email_String", "");
 
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "297, onResume, darkScreen: " + darkScreen);
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "289, onResume(), darkScreen: " + darkScreen);
         if (screenOrientL)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -303,17 +295,6 @@ public class MyPositionActivity
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-
-        if (darkScreen)
-        {
-            setTheme(R.style.AppTheme_Dark);
-        }
-        else
-        {
-            setTheme(R.style.AppTheme_Light);
-        }
-
-        super.onResume(); // put here for setTheme(...) to work
 
         // Load and show the data, set title in ActionBar
         try {
@@ -326,34 +307,10 @@ public class MyPositionActivity
         // Get location self permission state
         locationPermGranted = isFineLocPermGranted();
 
-        // Get flag 'has_asked_background'
-        boolean hasAskedBackgroundLocation = prefs.getBoolean("has_asked_background", false);
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "332, hasAskedBackgroundLocation: " + hasAskedBackgroundLocation);
-
-        // After granting the foreground location permission
-        //   asked only once the permission for background location
-        if (locationPermGranted && !hasAskedBackgroundLocation
-            && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
-            PermissionsBackgroundDialogFragment.newInstance().show(getSupportFragmentManager(),
-                PermissionsBackgroundDialogFragment.class.getName());
-
-            // Query result of BackgroundDialog
-            if (IsRunningOnEmulator.DLOG)
-                Log.i(TAG, "344, isBackLocPermGranted: " + isBackLocPermGranted());
-
-            // Store flag 'hasAskedBackground = true' in SharedPreferences
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("has_asked_background", true);
-            editor.commit();
-        }
-
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
         df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
         tvDegreeCoord = findViewById(R.id.tvDegreeCoord);
-        tvUpdatedTime = findViewById(R.id.tvUpdatedTime);
         tvLocation = findViewById(R.id.tvLocation);
         tvMessage = findViewById(R.id.tvMessage);
 
@@ -372,13 +329,11 @@ public class MyPositionActivity
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
 
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "376, onResume, locationPermGranted: " + locationPermGranted);
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "333, onResume(), locationPermGranted: " + locationPermGranted);
 
         // Get location with permissions check
-        locationDispatcherMode = 1; // get location
-        locationDispatcher();
-        registerRelativeFixTime();
+        locationDispatcher(1);
     }
     // End of onResume()
 
@@ -393,12 +348,11 @@ public class MyPositionActivity
     {
         super.onStop();
 
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "397, onStop");
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "352, onStop()");
 
         // Stop location service with permissions check
-        locationDispatcherMode = 2;
-        locationDispatcher();
+        locationDispatcher(2);
 
         // Stop RetrieveAddrRunner
         WorkManager.getInstance(this).cancelAllWork();
@@ -415,8 +369,8 @@ public class MyPositionActivity
     {
         super.onDestroy();
 
-        if (IsRunningOnEmulator.DLOG)
-            Log.i(TAG, "419, onDestroy");
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "373, onDestroy()");
     }
 
     public boolean onCreateOptionsMenu(Menu menu)
@@ -448,8 +402,8 @@ public class MyPositionActivity
         }
         if (id == R.id.menu_getpos)
         {
-            // Get location with permissions check
-            locationDispatcherMode = 1; // get location
+            // Get location service with permissions check
+            locationDispatcher(1); // stop location service
 
             // Re-enter MyPositionActivity to get the new position
             intent = new Intent(MyPositionActivity.this, MyPositionActivity.class);
@@ -459,18 +413,27 @@ public class MyPositionActivity
         }
         if (id == R.id.menu_help)
         {
+            // Stop location service
+            locationDispatcher(2); // stop location service
+
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "help");
             startActivity(intent);
         }
         else if (id == R.id.menu_about)
         {
+            // Stop location service
+            locationDispatcher(2); // stop location service
+
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "about");
             startActivity(intent);
         }
         else if (id == R.id.menu_settings)
         {
+            // Stop location service
+            locationDispatcher(2); // stop location service
+
             intent = new Intent(MyPositionActivity.this, SettingsActivity.class);
             startActivity(intent);
         }
@@ -501,10 +464,10 @@ public class MyPositionActivity
         }
         else if (id == R.id.menu_converter)
         {
-            locationDispatcherMode = 2;
-            locationDispatcher();
-            if (IsRunningOnEmulator.DLOG)
-                Log.i(TAG, "507, Start ConverterAct");
+            // Stop location service
+            locationDispatcher(2);
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                Log.i(TAG, "470, Start ConverterAct");
 
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
@@ -518,7 +481,7 @@ public class MyPositionActivity
     // End of onOptionsItemSelected()
 
     // Part of location permission handling
-    public void locationDispatcher()
+    public void locationDispatcher(int locationDispatcherMode)
     {
         if (locationPermGranted)
         {
@@ -538,8 +501,8 @@ public class MyPositionActivity
                         Intent sIntent = new Intent(this, LocationService.class);
                         stopService(sIntent);
                         locServiceOn = false;
-                        if (IsRunningOnEmulator.DLOG)
-                            Log.i(TAG, "542, Stop locationService");
+                        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                            Log.i(TAG, "505, locationDispatcher(), Stop locationService");
                     }
                 }
             }
@@ -559,11 +522,13 @@ public class MyPositionActivity
         {
             lon = locationService.getLongitude();
             lat = locationService.getLatitude();
-            height = locationService.getAltitude();
-            if (height != 0)
-                height = correctHeight(lat, lon, height);
+//            if (locationService.hasAltitude()) {
+                height = locationService.getAltitude();
+                if (height != 0) {
+                    height = correctHeight(lat, lon, height);
+                }
+//            }
             uncertainty = locationService.getAccuracy();
-            fixTime = locationService.getTime();
 
             String nord = getString(R.string.nord);
             String east = getString(R.string.east);
@@ -624,18 +589,8 @@ public class MyPositionActivity
         // String addressLines1;
         if (locationService.canGetLocation() && (lat != 0 || lon != 0))
         {
-            final String time_header = this.getString(R.string.last_fix_time) + " ";
-
-            String relative_date = getString(R.string.unknownFix);
-            if (fixTime > 0)
-            {
-                relative_date = DateUtils.getRelativeTimeSpanString(fixTime,
-                    System.currentTimeMillis(), 0, 0).toString();
-            }
             tvDecimalCoord.setText(sb.toString());
             tvDegreeCoord.setText(toDegree(lat, lon));
-            String uTime = time_header + relative_date;
-            tvUpdatedTime.setText(uTime);
 
             // call reverse geocoding
             String urlString = "https://nominatim.openstreetmap.org/reverse?email="
@@ -738,9 +693,9 @@ public class MyPositionActivity
                 nntemp = nntemp.replace('.', ',');
             }
 
-            String hToast = getString(R.string.h_nn) + " " + nntemp
-                    + " \n " + getString(R.string.h_gps) + " " + gpstemp
-                    + " \n " + getString(R.string.h_corr) + " " + corrtemp;
+            String hToast = getString(R.string.h_nn) + " " + nntemp + " m"
+                    + " \n " + getString(R.string.h_gps) + " " + gpstemp + " m"
+                    + " \n " + getString(R.string.h_corr) + " " + corrtemp + " m";
             // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
             showSnackbarHeight(hToast + "\n\n");
         }
@@ -923,29 +878,6 @@ public class MyPositionActivity
         return message.toString();
     }
     // End of getMessage
-
-    // Updates fixtime display every second
-    private void registerRelativeFixTime()
-    {
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final String time_header = this.getString(R.string.last_fix_time) + " ";
-        handler.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                String relative_date = getString(R.string.unknownFix);
-                if (fixTime > 0)
-                {
-                    relative_date = DateUtils.getRelativeTimeSpanString(fixTime,
-                        System.currentTimeMillis(), 0, 0).toString();
-                }
-                String uTime = time_header + relative_date;
-                tvUpdatedTime.setText(uTime);
-                handler.postDelayed(this, Integer.parseInt(strTime) * 1000L);
-            }
-        }, Integer.parseInt(strTime) * 1000L);
-    }
 
     private void showSnackbarBlue(String str) // bold cyan text
     {

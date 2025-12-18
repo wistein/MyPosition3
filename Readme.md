@@ -39,12 +39,19 @@ Since versions 1.3.0 to current version copyright by wistein, 2017-2025,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
+<B>My Position, version 1.4.6,</B> 2025-12-18<br>
+- Code adapted for Android versions >= 16<br>
+- Background location service removed<br>
+- Info about last FixTime removed<br>
+- Some code improvements<br>
+<br>
+
 <B>My Position, version 1.4.5,</B> 2025-09-26<br>
 - Code adapted for Android versions >= 15<br>
-- App specific and permanent debug support for Emulator in Android Studio
-- Some code improvements.<br>
+- App specific and permanent debug support for Emulator in Android Studio<br>
+- Some code improvements<br>
 - Docs updated<br>
-- Compiled for SdkVersion 36.<br>
+- Compiled for SdkVersion 36<br>
 <br>
 
 <B>My Position, version 1.4.3,</B> 2025-03-27<br>

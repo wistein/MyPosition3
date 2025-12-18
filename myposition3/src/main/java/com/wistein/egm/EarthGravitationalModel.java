@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 /******************
  *    Derived from:
  *    GeoTools - The Open Source Java GIS Toolkit
- *    https://geotools.org
+ *    <a href="https://geotools.org">...</a>
  * <p>
  *    (C) 2006-2008, Open Source Geospatial Foundation (OSGeo)
  * <p>
@@ -29,10 +29,10 @@ import java.util.StringTokenizer;
  *    Lesser General Public License for more details.
  * <p>
  *    The original file is derived from NGA/NASA software available for unlimited distribution.
- *    See https://earth-info.nima.mil/GandG/wgs84/gravitymod/.
+ *    See earth-info.nima.mil/GandG/wgs84/gravitymod/.
  * <p>
  * Transforms vertical coordinates using coefficients from the
- * https://earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+ * earth-info.nima.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
  * Earth Gravitational Model.
  *
  * @author Pierre Cardinal
@@ -41,7 +41,7 @@ import java.util.StringTokenizer;
  * @since 2.3
  *
  * Code adaptation for use by MyPositionActivity by wm.stein on 2019-05-18.
- * Last edited on 2024-11-19.
+ * Last edited on 2025-11-09.
  */
 public final class EarthGravitationalModel extends VerticalTransform
 {

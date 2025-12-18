@@ -1,39 +1,41 @@
 <h3>1. General</h3>
-<b>My Position</b> determines the current location by GPS and shows address data and GPS coordinates including height above sea-level. 
+<b>My Position</b> determines the current location with address data from the GPS coordinates including height above sea-level.
 <br><br>
-For showing country-specific <b>address info</b>, it uses the Nominatim Reverse Geocoding service of OpenStreetMap. It works without Google services and thus no address data is transfered to data collectors by the app.
+For showing country-specific <b>address info</b>, it uses the Nominatim Reverse Geocoding service of OpenStreetMap. It works without Google services and thus neither location nor address data is transfered to data collectors by the app.
 <br><br>
 The application simplifies the task of <b>sharing your location</b> data with your contacts by using the available email or messaging apps.
 <br><br>
-Your <b>location</b> may also be shown <b>on a map</b> either local (if a suitable mapping app is installed and the default setting of Google Maps is changed*) or by internet browser on <b>OpenStreetMap</b>.
+Your location may be shown online on <b>OpenStreetMap</b> or offline with an installed suitable <b>mapping app</b> (provided the default map display - Google Maps - has been changed in the app settings *).
 <br><br>
-It shows a country-specific representation of address info and introduces localized strings and number formats (German, English). 
-<br><br>
-Additionally, this application also includes a <b>tool</b> to help <b>converting</b> between WGS84 decimal coordinate format and degree-minutes-seconds coordinate format and a calculator for the distance between 2 coordinates.
+Additionally, this application includes a <b>tool</b> to help <b>converting</b> between WGS84 decimal coordinate format and degree-minutes-seconds coordinate format and a calculator for the distance between 2 coordinates.
 <br><br>
 <h3>2. Set up</h3>
-Before initial use you should look at the <b>Settings</b> page and set up a <b>valid email address</b> for the Nominatim Reverse Geocoding service of OpenStreetMap. This is optional, but for a reliable service and for the reason of protection against abuse it is demanded. Especially, when the service is used on a regular basis (for details see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+Before initial use you should look at the <b>Settings</b> page and set up a <b>valid email address</b> for the Nominatim Reverse Geocoding service of OpenStreetMap. This is optional, but required for long-term reliable service and for security reasons to protect against misuse. (For details see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
 <br><br>
-The current <b>location</b> can be shown <b>on a map</b>. Untagged, it will show the position online on OpenStreetMap in your browser. Tagged, it tries to show the current position on an installed mapping app like Locus, OruxMaps or OSMAnd. But rather, determined by the default app geo-link settings of the smartphone, it will show the position on Google Maps. *)
+The current <b>location</b> can be shown <b>on a map</b>. Untagged, it will show the position online on OpenStreetMap in your browser. Tagged, it tries to show the current position on an installed mapping app like Locus, OruxMaps or OSMAnd. However, this requires a change to be made in the system settings, as otherwise the location will be displayed online on Google Maps using the smartphone's default geo-link. *)
 <br><br>
 You may set the app to portrait or landscape mode by the corresponding option. A fixed alignment mode avoids unexpected and disturbing toggling of the screen.
 <br><br>
-As the GPS signal delivers height values of an idealist geoid that might differ much from the commonly used height above sea level, the last option allows to set a toast message showing up that informs about the different height values (sea level height, GPS height and local correction value).
+As the GPS signal delivers height values of an idealist geoid that might differ much from the commonly used height above sea level, the altitude values are corrected to sea level for each specific location.
+<br><br>
+The last option allows to show a toast message that informs about the different height values (sea level height, GPS height and local correction value).
 <br><br>
 <h3>3. Usage</h3>
-After starting the app it tries to get the GPS satellites fixes (if not done already by another app). As soon as it gets the position it shows the coordinates with uncertainty and height above sea level. (It may take some time for more precise values.)
+On the main screen the action bar shows three icons representing <b>Update Position</b>, <b>Show Position on Map</b> and the <b>App Menu</b>, whose function is described below.
 <br><br>
-Then it tries to get the <b>address info</b> of the position by requesting the Nominatim service of OpenStreetMap. If there is no Internet access the Address view area shows: “No Address data!”. The address info is shown partly in a country-specific representation (at, ch, de, fr, it, rest of the world). 
+After starting the app it tries to get the GPS satellites fixes (if not done already by another app). Once the GPS fix has been established, the position can be determined using the Update Position button. (After a while, the values become more accurate.)
+<br><br>
+The coordinates are displayed with deviation and height above sea level.
+<br><br>
+Then it tries to get the <b>address info</b> of the position by requesting the Nominatim service of OpenStreetMap. If there is no Internet access the Address view area shows: “No Address data!”. The address info is shown partly in a country-specific representation (at, ch, de, fr, it, or for the rest of the world in English format).
 <br><br>
 The coordinates are shown in two formats: WGS84 <b>decimal</b> (dd.ddddddd) coordinate format and <b>degree</b>-minutes-seconds (dd° mm’ ss.sss”) coordinate format.
 <br><br>
-The <b>Message</b> area shows a prepared message that could be sent to someone you want to inform about your location. It contains all the available information and a link that shows the position on OpenStreetMap.
-<br><br>
-The <b>action bar</b> shows three icons representing <b>Update Position, Show Position on Map</b> and <b>App Menu</b>.
+The <b>Message</b> area shows a prepared editable message that could be sent to someone you want to inform about your location. It contains all the available information and a link that shows the position on OpenStreetMap.
 <br><br>
 Clicking <b>Update Position</b> triggers the GPS receiver to update the position.
 <br><br>
-Clicking <b>Show Position on Map</b> tries to show the current position either on an offline map by an installed mapping app or shows it online on OpenStreetMap depending on what you selected in Settings.
+Clicking <b>Show Position on Map</b> shows the current position either <b>online</b> on OpenStreetMap or <b>offline</b> by an installed mapping app depending on what you selected in Settings.
 <br><br>
 From the <b>App Menu</b> you access the Settings view (see 2. Set up), a coordinates <b>Conversion</b> calculator, the <b>Help</b> page and the <b>About</b> page with version number, short app description, legal and license info as well as the app history. 
 <br><br>
@@ -45,6 +47,3 @@ __________
 <br><br>
 Head back to My Position and call Show Map. Now you’ll be asked which application to use. Pick the one you prefer, and tap `This time´ to test it. Next time you may select ‘Always’ to make sure your preferred app opens by default.
 <br>
-
-
-

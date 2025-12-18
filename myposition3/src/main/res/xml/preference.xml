@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Last edited 2025-11-09 -->
+
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Dummy preferences to set empty screen space on top -->
+    <Preference
+        android:key="dummy1"
+        android:title=" "
+        android:summary=" "
+        />
+
+    <Preference
+        android:key="dummy2"
+        android:title=" "
+        android:summary=" "
+        />
 
     <EditTextPreference
         android:key="email_String"

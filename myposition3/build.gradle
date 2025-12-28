@@ -1,5 +1,5 @@
 // Build file where you can add configuration options for the module.
-// Last edited on 2025-11-09
+// Last edited on 2025-12-28
 
 plugins {
     id 'com.android.application'
@@ -14,8 +14,8 @@ android {
         applicationId "com.wistein.myposition"
         minSdk = 25
         targetSdk = 36
-        versionCode = 146
-        versionName = "1.4.6"
+        versionCode = 147
+        versionName = "1.4.7"
     }
 
     buildTypes {
@@ -56,7 +56,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.11.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.core:core-ktx:1.17.0'
-    implementation 'androidx.activity:activity-ktx:1.11.0' // new
+    implementation 'androidx.activity:activity-ktx:1.12.2' // new
     implementation 'androidx.annotation:annotation-jvm:1.9.1'
     implementation 'androidx.fragment:fragment-ktx:1.8.9'
     implementation 'com.google.android.material:material:1.13.0'

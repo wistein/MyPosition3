@@ -15,6 +15,9 @@ import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import com.wistein.myposition.MyPosition.Companion.lat
+import com.wistein.myposition.MyPosition.Companion.lon
+import com.wistein.myposition.MyPosition.Companion.uncertainty
 
 /***************************************************************************************
  * LocationService provides the location data: latitude, longitude, height, uncertainty.
@@ -33,7 +36,7 @@ import androidx.core.app.ActivityCompat
  * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-12-18
+ * last edited on 2025-12-28
  */
 class LocationService : Service, LocationListener {
     companion object {
@@ -49,10 +52,10 @@ class LocationService : Service, LocationListener {
     var checkNetwork: Boolean = false
     var canGetLocation: Boolean = false
     private var location: Location? = null
-    private var latitude = 0.0
-    private var longitude = 0.0
-    private var height = 0.0
-    private var uncertainty = 0.0
+
+    //    private var latitude = 0.0
+//    private var longitude = 0.0
+    private var heightGPS = 0.0
     protected var locationManager: LocationManager? = null
     private var locationAttributionContext: Context? = null
 
@@ -61,7 +64,7 @@ class LocationService : Service, LocationListener {
     private var exactLocation = false
 
     /** Default constructor() demanded by service declaration in AndroidManifest.xml */
-    constructor() // Deleting it produces a compilation error
+    constructor() {} // Deleting it produces a compilation error
 
     constructor(mContext: Context?) {
         this.mContext = mContext
@@ -86,8 +89,10 @@ class LocationService : Service, LocationListener {
             if (checkGPS || checkNetwork) {
                 this.canGetLocation = true
             } else {
-                Toast.makeText(mContext!!, getString(R.string.no_provider),
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mContext!!, getString(R.string.no_provider),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             // if GPS is enabled get position using GPS Service
@@ -106,9 +111,9 @@ class LocationService : Service, LocationListener {
                         location =
                             locationManager!!.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                         if (location != null) {
-                            latitude = location!!.latitude
-                            longitude = location!!.longitude
-                            height = location!!.altitude
+                            lat = location!!.latitude
+                            lon = location!!.longitude
+                            heightGPS = location!!.altitude
                             uncertainty = location!!.accuracy.toDouble()
                             exactLocation = true
                         }
@@ -134,9 +139,9 @@ class LocationService : Service, LocationListener {
                             location =
                                 locationManager!!.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                             if (location != null) {
-                                latitude = location!!.latitude
-                                longitude = location!!.longitude
-                                height = 0.0
+                                lat = location!!.latitude
+                                lon = location!!.longitude
+                                heightGPS = 0.0
                                 uncertainty = 500.0
                             }
                         }
@@ -145,7 +150,7 @@ class LocationService : Service, LocationListener {
             }
         } catch (e: Exception) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(TAG, "142, getLocation() $e")
+                Log.e(TAG, "148, getLocation() $e")
         }
     }
 
@@ -169,38 +174,34 @@ class LocationService : Service, LocationListener {
                 locationManager = null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "166, StopListener: $e")
+            Log.e(TAG, "172, StopListener: $e")
         }
     }
 
-    fun getLongitude(): Double {
+    fun getLongitude() {
         if (location != null) {
-            longitude = location!!.longitude
+            lon = location!!.longitude
         }
-        return longitude
     }
 
-    fun getLatitude(): Double {
+    fun getLatitude() {
         if (location != null) {
-            latitude = location!!.latitude
+            lat = location!!.latitude
         }
-        return latitude
     }
 
     fun getAltitude(): Double {
         if (location != null) {
-            height = location!!.altitude
+            heightGPS = location!!.altitude
         }
-        return height
+        return heightGPS
     }
 
-    val accuracy: Double
-        get() {
-            if (location != null) {
-                uncertainty = location!!.accuracy.toDouble()
-            }
-            return uncertainty
+    fun getAccuracy() {
+        if (location != null) {
+            uncertainty = location!!.accuracy.toDouble()
         }
+    }
 
     fun canGetLocation(): Boolean {
         return this.canGetLocation

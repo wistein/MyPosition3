@@ -36,12 +36,12 @@ import java.util.Locale
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * ShowTextDialog.java
- * Custom class for displaying the Help and Info Dialog
+ * Custom class for displaying Help and Info dialogs
  *
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-07-08
+ * last edited on 2025-12-28
  */
 class ShowTextDialog : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")

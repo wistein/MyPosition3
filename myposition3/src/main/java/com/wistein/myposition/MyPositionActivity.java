@@ -2,6 +2,11 @@ package com.wistein.myposition;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
+import static com.wistein.myposition.MyPosition.height;
+import static com.wistein.myposition.MyPosition.lat;
+import static com.wistein.myposition.MyPosition.lon;
+import static com.wistein.myposition.MyPosition.uncertainty;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
@@ -40,8 +45,10 @@ import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.wistein.egm.EarthGravitationalModel;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -73,12 +80,11 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-11-11
+ * last edited on 2025-12-28
  */
 public class MyPositionActivity
-    extends AppCompatActivity
-    implements OnClickListener
-{
+        extends AppCompatActivity
+        implements OnClickListener {
     private static final String TAG = "MyPositionAct";
 
     private TextView tvDecimalCoord;
@@ -108,21 +114,17 @@ public class MyPositionActivity
     /**
      * Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
      * public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
-
+     * <p>
      * Full screen gesture mode (introduced with Android Q)
      * public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
-    */
+     */
     // Classic three-button navigation (Back, Home, Recent Apps)
     public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
 
+    // Location info handling
     LocationService locationService;
     private boolean locServiceOn = false; // Service control flag
     private boolean locationPermGranted;  // Foreground location permission state
-
-    // Location info handling
-    private double lat, lon, uncertainty;
-    private double height = 0;
-    private final String strTime = "10"; // option to set GPS polling time, default 10 sec
 
     private boolean doubleBackToExitPressedTwice = false;
 
@@ -130,31 +132,24 @@ public class MyPositionActivity
 
     @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "136, onCreate()");
+            Log.i(TAG, "137, onCreate()");
 
         prefs = MyPosition.getPrefs();
 
         darkScreen = prefs.getBoolean("dark_Screen", false);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
 
-        if (screenOrientL)
-        {
+        if (screenOrientL) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        if (darkScreen)
-        {
+        if (darkScreen) {
             setTheme(R.style.AppTheme_Dark);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.AppTheme_Light);
         }
 
@@ -187,11 +182,10 @@ public class MyPositionActivity
         //   Set flag locationPermGranted from self permissions
         locationPermGranted = isFineLocPermGranted();
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "190, onCreate(), locationPermGranted: " + locationPermGranted);
+            Log.i(TAG, "185, onCreate(), locationPermGranted: " + locationPermGranted);
 
         // If not yet location permission is granted prepare and query for them
-        if (!locationPermGranted)
-        {
+        if (!locationPermGranted) {
             // Reset background location permission status in case it was set previously
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("has_asked_background", false);
@@ -199,13 +193,12 @@ public class MyPositionActivity
 
             // Query foreground location permission first
             PermissionsForegroundDialogFragment.newInstance().show(getSupportFragmentManager(),
-                PermissionsForegroundDialogFragment.class.getName());
+                    PermissionsForegroundDialogFragment.class.getName());
         }
 
         // New onBackPressed logic
         // Use only if 2 or 3 button Navigation bar is present.
-        if (getNavBarMode() == 0 || getNavBarMode() == 1)
-        {
+        if (getNavBarMode() == 0 || getNavBarMode() == 1) {
             OnBackPressedCallback callback = getOnBackPressedCallback();
             getOnBackPressedDispatcher().addCallback(this, callback);
         }
@@ -217,34 +210,28 @@ public class MyPositionActivity
 
         @SuppressLint("DiscouragedApi")
         int resourceId = resources.getIdentifier("config_navBarInteractionMode",
-            "integer", "android");
+                "integer", "android");
 
         // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
         int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
-            NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
+                NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "226, NavBarMode = " + iMode);
+            Log.i(TAG, "219, NavBarMode = " + iMode);
         return iMode;
     }
 
-    private OnBackPressedCallback getOnBackPressedCallback()
-    {
+    private OnBackPressedCallback getOnBackPressedCallback() {
         final Handler m1Handler = new Handler(Looper.getMainLooper());
         final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
 
-        return new OnBackPressedCallback(true)
-        {
+        return new OnBackPressedCallback(true) {
             @Override
-            public void handleOnBackPressed()
-            {
-                if (doubleBackToExitPressedTwice)
-                {
+            public void handleOnBackPressed() {
+                if (doubleBackToExitPressedTwice) {
                     m1Handler.removeCallbacks(r1);
                     finish();
                     remove();
-                }
-                else
-                {
+                } else {
                     doubleBackToExitPressedTwice = true;
                     showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
                     m1Handler.postDelayed(r1, 2000);
@@ -254,28 +241,23 @@ public class MyPositionActivity
     }
 
     // Test for foreground location self permission
-    private boolean isFineLocPermGranted()
-    {
+    private boolean isFineLocPermGranted() {
         return ContextCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
-    public void onResume()
-    {
-        if (darkScreen)
-        {
+    public void onResume() {
+        if (darkScreen) {
             setTheme(R.style.AppTheme_Dark);
-        }
-        else
-        {
+        } else {
             setTheme(R.style.AppTheme_Light);
         }
         super.onResume(); // put here for setTheme(...) to work
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "278, onResume()");
+            Log.i(TAG, "260, onResume()");
 
         prefs = MyPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
@@ -286,13 +268,10 @@ public class MyPositionActivity
         emailString = prefs.getString("email_String", "");
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "289, onResume(), darkScreen: " + darkScreen);
-        if (screenOrientL)
-        {
+            Log.i(TAG, "271, onResume(), darkScreen: " + darkScreen);
+        if (screenOrientL) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        else
-        {
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
@@ -330,7 +309,7 @@ public class MyPositionActivity
         shareMessage.setOnClickListener(this);
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "333, onResume(), locationPermGranted: " + locationPermGranted);
+            Log.i(TAG, "312, onResume(), locationPermGranted: " + locationPermGranted);
 
         // Get location with permissions check
         locationDispatcher(1);
@@ -339,17 +318,15 @@ public class MyPositionActivity
 
     @SuppressLint("ApplySharedPref")
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
     }
 
-    public void onStop()
-    {
+    public void onStop() {
         super.onStop();
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "352, onStop()");
+            Log.i(TAG, "329, onStop()");
 
         // Stop location service with permissions check
         locationDispatcher(2);
@@ -365,22 +342,19 @@ public class MyPositionActivity
         baseLayout.invalidate();
     }
 
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "373, onDestroy()");
+            Log.i(TAG, "349, onDestroy()");
     }
 
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_my_location, menu);
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         int id = item.getItemId();
 
@@ -388,22 +362,18 @@ public class MyPositionActivity
         {
             final Handler m1Handler = new Handler(Looper.getMainLooper());
             final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
-            if (doubleBackToExitPressedTwice)
-            {
+            if (doubleBackToExitPressedTwice) {
                 m1Handler.removeCallbacks(r1);
                 finish();
-            }
-            else
-            {
+            } else {
                 doubleBackToExitPressedTwice = true;
                 showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
                 m1Handler.postDelayed(r1, 2000);
             }
         }
-        if (id == R.id.menu_getpos)
-        {
+        if (id == R.id.menu_getpos) {
             // Get location service with permissions check
-            locationDispatcher(1); // stop location service
+            locationDispatcher(1); // start location service
 
             // Re-enter MyPositionActivity to get the new position
             intent = new Intent(MyPositionActivity.this, MyPositionActivity.class);
@@ -411,63 +381,46 @@ public class MyPositionActivity
             startActivity(intent);
             finish();
         }
-        if (id == R.id.menu_help)
-        {
-            // Stop location service
+        if (id == R.id.menu_help) {
             locationDispatcher(2); // stop location service
 
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "help");
             startActivity(intent);
-        }
-        else if (id == R.id.menu_about)
-        {
-            // Stop location service
+        } else if (id == R.id.menu_about) {
             locationDispatcher(2); // stop location service
 
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "about");
             startActivity(intent);
-        }
-        else if (id == R.id.menu_settings)
-        {
-            // Stop location service
+        } else if (id == R.id.menu_settings) {
             locationDispatcher(2); // stop location service
 
             intent = new Intent(MyPositionActivity.this, SettingsActivity.class);
             startActivity(intent);
-        }
-        else if (id == R.id.menu_viewmap)
-        {
-            if (mapLocal)
-            {
+        } else if (id == R.id.menu_viewmap) {
+            if (mapLocal) {
                 // when GAPPS are present MyPosition3 shows location online on Google Maps
                 // without GAPPS MyPosition3 uses a local mapping app to show the location
                 String geo = "geo:" + lat + "," + lon + "?z=17";
                 intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(geo));
-            }
-            else
-            {
+            } else {
                 // use browser or other web app to show location in OpenStreetMap
                 String urlView = "https://www.openstreetmap.org/?mlat="
-                    + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
+                        + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
             }
 
-            try
-            {
+            try {
                 startActivity(intent);
-            } catch (ActivityNotFoundException e)
-            {
+            } catch (ActivityNotFoundException e) {
                 Toast.makeText(this, getString(R.string.t_noapp), Toast.LENGTH_LONG).show();
             }
-        }
-        else if (id == R.id.menu_converter)
-        {
+        } else if (id == R.id.menu_converter) {
             // Stop location service
             locationDispatcher(2);
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "470, Start ConverterAct");
+                Log.i(TAG, "423, Start ConverterAct");
 
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
@@ -481,28 +434,22 @@ public class MyPositionActivity
     // End of onOptionsItemSelected()
 
     // Part of location permission handling
-    public void locationDispatcher(int locationDispatcherMode)
-    {
-        if (locationPermGranted)
-        {
-            switch (locationDispatcherMode)
-            {
-                case 1 ->
-                {
+    public void locationDispatcher(int locationDispatcherMode) {
+        if (locationPermGranted) {
+            switch (locationDispatcherMode) {
+                case 1 -> {
                     // get location data
                     getLoc();
                 }
-                case 2 ->
-                {
+                case 2 -> {
                     // stop location service
-                    if (locServiceOn)
-                    {
+                    if (locServiceOn) {
                         locationService.stopListener(); // .stopListener(this)
                         Intent sIntent = new Intent(this, LocationService.class);
                         stopService(sIntent);
                         locServiceOn = false;
                         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                            Log.i(TAG, "505, locationDispatcher(), Stop locationService");
+                            Log.i(TAG, "452, locationDispatcher(), Stop locationService");
                     }
                 }
             }
@@ -510,25 +457,22 @@ public class MyPositionActivity
     }
 
     // get the location data
-    public void getLoc()
-    {
+    public void getLoc() {
         locationService = new LocationService(this);
         Intent sIntent = new Intent(this, LocationService.class);
         startService(sIntent);
         locServiceOn = true;
 
         StringBuilder sb;
-        if (locationService.canGetLocation())
-        {
-            lon = locationService.getLongitude();
-            lat = locationService.getLatitude();
-//            if (locationService.hasAltitude()) {
-                height = locationService.getAltitude();
-                if (height != 0) {
-                    height = correctHeight(lat, lon, height);
-                }
-//            }
-            uncertainty = locationService.getAccuracy();
+        if (locationService.canGetLocation()) {
+            locationService.getLongitude();
+            locationService.getLatitude();
+            double gpsHeight;
+            gpsHeight = locationService.getAltitude();
+            if (gpsHeight != 0) {
+                height = correctHeight(gpsHeight);
+            }
+            locationService.getAccuracy();
 
             String nord = getString(R.string.nord);
             String east = getString(R.string.east);
@@ -559,83 +503,73 @@ public class MyPositionActivity
 
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
             if (language.equals("de") || language.equals("es") || language.equals("fr")
-                || language.equals("it") || language.equals("nl") || language.equals("pt"))
-            {
+                    || language.equals("it") || language.equals("nl") || language.equals("pt")) {
                 lattemp = lattemp.replace('.', ',');
                 lontemp = lontemp.replace('.', ',');
                 heighttemp = heighttemp.replace('.', ',');
                 uncerttemp = uncerttemp.replace('.', ',');
 
                 sb.append(lattemp).append(" ").append(directionNS).append(",   ")
-                    .append(lontemp).append(" ").append(directionEW).append("\n")
-                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                    .append(high).append(" ").append(heighttemp).append(" m");
-            }
-            else
-            {
+                        .append(lontemp).append(" ").append(directionEW).append("\n")
+                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                        .append(high).append(" ").append(heighttemp).append(" m");
+            } else {
                 sb.append(directionNS).append(" ").append(lattemp).append(",   ")
-                    .append(directionEW).append(" ").append(lontemp).append("\n")
-                    .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                    .append(high).append(" ").append(heighttemp).append(" m");
+                        .append(directionEW).append(" ").append(lontemp).append("\n")
+                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
+                        .append(high).append(" ").append(heighttemp).append(" m");
             }
 
-        }
-        else
-        {
+        } else {
             sb = new StringBuilder(getString(R.string.posnotknown));
         }
 
         // Get reverse geocoding formatted string for message
         // String addressLines1;
-        if (locationService.canGetLocation() && (lat != 0 || lon != 0))
-        {
+        if (locationService.canGetLocation() && (lat != 0 || lon != 0)) {
             tvDecimalCoord.setText(sb.toString());
-            tvDegreeCoord.setText(toDegree(lat, lon));
+            tvDegreeCoord.setText(toDegree());
 
-            // call reverse geocoding
-            String urlString = "https://nominatim.openstreetmap.org/reverse?email="
-                + emailString + "&format=xml&lat="
-                + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
-
+            // Call reverse geocoding
+            String urlString;
+            if (Objects.equals(emailString, "")) {
+                urlString = "https://nominatim.openstreetmap.org/reverse?"
+                        + "email=test@temp.test" + "&format=xml&lat="
+                        + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+            } else {
+                urlString = "https://nominatim.openstreetmap.org/reverse?email="
+                        + emailString + "&format=xml&lat="
+                        + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+            }
             WorkRequest retrieveAddrWorkRequest =
-                new OneTimeWorkRequest.Builder(RetrieveAddrRunner.class)
-                    .setInputData(new Data.Builder()
-                            .putString("URL_STRING", urlString)
-                            .build()
-                                 )
-                    .build();
+                    new OneTimeWorkRequest.Builder(RetrieveAddrRunner.class)
+                            .setInputData(new Data.Builder()
+                                    .putString("URL_STRING", urlString)
+                                    .build()
+                            )
+                            .build();
+            WorkManager.getInstance(getApplicationContext()).enqueue(retrieveAddrWorkRequest);
 
-            WorkManager.getInstance(getApplicationContext())
-                .enqueue(retrieveAddrWorkRequest);
-
-            // format for TextView tvMessage,
-            // delayed for getting the result of WorkRequest
+            // Format TextView tvMessage,
+            //   delayed for getting the result of WorkRequest
             final Handler m2Handler = new Handler(Looper.getMainLooper());
-            final Runnable r2 = new Runnable()
-            {
+            final Runnable r2 = new Runnable() {
                 String addressLines1;
 
                 @Override
-                public void run()
-                {
+                public void run() {
                     addressLines1 = "   " + addressLines; // addressLines is set by RetrieveAddrRunner
                     addressLines1 = addressLines1.replace("\n", "\n   ");
 
-                    if (!Objects.equals(addressLines, ""))
-                    {
-                        try
-                        {
+                    if (!Objects.equals(addressLines, "")) {
+                        try {
                             tvLocation.setText(addressLines);
-                            tvMessage.setText(getMessage(lat, lon, height,
-                                uncertainty, messageHeader, addressLines1));
-                        } catch (Exception e)
-                        {
+                            tvMessage.setText(getMessage(messageHeader, addressLines1));
+                        } catch (Exception e) {
                             tvLocation.setText(getString(R.string.noAddr));
                             tvMessage.setText(getString(R.string.noAddr));
                         }
-                    }
-                    else
-                    {
+                    } else {
                         addressLines = getString(R.string.noAddr);
                         tvLocation.setText(addressLines);
                         tvMessage.setText(addressLines);
@@ -643,51 +577,42 @@ public class MyPositionActivity
                 }
             };
             m2Handler.postDelayed(r2, 500);
-        }
-        else
-        {
+        } else {
             addressLines = getString(R.string.noAddr);
             tvLocation.setText(addressLines);
             tvMessage.setText(addressLines);
         }
     }
-    // End of getLoc()
+    // End of calcLoc()
 
-    private double correctHeight(double lat, double lon, double gpsHeight)
-    {
+    public double correctHeight(double gpsHeight) {
         double corrHeight;
         double nnHeight;
 
         EarthGravitationalModel gh = new EarthGravitationalModel();
-        try
-        {
+        try {
             gh.load(this); // load the WGS84 correction coefficient table egm180.txt
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             return 0;
         }
 
         // Calculate the offset between the ellipsoid and geoid
-        try
-        {
+        try {
             corrHeight = gh.heightOffset(lat, lon, gpsHeight);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             return 0;
         }
 
         nnHeight = gpsHeight + corrHeight;
 
-        if (showHtMessage)
-        {
+        if (showHtMessage) {
             @SuppressLint("DefaultLocale") String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
             @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", gpsHeight);
             @SuppressLint("DefaultLocale") String nntemp = String.format("%.1f", nnHeight);
 
             String language = Locale.getDefault().toString().substring(0, 2);
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
-            {
+            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
                 corrtemp = corrtemp.replace('.', ',');
                 gpstemp = gpstemp.replace('.', ',');
                 nntemp = nntemp.replace('.', ',');
@@ -703,8 +628,7 @@ public class MyPositionActivity
     }
 
     // Convert to degree
-    private String toDegree(double lat, double lon)
-    {
+    private String toDegree() {
         String language = Locale.getDefault().toString().substring(0, 2);
         StringBuilder stringb = new StringBuilder();
         LatLonConvert convert = new LatLonConvert(lat);
@@ -726,8 +650,7 @@ public class MyPositionActivity
             directionEW = west;
 
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt"))
-        {
+        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
 
@@ -743,9 +666,7 @@ public class MyPositionActivity
             sectemp = new DecimalFormat("#.#").format(convert.getSecond());
             sectemp = sectemp.replace('.', ',');
             stringb.append(sectemp).append("\" ").append(directionEW);
-        }
-        else
-        {
+        } else {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
             stringb.append(new DecimalFormat("#.#").format(convert.getSecond())).append("\" ").append(directionNS).append(",  ");
@@ -762,39 +683,29 @@ public class MyPositionActivity
 
     // Share button clicked next to one of the text boxes
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
         Intent intent;
         intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TITLE, "My Location");
         intent.setType("text/plain");
         int viewID = view.getId();
-        if (viewID == R.id.shareLocation)
-        {
+        if (viewID == R.id.shareLocation) {
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myLoc)
-                + "\n  " + tvLocation.getText());
-        }
-        else if (viewID == R.id.shareDecimal)
-        {
+                    + "\n  " + tvLocation.getText());
+        } else if (viewID == R.id.shareDecimal) {
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myPos)
-                + "\n  " + tvDecimalCoord.getText());
-        }
-        else if (viewID == R.id.shareDegree)
-        {
+                    + "\n  " + tvDecimalCoord.getText());
+        } else if (viewID == R.id.shareDegree) {
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myPos)
-                + "\n  " + tvDegreeCoord.getText());
-        }
-        else if (viewID == R.id.shareMessage)
-        {
+                    + "\n  " + tvDegreeCoord.getText());
+        } else if (viewID == R.id.shareMessage) {
             intent.putExtra(Intent.EXTRA_TEXT, tvMessage.getText());
         }
         startActivity(Intent.createChooser(intent, "Share via"));
     }
 
     // Show message to share
-    private String getMessage(double lat, double lon, double height, double uncertainty,
-                              String messageHeader, String adrlines)
-    {
+    private String getMessage(String messageHeader, String adrlines) {
         StringBuilder message = new StringBuilder();
         String geoLoc = getApplicationContext().getString(R.string.geoloc);
         String uncert = getApplicationContext().getString(R.string.uncert);
@@ -815,16 +726,14 @@ public class MyPositionActivity
         String language = Locale.getDefault().toString().substring(0, 2);
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
         if (language.equals("de") || language.equals("es") || language.equals("fr")
-            || language.equals("it") || language.equals("nl") || language.equals("pt"))
-        {
+                || language.equals("it") || language.equals("nl") || language.equals("pt")) {
             tempLat = tempLat.replace('.', ',');
             tempLon = tempLon.replace('.', ',');
             tempHigh = tempHigh.replace('.', ',');
             tempUncert = tempUncert.replace('.', ',');
         }
 
-        if (lat == 0.0 && lon == 0.0)
-        {
+        if (lat == 0.0 && lon == 0.0) {
             return getApplicationContext().getString(R.string.posnotknown);
         }
 
@@ -892,8 +801,7 @@ public class MyPositionActivity
     }
 
     // Blue height message with button to dismiss
-    private void showSnackbarHeight(String str)
-    {
+    private void showSnackbarHeight(String str) {
         baseLayout = findViewById(R.id.baseLayout);
         Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_INDEFINITE);
         TextView tv = sB.getView().findViewById(R.id.snackbar_text);

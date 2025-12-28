@@ -29,7 +29,11 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>Mein Standort, Version 1.4.6,</B> 18-12-2025<br>
+<B>Mein Standort, Version 1.4.7,</B> 28.12.2025<br>
+- Code-Verbesserungen.<br>
+<br>
+
+<B>Mein Standort, Version 1.4.6,</B> 18.12.2025<br>
 - Code-Anpassungen für Android-Version 16.<br>
 - Positionsbestimmung im Hintergrund entfernt.<br>
 - Info über letzte GPS-FixTime entfernt.<br>

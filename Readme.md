@@ -39,6 +39,10 @@ Since versions 1.3.0 to current version copyright by wistein, 2017-2025,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
+<B>My Position, version 1.4.7,</B> 2025-12-28<br>
+- Some code improvements<br>
+<br>
+
 <B>My Position, version 1.4.6,</B> 2025-12-18<br>
 - Code adapted for Android versions >= 16<br>
 - Background location service removed<br>

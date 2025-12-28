@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+import com.wistein.myposition.MyPosition.Companion.lat
+import com.wistein.myposition.MyPosition.Companion.lon
 import java.text.DecimalFormat
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -51,7 +53,7 @@ import kotlin.math.sqrt
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2025-11-09
+ * Last edited on 2025-12-28
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -72,9 +74,6 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var buttonCalc1: Button
     private lateinit var buttonCalc2: Button
     private lateinit var buttonCalc3: Button
-
-    var lat: Double = 0.0
-    var lon: Double = 0.0
 
     private lateinit var convLayout: ScrollView
 

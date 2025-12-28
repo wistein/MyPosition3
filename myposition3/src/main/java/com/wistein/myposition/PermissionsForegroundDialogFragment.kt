@@ -24,7 +24,7 @@ import androidx.fragment.app.DialogFragment
  * Adopted for MyPosition3 by wistein on 2019-02-08,
  * last edited in java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-11-25
+ * last edited on 2025-12-28
  */
 class PermissionsForegroundDialogFragment : DialogFragment() {
     private var context: Context? = null
@@ -39,14 +39,14 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "44, onCreate()")
+            Log.i(TAG, "42, onCreate()")
 
         setStyle(STYLE_NO_TITLE, R.style.PermissionsDialogFragmentStyle)
         isCancelable = false
 
         // Request foreground location permission
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "57, requestForegroundPermissions")
+            Log.i(TAG, "49, requestForegroundPermissions")
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
 
         permissionLauncherForeground.launch(permission)
@@ -59,7 +59,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
     { isGranted ->
         if (isGranted) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "71, permLauncherForegrnd granted: $isGranted")
+                Log.i(TAG, "62, permLauncherForegrnd granted: $isGranted")
             dismiss()
         } else {
             showAppSettingsForegroundDialog()
@@ -69,7 +69,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
     // Inform about missing necessary foreground permissions and show settings
     private fun showAppSettingsForegroundDialog() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "82, AppSettingsForegroundDialog")
+            Log.i(TAG, "72, AppSettingsForegroundDialog")
 
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.dialog_fine_location_title))
@@ -93,7 +93,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
         super.onDetach()
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "106, onDetach()")
+            Log.i(TAG, "96, onDetach()")
 
         context = null
     }

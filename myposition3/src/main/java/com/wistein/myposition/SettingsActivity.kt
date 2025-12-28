@@ -31,9 +31,8 @@ import androidx.preference.PreferenceFragmentCompat
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-11-09
+ * last edited on 2025-12-28
  */
-@Suppress("KotlinConstantConditions")
 class SettingsActivity : AppCompatActivity() {
     private var TAG = "MyPosSettingsAct"
     private var prefs = MyPosition.getPrefs()

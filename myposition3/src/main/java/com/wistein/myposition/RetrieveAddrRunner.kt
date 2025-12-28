@@ -18,7 +18,7 @@ import java.net.URL
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2025-10-26
+ * last edited on 2025-12-28
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -136,9 +136,8 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append("\n")
                     } else  // without house-No.
                     {
-                        if (xmlString.contains("<road>") || xmlString.contains("<street>")) msg.append(
-                            "\n"
-                        )
+                        if (xmlString.contains("<road>") || xmlString.contains("<street>"))
+                            msg.append("\n")
                     }
 
                     // 3. line: city_district, suburb
@@ -327,6 +326,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
         } catch (e: IOException) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
                 Log.e(rTag, "329, Problem with address handling: $e")
+
             addressLines = R.string.unknownAddr.toString()
         }
         return Result.success()

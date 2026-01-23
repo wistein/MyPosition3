@@ -24,10 +24,15 @@ Diese App wird angeboten in der Hoffnung, dass sie nützlich ist, aber ohne jedw
 Lizenziert unter der GNU GPLv2 oder neuer.<br>
 https://www.gnu.org/licenses/gpl-3.0<br>
 <br>
-Seit Version 1.3.0 bis zur aktuellen Version: Copyrighted wistein, 2017-2025,<br>
+Seit Version 1.3.0 bis zur aktuellen Version: Copyrighted wistein, 2017-2026,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
+
+<B>Mein Standort, Version 1.4.8,</B> 23.01.2026<br>
+- Fehlermeldungen in rot.<br>
+- Einige Textstellen korrigiert<br>
+<br>
 
 <B>Mein Standort, Version 1.4.7,</B> 28.12.2025<br>
 - Code-Verbesserungen.<br>

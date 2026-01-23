@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat
 import com.wistein.myposition.MyPosition.Companion.lat
 import com.wistein.myposition.MyPosition.Companion.lon
 import com.wistein.myposition.MyPosition.Companion.uncertainty
+import com.wistein.myposition.Utils.fromHtml
 
 /***************************************************************************************
  * LocationService provides the location data: latitude, longitude, height, uncertainty.
@@ -36,7 +37,7 @@ import com.wistein.myposition.MyPosition.Companion.uncertainty
  * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-12-28
+ * last edited on 2026-01-23
  */
 class LocationService : Service, LocationListener {
     companion object {
@@ -89,8 +90,10 @@ class LocationService : Service, LocationListener {
             if (checkGPS || checkNetwork) {
                 this.canGetLocation = true
             } else {
+                val mesg = getString(R.string.no_provider)
                 Toast.makeText(
-                    mContext!!, getString(R.string.no_provider),
+                    mContext!!,
+                    fromHtml("<font color='red'><b>$mesg</b></font>"),
                     Toast.LENGTH_SHORT
                 ).show()
             }

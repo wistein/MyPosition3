@@ -1,5 +1,5 @@
 // Build file where you can add configuration options for the module.
-// Last edited on 2025-12-28
+// Last edited on 2026-01-23
 
 plugins {
     id 'com.android.application'
@@ -14,8 +14,8 @@ android {
         applicationId "com.wistein.myposition"
         minSdk = 25
         targetSdk = 36
-        versionCode = 147
-        versionName = "1.4.7"
+        versionCode = 148
+        versionName = "1.4.8"
     }
 
     buildTypes {

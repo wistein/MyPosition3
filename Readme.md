@@ -18,27 +18,31 @@ The app simplifies the task of sharing your location data with your contacts.
 - select <I>Apps</I>, 
 - find <i>Maps</i> and select <i>Clear defaults</i>. 
 - Head back to <i>My Position</I> and call <I>Show Map</I>. 
-- Now you’ll be asked which application to use.  
-Pick the one you prefer,
+- Now you’ll be asked which application to use. 
+- Pick the one you prefer,
 - select <i>This time</I> to test it.  
 Next time you may select <i>Always</I> to make sure your preferred app opens by default.
 
-**) To achieve OSM Reverse Geocoding by a more reliable service and for protection against abuse it optionally takes your provided email address  
-(see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
+**) To achieve OSM Reverse Geocoding by a more reliable service and for protection against its abuse it is recommended to provide your email address (see http://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).
  
 ### Permissions
 - Location (GPS and Network)
 - Internet access (for Reverse Geocoding by OpenStreetMap)
 
 ### License
-Licensed under GNU GPLv2 or later. (See https://www.gnu.org/licenses/gpl-3.0)
+Licensed under GNU GPLv2 or later (see https://www.gnu.org/licenses/gpl-3.0).
  
 This app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Since versions 1.3.0 to current version copyright by wistein, 2017-2025,<br>
+Since versions 1.3.0 to current version, copyright by wistein, 2017-2026,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
+<B>My Position, version 1.4.8,</B> 2026-01-23<br>
+- Error messages in red<br>
+- Some text corrected<br>
+<br>
+
 <B>My Position, version 1.4.7,</B> 2025-12-28<br>
 - Some code improvements<br>
 <br>

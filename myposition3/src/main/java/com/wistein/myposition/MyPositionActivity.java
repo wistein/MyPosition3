@@ -6,6 +6,7 @@ import static com.wistein.myposition.MyPosition.height;
 import static com.wistein.myposition.MyPosition.lat;
 import static com.wistein.myposition.MyPosition.lon;
 import static com.wistein.myposition.MyPosition.uncertainty;
+import static com.wistein.myposition.Utils.fromHtml;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -59,8 +60,9 @@ import java.util.TimeZone;
 
 /***********************************************************************
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License version 2 as
- *  published by the Free Software Foundation
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  * <p>
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -68,19 +70,18 @@ import java.util.TimeZone;
  *  GNU General Public License for more details.
  * <p>
  *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  along with this program. If not, see <<a href="https://www.gnu.org/licenses/">...</a>>.
  * <p>
  * MyPositionActivity.java
  * Main Activity Class for MyPosition3
  * <p>
- * Based on
+ * Partly based on
  * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
  * <p>
  * Adopted 2019 by wistein for MyPosition3
- * Copyright 2019-2025, Wilhelm Stein, Bonn, Germany
- * last edited on 2025-12-28
+ * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
+ * last edited on 2026-01-23
  */
 public class MyPositionActivity
         extends AppCompatActivity
@@ -106,19 +107,19 @@ public class MyPositionActivity
     private boolean screenOrientL;     // option for screen orientation
     private boolean darkScreen;        // Option for dark screen background
     private boolean showHtMessage;     // option to show height info
-    // the option mapLocal works only without GAPPS. It lets you select where to show the map,
-    //   either on a local mapping app (true) or online (false).
-    // But when GAPPS are present MyPosition3 shows the location always online on Google Maps.
+
+    // The option mapLocal works only after changing the default setting for Maps to an
+    //   installed Mapping app. This is especially necessary when GAPPS are present.
+    //   It then lets you select where to show the map, either on the local mapping app (true)
+    //   or online on OpenStreetMap (false).
     private boolean mapLocal;
 
-    /**
-     * Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
-     * public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
-     * <p>
-     * Full screen gesture mode (introduced with Android Q)
-     * public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
-     */
+    // Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
+    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
+    // Full screen gesture mode (introduced with Android Q)
+    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
     // Classic three-button navigation (Back, Home, Recent Apps)
+    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
     public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
 
     // Location info handling
@@ -400,8 +401,9 @@ public class MyPositionActivity
             startActivity(intent);
         } else if (id == R.id.menu_viewmap) {
             if (mapLocal) {
-                // when GAPPS are present MyPosition3 shows location online on Google Maps
-                // without GAPPS MyPosition3 uses a local mapping app to show the location
+                // When GAPPS are present MyPosition3 by default shows location online on Google Maps.
+                // Without GAPPS or after changing the default setting for Maps, MyPosition3
+                // uses a local mapping app to show the location
                 String geo = "geo:" + lat + "," + lon + "?z=17";
                 intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(geo));
             } else {
@@ -414,7 +416,10 @@ public class MyPositionActivity
             try {
                 startActivity(intent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(this, getString(R.string.t_noapp), Toast.LENGTH_LONG).show();
+                String mesg = getString(R.string.t_noapp);
+                Toast.makeText(this,
+                        fromHtml("<font color='red'><b>" + mesg + "</b></font>"),
+                        Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.menu_converter) {
             // Stop location service

@@ -42,7 +42,7 @@ import kotlin.math.round
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-02-21.
+ * last edited on 2026-01-23.
  */
 internal class LatLonConvert {
     // declare local variables used throughout the class
@@ -93,7 +93,7 @@ internal class LatLonConvert {
         // Get degrees by chopping off at the decimal
         dfDegree = floor(dfDecimal)
         // correction required since floor() is not the same as int()
-        if (dfDegree < 0) dfDegree = dfDegree + 1
+        if (dfDegree < 0) dfDegree += 1
 
         // Get fraction after the decimal
         // define variables local to this method
@@ -110,7 +110,7 @@ internal class LatLonConvert {
 
         // Fix roundoff errors
         if (round(dfSecond) == 60.toDouble()) {
-            dfMinute = dfMinute + 1
+            dfMinute += 1
             dfSecond = 0.0
         }
 

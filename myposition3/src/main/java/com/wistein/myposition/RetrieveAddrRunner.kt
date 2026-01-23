@@ -12,13 +12,27 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /***************************************************************************************
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program. If not, see <<a href="https://www.gnu.org/licenses/">...</a>>.
+ *
+ * RetrieveAddrRunner
  * Worker to get and parse address info from Nominatim Reverse Geocoder of OpenStreetMap
  *
- * Copyright 2018-2025 wistein
+ * Copyright (c) 2018-2026, Wilhelm Stein, Bonn, Germany.
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2025-12-28
+ * last edited on 2026-01-23
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {

@@ -81,7 +81,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
- * last edited on 2026-01-23
+ * last edited on 2026-02-19
  */
 public class MyPositionActivity
         extends AppCompatActivity
@@ -442,10 +442,8 @@ public class MyPositionActivity
     public void locationDispatcher(int locationDispatcherMode) {
         if (locationPermGranted) {
             switch (locationDispatcherMode) {
-                case 1 -> {
-                    // get location data
-                    getLoc();
-                }
+                case 1 -> // get location data
+                        getLoc();
                 case 2 -> {
                     // stop location service
                     if (locServiceOn) {

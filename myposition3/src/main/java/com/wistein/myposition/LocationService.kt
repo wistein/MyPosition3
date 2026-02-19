@@ -39,7 +39,7 @@ import com.wistein.myposition.Utils.fromHtml
  * converted to Kotlin on 2024-09-30,
  * last edited on 2026-01-23
  */
-class LocationService : Service, LocationListener {
+open class LocationService : Service, LocationListener {
     companion object {
         private const val TAG = "MyPos3, LocSrv"
         private const val MIN_DISTANCE_FOR_UPDATES_GPS: Long = 2

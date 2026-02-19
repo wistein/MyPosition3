@@ -32,7 +32,7 @@ import java.net.URL
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2026-01-23
+ * last edited on 2026-02-19
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -115,11 +115,11 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     msg.append(hotel)
                     msg.append("\n")
                 }
-                if (xmlString.contains("<guest_house>")) {
-                    sstart = xmlString.indexOf("<guest_house>") + 13
-                    send = xmlString.indexOf("</guest_house>")
-                    val guest_house = xmlString.substring(sstart, send)
-                    msg.append(guest_house)
+                if (xmlString.contains("<guestHouse>")) {
+                    sstart = xmlString.indexOf("<guestHouse>") + 13
+                    send = xmlString.indexOf("</guestHouse>")
+                    val guestHouse = xmlString.substring(sstart, send)
+                    msg.append(guestHouse)
                     msg.append("\n")
                 }
 
@@ -142,11 +142,11 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append(street)
                         msg.append(" ")
                     }
-                    if (xmlString.contains("<house_number>")) {
-                        sstart = xmlString.indexOf("<house_number>") + 14
-                        send = xmlString.indexOf("</house_number>")
-                        val house_number = xmlString.substring(sstart, send)
-                        msg.append(house_number)
+                    if (xmlString.contains("<houseNumber>")) {
+                        sstart = xmlString.indexOf("<houseNumber>") + 14
+                        send = xmlString.indexOf("</houseNumber>")
+                        val houseNumber = xmlString.substring(sstart, send)
+                        msg.append(houseNumber)
                         msg.append("\n")
                     } else  // without house-No.
                     {
@@ -154,12 +154,12 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                             msg.append("\n")
                     }
 
-                    // 3. line: city_district, suburb
-                    if (xmlString.contains("<city_district>")) {
-                        sstart = xmlString.indexOf("<city_district>") + 15
-                        send = xmlString.indexOf("</city_district>")
-                        val city_district = xmlString.substring(sstart, send)
-                        msg.append(city_district)
+                    // 3. line: cityDistrict, suburb
+                    if (xmlString.contains("<cityDistrict>")) {
+                        sstart = xmlString.indexOf("<cityDistrict>") + 15
+                        send = xmlString.indexOf("</cityDistrict>")
+                        val cityDistrict = xmlString.substring(sstart, send)
+                        msg.append(cityDistrict)
                         if (xmlString.contains("<suburb>")) {
                             msg.append(" - ")
                         } else {
@@ -174,7 +174,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append("\n")
                     }
 
-                    // 4. line: postcode village, town, city, county
+                    // 4. line: zip code village, town, city, county
                     if (xmlString.contains("<postcode>")) {
                         sstart = xmlString.indexOf("<postcode>") + 10
                         send = xmlString.indexOf("</postcode>")
@@ -239,11 +239,11 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append(house)
                         msg.append(" ")
                     }
-                    if (xmlString.contains("<house_number>")) {
-                        sstart = xmlString.indexOf("<house_number>") + 14
-                        send = xmlString.indexOf("</house_number>")
-                        val house_number = xmlString.substring(sstart, send)
-                        msg.append(house_number)
+                    if (xmlString.contains("<houseNumber>")) {
+                        sstart = xmlString.indexOf("<houseNumber>") + 14
+                        send = xmlString.indexOf("</houseNumber>")
+                        val houseNumber = xmlString.substring(sstart, send)
+                        msg.append(houseNumber)
                         msg.append(" ")
                     }
                     if (xmlString.contains("<road>")) {
@@ -295,7 +295,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append("\n")
                     }
 
-                    //6. line: county, state_district
+                    //6. line: county, stateDistrict
                     if (xmlString.contains("<county>")) {
                         sstart = xmlString.indexOf("<county>") + 8
                         send = xmlString.indexOf("</county>")
@@ -304,15 +304,15 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                         msg.append("\n")
                     }
 
-                    if (xmlString.contains("<state_district>")) {
-                        sstart = xmlString.indexOf("<state_district>") + 16
-                        send = xmlString.indexOf("</state_district>")
-                        val state_district = xmlString.substring(sstart, send)
-                        msg.append(state_district)
+                    if (xmlString.contains("<stateDistrict>")) {
+                        sstart = xmlString.indexOf("<stateDistrict>") + 16
+                        send = xmlString.indexOf("</stateDistrict>")
+                        val stateDistrict = xmlString.substring(sstart, send)
+                        msg.append(stateDistrict)
                         msg.append("\n")
                     }
 
-                    // 7. line: state or country, postcode
+                    // 7. line: state or country, zip code
                     if (xmlString.contains("<state>")) {
                         sstart = xmlString.indexOf("<state>") + 7
                         send = xmlString.indexOf("</state>")

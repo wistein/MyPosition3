@@ -55,7 +55,7 @@ import kotlin.math.sqrt
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2026-01-23
+ * Last edited on 2026-02-19
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -180,12 +180,16 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         val viewID = view.id
 
-        if (viewID == R.id.buttonCalc1) {
-            this.toDegree()
-        } else if (viewID == R.id.buttonCalc2) {
-            this.toDecimal()
-        } else if (viewID == R.id.buttonCalc3) {
-            this.sDistance()
+        when (viewID) {
+            R.id.buttonCalc1 -> {
+                this.toDegree()
+            }
+            R.id.buttonCalc2 -> {
+                this.toDecimal()
+            }
+            R.id.buttonCalc3 -> {
+                this.sDistance()
+            }
         }
     }
 

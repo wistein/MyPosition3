@@ -13,7 +13,7 @@ import kotlin.math.ceil
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-02-21.
+ * last edited on 2026-02-19.
  */
 internal object MapUtils {
     /**
@@ -45,7 +45,7 @@ internal object MapUtils {
 
         // append characters onto the end of the string to represent partial zoom
         //   levels (characters themselves have a granularity of 3 zoom levels).
-        (0 until (zoom + 8) % 3).forEach { j ->
+        (0 until (zoom + 8) % 3).forEach { _ ->
             str.append('-')
         }
         return str.toString()
@@ -58,8 +58,8 @@ internal object MapUtils {
     private fun interleaveBits(x: Long, y: Long): Long {
         var c: Long = 0
         for (b in 31 downTo 0) {
-            c = (c shl 1) or ((x shr b.toInt()) and 1L)
-            c = (c shl 1) or ((y shr b.toInt()) and 1L)
+            c = (c shl 1) or ((x shr b) and 1L)
+            c = (c shl 1) or ((y shr b) and 1L)
         }
         return c
     }

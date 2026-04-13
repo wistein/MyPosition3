@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_show_position_entries">
+        <item>Show position on OpenStreetMap</item>
+        <item>Show position on mapping app</item>
+    </string-array>
+    <string-array name="pref_show_position_values">
+        <item>online</item>
+        <item>offline</item>
+    </string-array>
+
+</resources>

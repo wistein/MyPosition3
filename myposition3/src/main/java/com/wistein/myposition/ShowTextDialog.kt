@@ -54,7 +54,6 @@ class ShowTextDialog : AppCompatActivity() {
 
         val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
-        val darkScreen = prefs.getBoolean("dark_Screen", false)
 
         requestedOrientation = if (screenOrientL) {
             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -62,14 +61,7 @@ class ShowTextDialog : AppCompatActivity() {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        if (darkScreen)
-        {
-            setTheme(R.style.AppTheme_Dark)
-        }
-        else
-        {
-            setTheme(R.style.AppTheme_Light)
-        }
+        setTheme(R.style.AppTheme_Dark)
 
         val dialog = intent.getStringExtra("dialog")
 

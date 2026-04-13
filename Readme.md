@@ -38,6 +38,18 @@ Since versions 1.3.0 to current version, copyright by wistein, 2017-2026,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
+<B>My Position, version 1.5.0,</B> 2026-04-13<br>
+- Code improved<br>
+- Bugfixes<br>
+<br>
+
+<B>My Position, version 1.4.9,</B> 2026-04-01<br>
+- Code adapted to new demands of Nominatim service from OpenStreetMap to get location detail data<br>
+- App menu improved<br>
+- App only in dark mode<br>
+- After 1. GPS fix the reverse geocode locality data is shown without extra request<br>
+<br>
+
 <B>My Position, version 1.4.8,</B> 2026-01-23<br>
 - Error messages in red<br>
 - Some text corrected<br>
@@ -120,7 +132,7 @@ https://github.com/wistein/MyPosition3<BR>
  - Fix values for min. distance and polling time<br> 
  - Help incorporated<br>
  - Docs revised<br>
- - Code shrinked<br>
+ - Code shrunk<br>
 <br>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>

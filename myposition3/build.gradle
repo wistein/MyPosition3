@@ -1,9 +1,8 @@
 // Build file where you can add configuration options for the module.
-// Last edited on 2026-01-23
+// Last edited on 2026-03-30
 
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -14,8 +13,8 @@ android {
         applicationId "com.wistein.myposition"
         minSdk = 25
         targetSdk = 36
-        versionCode = 148
-        versionName = "1.4.8"
+        versionCode = 150
+        versionName = "1.5.0"
     }
 
     buildTypes {
@@ -53,11 +52,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.work:work-runtime:2.11.1'
+    implementation 'androidx.work:work-runtime:2.11.2'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.core:core-ktx:1.17.0'
-    implementation 'androidx.activity:activity-ktx:1.12.4' // new
-    implementation 'androidx.annotation:annotation-jvm:1.9.1'
+    implementation 'androidx.core:core-ktx:1.18.0'
+    implementation 'androidx.activity:activity-ktx:1.13.0' // new
+    implementation 'androidx.annotation:annotation-jvm:1.10.0'
     implementation 'androidx.fragment:fragment-ktx:1.8.9'
     implementation 'com.google.android.material:material:1.13.0'
 

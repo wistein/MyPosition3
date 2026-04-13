@@ -24,7 +24,7 @@ import androidx.fragment.app.DialogFragment
  * Adopted for MyPosition3 by wistein on 2019-02-08,
  * last edited in java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2025-12-28
+ * last edited on 2026-04-01
  */
 class PermissionsForegroundDialogFragment : DialogFragment() {
     private var context: Context? = null
@@ -46,7 +46,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
 
         // Request foreground location permission
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "49, requestForegroundPermissions")
+            Log.i(TAG, "49, request Manifest FineLocationPermissions")
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
 
         permissionLauncherForeground.launch(permission)
@@ -69,7 +69,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
     // Inform about missing necessary foreground permissions and show settings
     private fun showAppSettingsForegroundDialog() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "72, AppSettingsForegroundDialog")
+            Log.i(TAG, "72, Show AppSettingsForegroundDialog")
 
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.dialog_fine_location_title))
@@ -99,7 +99,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
     }
 
     companion object {
-        private const val TAG = "PermForegrDlgFragm"
+        private const val TAG = "PermissionForgrDlgFragm"
 
         @JvmStatic
         fun newInstance(): PermissionsForegroundDialogFragment {

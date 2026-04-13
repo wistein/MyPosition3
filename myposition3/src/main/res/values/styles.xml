@@ -1,11 +1,4 @@
 <resources>
-    <!-- Standard mode -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
-
-    <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize light theme attributes here -->
-    </style>
-
     <style name="AppTheme.Dark" parent="Theme.AppCompat">
         <!-- Customize dark theme attributes here -->
     </style>

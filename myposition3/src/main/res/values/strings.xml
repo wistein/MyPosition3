@@ -1,6 +1,6 @@
 <!-- strings.xml
      English strings
-     last edited on 2025-12-18 -->
+     last edited on 2026-04-13 -->
 
 <resources>
     <string name="location_attr_label" translatable="false">LocationCheck</string>
@@ -19,7 +19,6 @@
     <string name="geoloc">Coordinates:</string>
     <string name="uncert">Uncertainty:</string>
     <string name="unknownAddr">Unknown address</string>
-    <string name="errAddr">Web read error!</string>
     <string name="noAddr">No address data!</string>
     <string name="addrInfo">Address Info</string>
     <string name="toshortAddr">Address info:</string>
@@ -50,6 +49,8 @@
     <string name="no_provider">No Service Provider available!</string>
     <string name="dist">Distance</string>
     <string name="distm">Distance (m):</string>
+    <string name="newLock">GPS has position!</string>
+    <string name="missingEmail">Please enter a valid email address under Settings for reliable location detection.</string>
 
     <string name="msg_text">Use the following link to see my position on the OSM map: </string>
     <string name="invValue">Invalid value</string>
@@ -57,7 +58,8 @@
     <string name="titel_email_string">Mail Address for OSM Geocoder</string>
     <string name="toast_string">Show toast for new position with height above sea-level, GPS-height und height correction value.</string>
     <string name="titel_toast_string">Show Toast for Height Values</string>
-    <string name="map_string">When not tagged the position is shown online in OpenStreetMap. When tagged it tries to use a local map app to show the position offline. (Eventually does not work on your device as it depends on Android\'s app management).</string>
+    <string name="map_string_title">Select how the position is shown either on OpenStreetMap or on a local mapping app.</string>
+    <string name="map_string_summary">There are 2 options: Online or offline. The offline method works only if a mapping app is installed.</string>
     <string name="titel_map_string">How to Show the Map?</string>
     <string name="screen_orientation">Show screen in landscape mode instead of portrait mode.</string>
     <string name="titel_screen_orientation">Use landscape mode</string>
@@ -65,8 +67,6 @@
     <string name="h_gps">Height from GPS:</string>
     <string name="h_corr">Height correction:</string>
     <string name="t_noapp">There is no suitable app installed.</string>
-    <string name="darkScreen">Set the screen to dark mode.</string>
-    <string name="titel_darkScreen">Use dark mode</string>
 
     <!-- Permissions -->
     <string name="dialog_fine_location_title">Permissions Required</string>

@@ -2,7 +2,11 @@ package com.wistein.myposition;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 
-import static com.wistein.myposition.MyPosition.height;
+import static com.wistein.myposition.MyPosition.addressLines;
+import static com.wistein.myposition.MyPosition.corrHeight;
+import static com.wistein.myposition.MyPosition.heightGPS;
+import static com.wistein.myposition.MyPosition.heightNN;
+import static com.wistein.myposition.MyPosition.isFirstStart;
 import static com.wistein.myposition.MyPosition.lat;
 import static com.wistein.myposition.MyPosition.lon;
 import static com.wistein.myposition.MyPosition.uncertainty;
@@ -48,15 +52,10 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.wistein.egm.EarthGravitationalModel;
 
-import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.TimeZone;
 
 /***********************************************************************
  *  This program is free software; you can redistribute it and/or modify
@@ -81,7 +80,7 @@ import java.util.TimeZone;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
- * last edited on 2026-02-19
+ * last edited on 2026-04-13
  */
 public class MyPositionActivity
         extends AppCompatActivity
@@ -98,21 +97,19 @@ public class MyPositionActivity
     private ImageView shareDegree;
     private ImageView shareMessage;
 
-    public static String addressLines; // formatted string for Address field
     private String messageHeader = ""; // 1st line in mail message
 
     // Preferences
     private SharedPreferences prefs;
     private String emailString = "";   // mail address for OSM query
     private boolean screenOrientL;     // option for screen orientation
-    private boolean darkScreen;        // Option for dark screen background
-    private boolean showHtMessage;     // option to show height info
+    private boolean showHeightMessage;     // option to show height info
 
     // The option mapLocal works only after changing the default setting for Maps to an
     //   installed Mapping app. This is especially necessary when GAPPS are present.
     //   It then lets you select where to show the map, either on the local mapping app (true)
     //   or online on OpenStreetMap (false).
-    private boolean mapLocal;
+    private boolean mapLocal = false;
 
     // Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
     //   public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
@@ -135,12 +132,18 @@ public class MyPositionActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "137, onCreate()");
+            Log.i(TAG, "135, onCreate()");
 
+        // Preferences
         prefs = MyPosition.getPrefs();
-
-        darkScreen = prefs.getBoolean("dark_Screen", false);
+        messageHeader = getString(R.string.msg_text);
+        // option for screen orientation
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
+        // Option for dark screen background
+        String showPosition = prefs.getString("show_position", "online");
+        mapLocal = showPosition.equals("offline");
+        showHeightMessage = prefs.getBoolean("show_Toast", false);
+        emailString = prefs.getString("email_String", ""); // for reliable query of Nominatim service
 
         if (screenOrientL) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -148,11 +151,7 @@ public class MyPositionActivity
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
 
-        if (darkScreen) {
-            setTheme(R.style.AppTheme_Dark);
-        } else {
-            setTheme(R.style.AppTheme_Light);
-        }
+        setTheme(R.style.AppTheme_Dark);
 
         super.onCreate(savedInstanceState); // put here for setTheme(...) to work
 
@@ -176,26 +175,20 @@ public class MyPositionActivity
                     return WindowInsetsCompat.CONSUMED;
                 });
 
-        baseLayout = findViewById(R.id.baseLayout);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
-
         // Part of location permissions handling:
         //   Set flag locationPermGranted from self permissions
         locationPermGranted = isFineLocPermGranted();
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "185, onCreate(), locationPermGranted: " + locationPermGranted);
 
-        // If not yet location permission is granted prepare and query for them
+        // If not yet location permission is granted query for it
         if (!locationPermGranted) {
-            // Reset background location permission status in case it was set previously
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putBoolean("has_asked_background", false);
-            editor.commit();
-
-            // Query foreground location permission first
             PermissionsForegroundDialogFragment.newInstance().show(getSupportFragmentManager(),
                     PermissionsForegroundDialogFragment.class.getName());
         }
+
+        // Set title and back button in ActionBar
+        baseLayout = findViewById(R.id.baseLayout);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // New onBackPressed logic
         // Use only if 2 or 3 button Navigation bar is present.
@@ -217,7 +210,7 @@ public class MyPositionActivity
         int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
                 NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "219, NavBarMode = " + iMode);
+            Log.i(TAG, "213, NavBarMode = " + iMode);
         return iMode;
     }
 
@@ -250,26 +243,20 @@ public class MyPositionActivity
     @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
     @Override
     public void onResume() {
-        if (darkScreen) {
-            setTheme(R.style.AppTheme_Dark);
-        } else {
-            setTheme(R.style.AppTheme_Light);
-        }
+        setTheme(R.style.AppTheme_Dark);
         super.onResume(); // put here for setTheme(...) to work
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "260, onResume()");
+            Log.i(TAG, "250, onResume()");
 
         prefs = MyPosition.getPrefs();
         messageHeader = getString(R.string.msg_text);
         screenOrientL = prefs.getBoolean("screen_Orientation", false);
-        darkScreen = prefs.getBoolean("dark_Screen", false);
-        mapLocal = prefs.getBoolean("map_Local", false);
-        showHtMessage = prefs.getBoolean("show_Toast", false);
+        String showPosition = prefs.getString("show_position", "online");
+        mapLocal = showPosition.equals("offline");
+        showHeightMessage = prefs.getBoolean("show_Toast", false);
         emailString = prefs.getString("email_String", "");
 
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "271, onResume(), darkScreen: " + darkScreen);
         if (screenOrientL) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
@@ -284,11 +271,6 @@ public class MyPositionActivity
             // nothing
         }
 
-        // Get location self permission state
-        locationPermGranted = isFineLocPermGranted();
-
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
-        df.setTimeZone(TimeZone.getDefault());
         tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
         tvDegreeCoord = findViewById(R.id.tvDegreeCoord);
         tvLocation = findViewById(R.id.tvLocation);
@@ -309,31 +291,33 @@ public class MyPositionActivity
         shareDegree.setOnClickListener(this);
         shareMessage.setOnClickListener(this);
 
+        if (isFirstStart) {
+            // This is to remind a missing email address for Nominatim Reverse Geocoder.
+            //   Info about the first GPS lock is handled in LocationService onLocationChanged().
+            if (Objects.equals(emailString, "")) {
+                String mesg = getString(R.string.missingEmail);
+                Toast.makeText(this, // orange
+                        fromHtml("<font color='#ff6000'>" + mesg + "</font>"),
+                        Toast.LENGTH_SHORT).show();
+            }
+            isFirstStart = false;
+        }
+
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "312, onResume(), locationPermGranted: " + locationPermGranted);
+            Log.i(TAG, "307, onResume(), locationPermGranted: " + locationPermGranted);
 
         // Get location with permissions check
-        locationDispatcher(1);
+        locationPermGranted = isFineLocPermGranted();
+        if (locationPermGranted)
+            locationDispatcher(1); // get location with data
     }
     // End of onResume()
-
-    @SuppressLint("ApplySharedPref")
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
 
     public void onStop() {
         super.onStop();
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "329, onStop()");
-
-        // Stop location service with permissions check
-        locationDispatcher(2);
-
-        // Stop RetrieveAddrRunner
-        WorkManager.getInstance(this).cancelAllWork();
+            Log.i(TAG, "320, onStop()");
 
         shareLocation.setOnClickListener(null);
         shareDecimal.setOnClickListener(null);
@@ -347,7 +331,14 @@ public class MyPositionActivity
         super.onDestroy();
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "349, onDestroy()");
+            Log.i(TAG, "334, onDestroy()");
+
+        // Stop location service with permissions check
+        locationDispatcher(2);
+
+        // Stop RetrieveAddrRunner
+        WorkManager.getInstance(this).cancelAllWork();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -380,23 +371,16 @@ public class MyPositionActivity
             intent = new Intent(MyPositionActivity.this, MyPositionActivity.class);
             intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
         }
         if (id == R.id.menu_help) {
-            locationDispatcher(2); // stop location service
-
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "help");
             startActivity(intent);
         } else if (id == R.id.menu_about) {
-            locationDispatcher(2); // stop location service
-
             intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
             intent.putExtra("dialog", "about");
             startActivity(intent);
         } else if (id == R.id.menu_settings) {
-            locationDispatcher(2); // stop location service
-
             intent = new Intent(MyPositionActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.menu_viewmap) {
@@ -422,10 +406,8 @@ public class MyPositionActivity
                         Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.menu_converter) {
-            // Stop location service
-            locationDispatcher(2);
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "423, Start ConverterAct");
+                Log.i(TAG, "410, Start ConverterAct");
 
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
@@ -442,41 +424,52 @@ public class MyPositionActivity
     public void locationDispatcher(int locationDispatcherMode) {
         if (locationPermGranted) {
             switch (locationDispatcherMode) {
-                case 1 -> // get location data
-                        getLoc();
+                case 1 -> {
+                    if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                        Log.i(TAG, "429, locationDispatcher(1)");
+                    // get location with data
+                    getLoc();
+                    getData();
+                }
                 case 2 -> {
+                    if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                        Log.i(TAG, "436 locationDispatcher(2)");
                     // stop location service
                     if (locServiceOn) {
                         locationService.stopListener(); // .stopListener(this)
                         Intent sIntent = new Intent(this, LocationService.class);
                         stopService(sIntent);
                         locServiceOn = false;
-                        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                            Log.i(TAG, "452, locationDispatcher(), Stop locationService");
                     }
                 }
             }
         }
     }
 
-    // get the location data
+    // Get the location
     public void getLoc() {
-        locationService = new LocationService(this);
-        Intent sIntent = new Intent(this, LocationService.class);
-        startService(sIntent);
-        locServiceOn = true;
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "452 getLoc()");
+        if (!locServiceOn) {
+            locationService = new LocationService(this);
+            Intent sIntent = new Intent(this, LocationService.class);
+            startService(sIntent);
+            locServiceOn = true;
+        }
+        if (locationService.canGetLocation()) {
+            locationService.getLongitude(); // -> lon
+            locationService.getLatitude();  // -> lat
+            locationService.getAltitude();  // -> heightGPS, corrHeight, heightNN
+            locationService.getAccuracy();  // -> uncertainty
+        }
+    }
 
+    // Get the location data
+    public void getData() {
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "470 getData()");
         StringBuilder sb;
         if (locationService.canGetLocation()) {
-            locationService.getLongitude();
-            locationService.getLatitude();
-            double gpsHeight;
-            gpsHeight = locationService.getAltitude();
-            if (gpsHeight != 0) {
-                height = correctHeight(gpsHeight);
-            }
-            locationService.getAccuracy();
-
             String nord = getString(R.string.nord);
             String east = getString(R.string.east);
             String west = getString(R.string.west);
@@ -497,30 +490,30 @@ public class MyPositionActivity
 
             sb = new StringBuilder();
 
-            @SuppressLint("DefaultLocale") String lattemp = String.format("%.5f", lat); // warnings not relevant here
-            @SuppressLint("DefaultLocale") String lontemp = String.format("%.5f", lon);
-            @SuppressLint("DefaultLocale") String heighttemp = String.format("%.1f", height);
-            @SuppressLint("DefaultLocale") String uncerttemp = String.format("%.1f", uncertainty);
+            @SuppressLint("DefaultLocale") String tempLat = String.format("%.5f", lat); // warnings not relevant here
+            @SuppressLint("DefaultLocale") String tempLon = String.format("%.5f", lon);
+            @SuppressLint("DefaultLocale") String tempHeight = String.format("%.1f", heightNN);
+            @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
 
             String language = Locale.getDefault().toString().substring(0, 2);
 
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
             if (language.equals("de") || language.equals("es") || language.equals("fr")
                     || language.equals("it") || language.equals("nl") || language.equals("pt")) {
-                lattemp = lattemp.replace('.', ',');
-                lontemp = lontemp.replace('.', ',');
-                heighttemp = heighttemp.replace('.', ',');
-                uncerttemp = uncerttemp.replace('.', ',');
+                tempLat = tempLat.replace('.', ',');
+                tempLon = tempLon.replace('.', ',');
+                tempHeight = tempHeight.replace('.', ',');
+                tempUncert = tempUncert.replace('.', ',');
 
-                sb.append(lattemp).append(" ").append(directionNS).append(",   ")
-                        .append(lontemp).append(" ").append(directionEW).append("\n")
-                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                        .append(high).append(" ").append(heighttemp).append(" m");
+                sb.append(tempLat).append(" ").append(directionNS).append(",   ")
+                        .append(tempLon).append(" ").append(directionEW).append("\n")
+                        .append(uncert).append(" ").append(tempUncert).append(" m,   ")
+                        .append(high).append(" ").append(tempHeight).append(" m");
             } else {
-                sb.append(directionNS).append(" ").append(lattemp).append(",   ")
-                        .append(directionEW).append(" ").append(lontemp).append("\n")
-                        .append(uncert).append(" ").append(uncerttemp).append(" m,   ")
-                        .append(high).append(" ").append(heighttemp).append(" m");
+                sb.append(directionNS).append(" ").append(tempLat).append(",   ")
+                        .append(directionEW).append(" ").append(tempLon).append("\n")
+                        .append(uncert).append(" ").append(tempUncert).append(" m,   ")
+                        .append(high).append(" ").append(tempHeight).append(" m");
             }
 
         } else {
@@ -529,7 +522,7 @@ public class MyPositionActivity
 
         // Get reverse geocoding formatted string for message
         // String addressLines1;
-        if (locationService.canGetLocation() && (lat != 0 || lon != 0)) {
+        if (locationService.canGetLocation() && (lat != 0.0 || lon != 0.0)) {
             tvDecimalCoord.setText(sb.toString());
             tvDegreeCoord.setText(toDegree());
 
@@ -548,6 +541,7 @@ public class MyPositionActivity
                     new OneTimeWorkRequest.Builder(RetrieveAddrRunner.class)
                             .setInputData(new Data.Builder()
                                     .putString("URL_STRING", urlString)
+                                    .putBoolean("LOC_SERVICE", false)
                                     .build()
                             )
                             .build();
@@ -585,33 +579,11 @@ public class MyPositionActivity
             tvLocation.setText(addressLines);
             tvMessage.setText(addressLines);
         }
-    }
-    // End of calcLoc()
 
-    public double correctHeight(double gpsHeight) {
-        double corrHeight;
-        double nnHeight;
-
-        EarthGravitationalModel gh = new EarthGravitationalModel();
-        try {
-            gh.load(this); // load the WGS84 correction coefficient table egm180.txt
-        } catch (IOException e) {
-            return 0;
-        }
-
-        // Calculate the offset between the ellipsoid and geoid
-        try {
-            corrHeight = gh.heightOffset(lat, lon, gpsHeight);
-        } catch (Exception e) {
-            return 0;
-        }
-
-        nnHeight = gpsHeight + corrHeight;
-
-        if (showHtMessage) {
+        if (showHeightMessage) {
             @SuppressLint("DefaultLocale") String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
-            @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", gpsHeight);
-            @SuppressLint("DefaultLocale") String nntemp = String.format("%.1f", nnHeight);
+            @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", heightGPS);
+            @SuppressLint("DefaultLocale") String nntemp = String.format("%.1f", heightNN);
 
             String language = Locale.getDefault().toString().substring(0, 2);
             // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
@@ -627,11 +599,13 @@ public class MyPositionActivity
             // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
             showSnackbarHeight(hToast + "\n\n");
         }
-        return nnHeight;
     }
+    // End of getData()
 
     // Convert to degree
     private String toDegree() {
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "608 toDegree()");
         String language = Locale.getDefault().toString().substring(0, 2);
         StringBuilder stringb = new StringBuilder();
         LatLonConvert convert = new LatLonConvert(lat);
@@ -709,6 +683,8 @@ public class MyPositionActivity
 
     // Show message to share
     private String getMessage(String messageHeader, String adrlines) {
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i(TAG, "687 getMessage to share()");
         StringBuilder message = new StringBuilder();
         String geoLoc = getApplicationContext().getString(R.string.geoloc);
         String uncert = getApplicationContext().getString(R.string.uncert);
@@ -723,7 +699,7 @@ public class MyPositionActivity
 
         @SuppressLint("DefaultLocale") String tempLat = String.format("%.5f", lat); // warnings not relevant here
         @SuppressLint("DefaultLocale") String tempLon = String.format("%.5f", lon);
-        @SuppressLint("DefaultLocale") String tempHigh = String.format("%.1f", height);
+        @SuppressLint("DefaultLocale") String tempHigh = String.format("%.1f", heightNN);
         @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
 
         String language = Locale.getDefault().toString().substring(0, 2);
@@ -804,7 +780,7 @@ public class MyPositionActivity
     }
 
     // Blue height message with button to dismiss
-    private void showSnackbarHeight(String str) {
+    public void showSnackbarHeight(String str) {
         baseLayout = findViewById(R.id.baseLayout);
         Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_INDEFINITE);
         TextView tv = sB.getView().findViewById(R.id.snackbar_text);

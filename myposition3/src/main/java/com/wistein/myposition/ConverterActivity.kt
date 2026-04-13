@@ -55,7 +55,7 @@ import kotlin.math.sqrt
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2026-02-19
+ * Last edited on 2026-04-13
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -83,10 +83,9 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "85, onCreate()")
+            Log.i(TAG, "86, onCreate()")
         val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
-        val darkScreen = prefs.getBoolean("dark_Screen", false)
 
         requestedOrientation = if (screenOrientL) {
             ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -94,14 +93,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
             ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        if (darkScreen)
-        {
-            setTheme(R.style.AppTheme_Dark)
-        }
-        else
-        {
-            setTheme(R.style.AppTheme_Light)
-        }
+        setTheme(R.style.AppTheme_Dark)
 
         super.onCreate(savedInstanceState)
 
@@ -197,7 +189,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     {
         super.onDestroy()
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "195, onDestroy()")
+            Log.i(TAG, "192, onDestroy()")
 
         // All following instructions don't prohibit memory leak of ConverterActivity
         buttonCalc1.setOnClickListener(null)

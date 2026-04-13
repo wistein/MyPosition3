@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Last edited 2025-11-09 -->
+<!-- Last edited 2026-03-30 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -19,37 +19,32 @@
     <EditTextPreference
         android:key="email_String"
         android:title="@string/titel_email_string"
-        android:icon="@drawable/ic_email_black_48dp"
+        android:icon="@drawable/ic_email_white_48dp"
         android:summary="@string/email_string"
         />
 
-    <CheckBoxPreference
-        android:key="map_Local"
+    <ListPreference
+        android:defaultValue="online"
+        android:dialogTitle="@string/map_string_title"
+        android:entries="@array/pref_show_position_entries"
+        android:entryValues="@array/pref_show_position_values"
+        android:icon="@drawable/ic_menu_mapmode_white"
+        android:key="show_position"
         android:title="@string/titel_map_string"
-        android:icon="@drawable/ic_menu_mapmode_ni"
-        android:summary="@string/map_string"
-        />
-
-    <CheckBoxPreference
-        android:id="@+id/checkBoxDark"
-        android:key="dark_Screen"
-        android:title="@string/titel_darkScreen"
-        android:icon="@drawable/ic_dark_portrait_48dp"
-        android:onClick="checkBoxDark"
-        android:summary="@string/darkScreen"
+        android:summary="@string/map_string_summary"
         />
 
     <CheckBoxPreference
         android:key="screen_Orientation"
         android:title="@string/titel_screen_orientation"
-        android:icon="@drawable/ic_rot_portr_landsc_black_48dp"
+        android:icon="@drawable/ic_rot_portr_landsc_white_48dp"
         android:summary="@string/screen_orientation"
         />
 
     <CheckBoxPreference
         android:key="show_Toast"
         android:title="@string/titel_toast_string"
-        android:icon="@drawable/ic_speaker_notes_black_48dp"
+        android:icon="@drawable/ic_speaker_notes_white_48dp"
         android:summary="@string/toast_string"
         />
 

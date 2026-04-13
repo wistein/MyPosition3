@@ -29,6 +29,18 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
+<B>Mein Standort, Version 1.5.0,</B> 13.04.2026<br>
+- Code verbessert<br>
+- Bugfixe<br>
+<br>
+
+<B>Mein Standort, Version 1.4.9,</B> 01.04.2026<br>
+- Anpassung an die neuen Erfordernisse des Nominatim-Service von OpenStreetMap.<br>
+- Menü der App angepasst<br>
+- App nur noch in dunklem Design<br>
+- Nach 1. GPS-Fix werden die Adress-Daten des Nominatim-Service unaufgefordert angezeigt<br>
+<br>
+
 <B>Mein Standort, Version 1.4.8,</B> 23.01.2026<br>
 - Fehlermeldungen in rot.<br>
 - Einige Textstellen korrigiert<br>

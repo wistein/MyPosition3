@@ -7,11 +7,12 @@ plugins {
 
 android {
     namespace 'com.wistein.myposition'
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId "com.wistein.myposition"
         minSdk = 25
+        //noinspection OldTargetApi
         targetSdk = 36
         versionCode = 150
         versionName = "1.5.0"
@@ -58,7 +59,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.13.0' // new
     implementation 'androidx.annotation:annotation-jvm:1.10.0'
     implementation 'androidx.fragment:fragment-ktx:1.8.9'
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
 // Activate (uncomment) the following line when LeakCanary should run in debug builds.
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'

@@ -3,14 +3,18 @@ package com.wistein.myposition
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+
 import com.wistein.myposition.MyPosition.Companion.addressLines
+
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+
 import javax.net.ssl.HttpsURLConnection
 
 /***************************************************************************************
@@ -34,7 +38,7 @@ import javax.net.ssl.HttpsURLConnection
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2026-04-01
+ * last edited on 2026-05-24
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -49,7 +53,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
         val urlString = inputData.getString("URL_STRING") ?: return Result.failure()
 
         // locService: true set by LocationService, false set by MyPositionActivity
-        val locService = inputData.getBoolean("LOC_SERVICE", defaultValue = false)
+        val locService = inputData.getBoolean("LOC_SERVICE", false)
 
         // Get app version number for User-Agent (requested parameter for Nominatim service)
         val lastVersion = prefs.getString("PREFS_VERSION_KEY", "")
@@ -70,10 +74,9 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
             val status = urlConnection.responseCode
 
             // Handle connection error
-            if (status != HttpsURLConnection.HTTP_OK) // Error
-            {
+            if (status != HttpsURLConnection.HTTP_OK) {
                 if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                    Log.e(rTag, "76, Nominatim status: $status")
+                    Log.e(rTag, "79, Nominatim status: $status")
 
                 urlConnection.disconnect()
                 return Result.failure()
@@ -82,14 +85,14 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
             // Get the XML from input stream of Nominatim
             val iStream = urlConnection.inputStream
             val reader = BufferedReader(InputStreamReader(iStream))
-            var line: String?
+            var line: String? = ""
             try {
                 while (reader.readLine().also { line = it } != null) {
                     sb.append(line).append('\n')
                 }
             } catch (e: IOException) {
                 if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                    Log.e(rTag, "92, Problem converting Stream to String: $e")
+                    Log.e(rTag, "96, Problem converting Stream to String: $e")
             } finally {
                 reader.close()
                 iStream.close()
@@ -97,7 +100,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
         } catch (e: IOException) {
             // SocketTimeoutException without email
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(rTag, "100, Problem with internet address handling: $e")
+                Log.e(rTag, "104, Problem with internet address handling: $e")
             addressLines = R.string.unknownAddr.toString()
         } finally {
             urlConnection.disconnect()
@@ -142,10 +145,10 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 msg.append("\n")
             }
 
-            if (xmlString.contains(">de<") || xmlString.contains(">fr<") || xmlString.contains(">ch<") || xmlString.contains(
-                    ">at<"
-                ) || xmlString.contains(">it<")
-            ) {
+            if (xmlString.contains(">de<") || xmlString.contains(">fr<")
+                || xmlString.contains(">ch<") || xmlString.contains(">at<")
+                || xmlString.contains(">it<")) {
+
                 // 2. line: road or street, house-No.
                 if (xmlString.contains("<road>")) {
                     sstart = xmlString.indexOf("<road>") + 6
@@ -362,11 +365,8 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
             val intent = Intent(applicationContext, MyPositionActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             applicationContext.startActivity(intent)
-            return Result.failure()
-        } else {
-            // If called from MyPositionActivity just return
-            return Result.success()
         }
+        return Result.success()
     }
 
 }

@@ -80,7 +80,7 @@ import java.util.Objects;
  * <p>
  * Adopted 2019 by wistein for MyPosition3
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
- * last edited on 2026-04-13
+ * last edited on 2026-05-14
  */
 public class MyPositionActivity
         extends AppCompatActivity
@@ -325,20 +325,26 @@ public class MyPositionActivity
         shareMessage.setOnClickListener(null);
 
         baseLayout.invalidate();
+
+        // Stop Services when app is finished but not yet destroyed
+        if (!TCLifecycleHandler.isApplicationVisible()) {
+            // Stop location service with permissions check
+            locationDispatcher(2);
+
+            // Stop RetrieveAddrRunner
+            WorkManager.getInstance(this).cancelAllWork();
+
+            finishAndRemoveTask();
+        }
     }
 
     public void onDestroy() {
         super.onDestroy();
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "334, onDestroy()");
+            Log.i(TAG, "345, onDestroy()");
 
-        // Stop location service with permissions check
-        locationDispatcher(2);
-
-        // Stop RetrieveAddrRunner
-        WorkManager.getInstance(this).cancelAllWork();
-
+        System.exit(0);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -407,7 +413,7 @@ public class MyPositionActivity
             }
         } else if (id == R.id.menu_converter) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "410, Start ConverterAct");
+                Log.i(TAG, "416, Start ConverterAct");
 
             intent = new Intent();
             intent.setClass(MyPositionActivity.this, ConverterActivity.class);
@@ -426,14 +432,14 @@ public class MyPositionActivity
             switch (locationDispatcherMode) {
                 case 1 -> {
                     if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG, "429, locationDispatcher(1)");
+                        Log.i(TAG, "435, locationDispatcher(1)");
                     // get location with data
                     getLoc();
                     getData();
                 }
                 case 2 -> {
                     if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG, "436 locationDispatcher(2)");
+                        Log.i(TAG, "442 locationDispatcher(2)");
                     // stop location service
                     if (locServiceOn) {
                         locationService.stopListener(); // .stopListener(this)
@@ -449,7 +455,7 @@ public class MyPositionActivity
     // Get the location
     public void getLoc() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "452 getLoc()");
+            Log.i(TAG, "458 getLoc()");
         if (!locServiceOn) {
             locationService = new LocationService(this);
             Intent sIntent = new Intent(this, LocationService.class);
@@ -467,7 +473,7 @@ public class MyPositionActivity
     // Get the location data
     public void getData() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "470 getData()");
+            Log.i(TAG, "476 getData()");
         StringBuilder sb;
         if (locationService.canGetLocation()) {
             String nord = getString(R.string.nord);
@@ -497,7 +503,7 @@ public class MyPositionActivity
 
             String language = Locale.getDefault().toString().substring(0, 2);
 
-            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
             if (language.equals("de") || language.equals("es") || language.equals("fr")
                     || language.equals("it") || language.equals("nl") || language.equals("pt")) {
                 tempLat = tempLat.replace('.', ',');
@@ -548,7 +554,7 @@ public class MyPositionActivity
             WorkManager.getInstance(getApplicationContext()).enqueue(retrieveAddrWorkRequest);
 
             // Format TextView tvMessage,
-            //   delayed for getting the result of WorkRequest
+            //   delayed for getting the result of retrieveAddrWorkRequest
             final Handler m2Handler = new Handler(Looper.getMainLooper());
             final Runnable r2 = new Runnable() {
                 String addressLines1;
@@ -586,7 +592,7 @@ public class MyPositionActivity
             @SuppressLint("DefaultLocale") String nntemp = String.format("%.1f", heightNN);
 
             String language = Locale.getDefault().toString().substring(0, 2);
-            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
             if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
                 corrtemp = corrtemp.replace('.', ',');
                 gpstemp = gpstemp.replace('.', ',');
@@ -605,7 +611,7 @@ public class MyPositionActivity
     // Convert to degree
     private String toDegree() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "608 toDegree()");
+            Log.i(TAG, "614 toDegree()");
         String language = Locale.getDefault().toString().substring(0, 2);
         StringBuilder stringb = new StringBuilder();
         LatLonConvert convert = new LatLonConvert(lat);
@@ -626,7 +632,7 @@ public class MyPositionActivity
         else
             directionEW = west;
 
-        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
         if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
             stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
             stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
@@ -684,7 +690,7 @@ public class MyPositionActivity
     // Show message to share
     private String getMessage(String messageHeader, String adrlines) {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "687 getMessage to share()");
+            Log.i(TAG, "693 getMessage to share()");
         StringBuilder message = new StringBuilder();
         String geoLoc = getApplicationContext().getString(R.string.geoloc);
         String uncert = getApplicationContext().getString(R.string.uncert);
@@ -703,7 +709,7 @@ public class MyPositionActivity
         @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
 
         String language = Locale.getDefault().toString().substring(0, 2);
-        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in mumbers
+        // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
         if (language.equals("de") || language.equals("es") || language.equals("fr")
                 || language.equals("it") || language.equals("nl") || language.equals("pt")) {
             tempLat = tempLat.replace('.', ',');

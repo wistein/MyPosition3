@@ -28,7 +28,7 @@ import androidx.preference.PreferenceManager
  * Copyright (c) 2016-2026, Wilhelm Stein, Bonn, Germany.
  * Last edited in Java on 2025-02-05,
  * converted to Kotlin on 2025-02-05,
- * last edited on 2026-04-13
+ * last edited on 2026-05-14
  */
 class MyPosition : Application() {
     override fun onCreate() {
@@ -50,6 +50,9 @@ class MyPosition : Application() {
         }
 
         prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        // Initiate ActivityLifecycle for stopping periodic location requests
+        registerActivityLifecycleCallbacks(TCLifecycleHandler())
     }
     // End of onCreate()
 

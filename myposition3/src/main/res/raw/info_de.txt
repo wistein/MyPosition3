@@ -1,8 +1,16 @@
 <h4>Beschreibung</h4>
 <b>Mein Standort</b> erlaubt die Übermittlung der aktuellen Position an Deine Kontakte.<br>
-Die App bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der Höhe über NN.<br>
+Die App bestimmt den aktuellen Standort mit Adressdaten und zugehörigen GPS-Koordinaten einschließlich der korrigierten Höhe über NN.<br>
+<br>
+
+<h4>Neue Android-Einschränkungen durch Google</h4>
+Google hat angekündigt, dass ab September 2026 alle Apps auf regulären Android-Geräten nur noch funktionieren, wenn die Entwickler sich bei Google registrieren, eine Gebühr bezahlen und ihre offiziellen Identitätsdaten direkt an Google übermitteln.<br>
+Als privater Entwickler dieser datenschutzkonformen Open-Source-App stimme ich dieser Anforderung von Google nicht zu. Deshalb wird leider diese App ab diesem Zeitpunkt auf regulären Android-Geräten möglicherweise nicht mehr ohne besondere Vorkehrungen funktionieren. Mehr Information dazu siehe https://keepandroidopen.org/.<br>
+<br>
+
+<h4>Eigenschaften</h4>
 Dein Standort kann auf einer Karte angezeigt werden, entweder lokal (falls eine passende App installiert ist oder im Browser bei OpenStreetMap.<br>
-Mittels Abfrage des Reverse Geocoding von OpenStreetMap werden Adress-Informationen in zumeist landespezifischem Format angezeigt. Dazu wird, für einen zuverlässigen Dienst und als Vorbeugung gegen Missbrauch, Deine E-Mail-Adresse erwünscht und nur zu diesem Zweck verwendet (siehe https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br> 
+Mittels Abfrage des Reverse Geocoding von OpenStreetMap werden Adress-Informationen in zumeist landespezifischem Format angezeigt. Dazu wird, für einen zuverlässigen Dienst und als Vorbeugung gegen Missbrauch, Deine E-Mail-Adresse erwünscht und nur zu diesem Zweck verwendet (siehe https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
 Die App kann in Deutsch oder Englisch verwendet werden und zeigt auch die Zahlenformate entsprechend an.<br>
 Es werden zwei GPS-Koordinatenformate unterstützt: <br>
 WGS84 Dezimal-Koordinaten und <br>
@@ -29,7 +37,7 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>Historie</h4>
 
-<B>Mein Standort, Version 1.5.0,</B> 13.04.2026<br>
+<B>Mein Standort, Version 1.5.0,</B> 24.05.2026<br>
 - Code verbessert<br>
 - Bugfixe<br>
 <br>
@@ -162,15 +170,16 @@ https://github.com/wistein/MyPosition3<BR>
 
 <B>Mein Standort, Version 1.3.0</B>, 11.04.2017,<br>
 Copyright 2017 by wistein,<br>
-Lizenziert unter der GNU GPLv2 oder neuer.<br>
- - umfasst Code-Korrekturen und Ergänzungen,<br>
+ - Lizenz: GNU GPLv2<br>
+ - Basiert auf dem Code von myLocation 1.2 mit den folgenden Änderungen:<br>
+ - Code-Korrekturen und Ergänzungen,<br>
  - funktioniert ohne Google Apps (GApps),<br>
  - unterbricht bzw. beendet GPS-Nutzung bei App-Unterbrechung oder -Beendung,<br> 
  - verwendet zur Adressanzeige Reverse-Geocoding von OpenStreetMap,<br>
  - nutzt dazu optional eine einstellbare E-Mail-Adresse, wie von OpenStreetMap empfohlen,<br>
- - länderspezifische Darstellung der Adressinfo (at, ch, de, fr, it, Rest der Welt),<br>
- - sprachspezifische Anpassung der Texte (Deutsch, Englisch) und,<br>
- - sprachspezifische Anpassung der Zahlendarstellung (Deutsch, Englisch).<br>
+ - Systemsprach-spezifische Darstellung der Adressinfo,<br>
+ - sprachspezifische Anpassung der Texte (de Deutsch, andere Englisch) und,<br>
+ - sprachspezifische Anpassung der Zahlenformate ("." Englisch, "," andere, ".").<br>
  - App-Icon von wistein.<br>
 <br>
 

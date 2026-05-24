@@ -1,6 +1,16 @@
 <h4>Description</h4>
 <b>My Position</b> simplifies the task of sharing your position data with your contacts.<br>
-The application determines the current location with address data and GPS coordinates including height above sea-level.<br>
+The application determines the current location with address data and GPS coordinates including corrected height above sea-level.<br>
+<br>
+
+<h4>New Google restrictions</h4>
+Unfortunately, Google is enforcing its monopoly position as they decided to restrict the use of free Android software.
+Starting September 2026, a silent update, nonconsensually pushed by Google, will block every Android app whose developers have not registered with Google, signed their contract, paid up a fee, and handed over their government ID.
+I am NOT willing to accept neither these registration conditions nor the procedure.
+For more background on this and how to overcome the restriction you may visit https://keepandroidopen.org/.<br>
+<br>
+
+<h4>Features</h4>
 Your location may be shown on a map either local (if a suitable app is installed and the default setting of Google Maps is changed) or by browser on OpenStreetMap.<br>
 Per Reverse Geocoding by OpenStreetMap query it shows local address info in most cases in a country-specific representation. To achieve this by a more reliable service and for protection against abuse it optionally takes your provided email address (see https://wiki.openstreetmap.org/wiki/Nominatim#Reverse_Geocoding).<br>
 It introduces localized strings and considers localized number formats for German and English.<br>
@@ -29,7 +39,7 @@ https://github.com/wistein/MyPosition3<BR>
 
 <h4>History</h4>
 
-<B>My Position, version 1.5.0,</B> 2026-04-13<br>
+<B>My Position, version 1.5.0,</B> 2026-05-24<br>
 - Code improved<br>
 - Bugfixes<br>
 <br>

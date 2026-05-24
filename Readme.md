@@ -4,6 +4,14 @@
  
 Share your location, easily.  
 The app simplifies the task of sharing your location data with your contacts.
+I have been developing it for myself and published it, so it can be freely used by anyone who likes to.
+The software is privacy conscious as it does not make use of Google Play Services or other tracking functions.
+
+### New Google restrictions
+Unfortunately, Google is enforcing its monopoly position as they decided to restrict the use of free Android software.
+Starting September 2026, a silent update, nonconsensually pushed by Google, will block every Android app whose developers have not registered with Google, signed their contract, paid up a fee, and handed over their government ID.
+I am NOT willing to accept neither these registration conditions nor the procedure.
+For more background on this and how to overcome the restriction you may visit https://keepandroidopen.org/.
 
 ### Features
 - My Position determines the current location with address data and GPS coordinates including height above sea-level. 
@@ -38,7 +46,7 @@ Since versions 1.3.0 to current version, copyright by wistein, 2017-2026,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
-<B>My Position, version 1.5.0,</B> 2026-04-13<br>
+<B>My Position, version 1.5.0,</B> 2026-05-24<br>
 - Code improved<br>
 - Bugfixes<br>
 <br>
@@ -169,15 +177,17 @@ https://github.com/wistein/MyPosition3<BR>
 <br>
  
 <B>My Position version 1.3.0</B>, 2017-04-11<br> 
-Copyright 2017 by wistein,<br>
-  - Based on the code of myLocation 1.2 with the following changes:
+Copyright 2017-2026 by wistein,<br>
+  - License: GNU GPLv2<br>
+  - Based on the code of myLocation 1.2 with the following changes:<br>
   - Code corrections and enhancements<br>
   - Works without Google Apps GApps<br>
   - Interrupts GPS usage when app pauses or ends GPS usage when app terminates<br>
   - Reverse geocoding for address info by Nominatim service of OpenStreetMap<br>
   - Optional email address as parameter for polling the reverse geocoding service as demanded by OpenStreetMap (for reliable service)<br>
-  - Localization for German and English (default) of text and number formats<br>
-  - Country-specific representation of address info (at, ch, de, fr, it, rest of the world)<br>
+  - System language-specific representation of address info,<br>
+  - Localization of text (de German, others English) and<br>
+  - Localization of number formats ("." English, "," others<br>
   - App-Icon by wistein<br>
 <br>
 
@@ -187,5 +197,5 @@ Copyright 2012 by Mohammad Hafiz Ismail<br>
 http://code.google.com/p/mylocation/<br>
 Changes and enhancements by GDR!<br>
 https://github.com/gjedeer/mylocation/<br>
-License: GNU GPLv2
-<BR>
+License: GNU GPLv2.<br>>
+<br>

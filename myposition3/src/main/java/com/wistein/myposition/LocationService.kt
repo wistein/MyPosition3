@@ -13,11 +13,13 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
+
 import androidx.core.app.ActivityCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+
 import com.wistein.egm.EarthGravitationalModel
 import com.wistein.myposition.MyPosition.Companion.corrHeight
 import com.wistein.myposition.MyPosition.Companion.heightGPS
@@ -27,6 +29,7 @@ import com.wistein.myposition.MyPosition.Companion.lat
 import com.wistein.myposition.MyPosition.Companion.lon
 import com.wistein.myposition.MyPosition.Companion.uncertainty
 import com.wistein.myposition.Utils.fromHtml
+
 import java.io.IOException
 
 /***************************************************************************************
@@ -46,7 +49,7 @@ import java.io.IOException
  * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-04-13
+ * last edited on 2026-05-14
  */
 open class LocationService : Service, LocationListener {
     companion object {
@@ -84,7 +87,7 @@ open class LocationService : Service, LocationListener {
 
     fun getLocation() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "87, getLocation()")
+            Log.i(TAG, "90, getLocation()")
         locationAttributionContext =
             if (Build.VERSION.SDK_INT >= 30)
                 mContext!!.createAttributionContext("locationCheck")
@@ -173,7 +176,7 @@ open class LocationService : Service, LocationListener {
             }
         } catch (e: Exception) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(TAG, "176, getLocation() $e")
+                Log.e(TAG, "179, getLocation() $e")
         }
     }
 
@@ -199,7 +202,7 @@ open class LocationService : Service, LocationListener {
     // Stop location service
     fun stopListener() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "202, stopListener()")
+            Log.i(TAG, "205, stopListener()")
         try {
             if (locationManager != null) {
                 locationManager!!.removeUpdates(this@LocationService)
@@ -208,7 +211,7 @@ open class LocationService : Service, LocationListener {
             }
         } catch (e: Exception) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(TAG, "211, StopListener: $e")
+                Log.e(TAG, "214, StopListener: $e")
         }
     }
 
@@ -250,7 +253,7 @@ open class LocationService : Service, LocationListener {
         // Ask Nominatim service just once on app start
         if (isFirstLoc && lat != 0.0) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "253, onLocationChanged")
+                Log.i(TAG, "256, onLocationChanged")
 
             isFirstLoc = false
 

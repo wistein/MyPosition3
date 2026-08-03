@@ -92,7 +92,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                 }
             } catch (e: IOException) {
                 if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                    Log.e(rTag, "96, Problem converting Stream to String: $e")
+                    Log.e(rTag, "95, Problem converting Stream to String: $e")
             } finally {
                 reader.close()
                 iStream.close()
@@ -100,7 +100,7 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
         } catch (e: IOException) {
             // SocketTimeoutException without email
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(rTag, "104, Problem with internet address handling: $e")
+                Log.e(rTag, "103, Problem with internet address handling: $e")
             addressLines = R.string.unknownAddr.toString()
         } finally {
             urlConnection.disconnect()

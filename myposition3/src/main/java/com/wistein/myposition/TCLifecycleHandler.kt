@@ -9,14 +9,12 @@ import android.util.Log
  * TCLifecycleHandler controls the state of all activities and check if your application
  * is in foreground or background.
  * Needed to stop the app with clean memory.
- * 
- * 
- * Based on [...](https://stackoverflow.com/questions/3667022/)
+ *
+ * Based on https://stackoverflow.com/questions/3667022/
  * checking-if-an-android-application-is-running-in-the-background/13809991#13809991
- * 
- * 
+ *
  * Adopted for MyPosition3 by wmstein on 2026-05-14,
- * Last edited on 2026-05-14
+ * Last edited on 2026-08-03
  */
 class TCLifecycleHandler : ActivityLifecycleCallbacks {
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
@@ -36,16 +34,15 @@ class TCLifecycleHandler : ActivityLifecycleCallbacks {
 
     override fun onActivityStarted(activity: Activity) {
         started++
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG) Log.i(
-            "TCLifecycleHandler ", "Application started: $started"
-        )
+        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+            Log.i("TCLifecycleHandler ", "48, Application started: $started")
     }
 
     override fun onActivityStopped(activity: Activity) {
         stopped++
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG) {
-            Log.i("TCLifecycleHandler: ", "Application stopped: $stopped")
-            Log.i("TCLifecycleHandler: ", "Application is visible: " + (started > stopped))
+            Log.i("TCLifecycleHandler: ", "44, Application stopped: $stopped")
+            Log.i("TCLifecycleHandler: ", "45, Application is visible: " + (started > stopped))
         }
     }
 

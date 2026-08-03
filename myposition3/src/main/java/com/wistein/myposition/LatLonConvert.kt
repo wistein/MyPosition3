@@ -42,7 +42,7 @@ import kotlin.math.round
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-01-23.
+ * last edited on 2026-05-29
  */
 internal class LatLonConvert {
     // declare local variables used throughout the class
@@ -63,7 +63,7 @@ internal class LatLonConvert {
      * --------------------------------------------------------------------------*/
     // This constructor converts decimal degrees to degrees/minutes/seconds
     constructor(dfDecimalIn: Double) {
-        // load local variables
+        // load local variable
         dfDecimal = dfDecimalIn
 
         // call appropriate conversion method

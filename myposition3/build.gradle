@@ -1,5 +1,5 @@
 // Build file where you can add configuration options for the module.
-// Last edited on 2026-03-30
+// Last edited on 2026-07-06
 
 plugins {
     id 'com.android.application'
@@ -12,10 +12,9 @@ android {
     defaultConfig {
         applicationId "com.wistein.myposition"
         minSdk = 25
-        //noinspection OldTargetApi
-        targetSdk = 36
-        versionCode = 150
-        versionName = "1.5.0"
+        targetSdk = 37
+        versionCode = 151
+        versionName = "1.5.1"
     }
 
     buildTypes {
@@ -55,13 +54,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.work:work-runtime:2.11.2'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.core:core-ktx:1.18.0'
+    implementation 'androidx.core:core-ktx:1.19.0'
     implementation 'androidx.activity:activity-ktx:1.13.0' // new
     implementation 'androidx.annotation:annotation-jvm:1.10.0'
     implementation 'androidx.fragment:fragment-ktx:1.8.9'
     implementation 'com.google.android.material:material:1.14.0'
 
-// Activate (uncomment) the following line when LeakCanary should run in debug builds.
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+// Uncomment the last line when LeakCanary should run in debug builds.
+// Uncomment also corresponding lines in MyPosition.kt
+
+//   debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
 }
 

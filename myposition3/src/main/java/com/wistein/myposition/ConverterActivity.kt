@@ -16,15 +16,19 @@ import android.widget.ScrollView
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import android.widget.Toast
+
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+
 import com.wistein.myposition.MyPosition.Companion.lat
 import com.wistein.myposition.MyPosition.Companion.lon
 import com.wistein.myposition.Utils.fromHtml
+
 import java.text.DecimalFormat
+
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -55,7 +59,7 @@ import kotlin.math.sqrt
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2026-04-13
+ * Last edited on 2026-08-03
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -83,7 +87,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "86, onCreate()")
+            Log.i(TAG, "90, onCreate()")
         val prefs = MyPosition.getPrefs()
         val screenOrientL = prefs.getBoolean("screen_Orientation", false)
 
@@ -189,7 +193,7 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     {
         super.onDestroy()
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "192, onDestroy()")
+            Log.i(TAG, "196, onDestroy()")
 
         // All following instructions don't prohibit memory leak of ConverterActivity
         buttonCalc1.setOnClickListener(null)
@@ -347,16 +351,16 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    fun hideKeyboard(activity: Activity) {
+        val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+        //Find the currently focused view, so we can grab the correct window token from it.
+        val view = checkNotNull(activity.currentFocus)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
     companion object {
         const val TAG: String = "ConverterAct"
-
-        fun hideKeyboard(activity: Activity) {
-            val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-
-            //Find the currently focused view, so we can grab the correct window token from it.
-            val view = checkNotNull(activity.currentFocus)
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
     }
 
 }

@@ -12,7 +12,7 @@ Android Smartphone with high resolution screen (Android 7.1 or higher)
 
 ## Android Studio Components
 Android SDK with
-- Android Platforms: 9, 10, 11, 12, 13, 14, 15
+- Android Platforms: 9, 10, 11, 12, 13, 14, 15, 16, 17
 - SDK Tools: Android Emulator, Android SDK Platform-Tools, Android SDK Tools, Android Support Library, Google USB Driver, Intel x86 Emulator Accelerator, Android Support Repository, Google Repository
 - Plugins: .ignore, Android Support, CVS Integration, EditorConfig, Git Integration, GitHub, Gradle, Groovy, hg4idea, I18n for Java, IntelliLang, Java Bytecode Decompiler, JUnit, Properties Support, SDK Updater, Subversion Integration, Task Management, Terminal 
 
@@ -21,25 +21,27 @@ Android SDK with
 ### build.gradle (MyPosition3)
 - buildscript:
   ext:
-    kotlin_version = '2.0.21' (or higher)
+    kotlin_version = '2.4.0' (or higher)
   repositories:
     mavenCentral()
     google()
   dependencies:
-    classpath 'com.android.tools.build:gradle:8.8.0' (or higher)
+    classpath 'com.android.tools.build:gradle:9.3.1' (or higher)
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
 ### build.gradle (mypostion3)
-- Compiled with SDK Ver. 35 for targetSdk 34 and minSdk 25.
-- JavaVersion.VERSION_17 (or current version)
+- Compiled with SDK Ver. 37 for targetSdk 37 and minSdk 25.
+- JavaVersion.VERSION_21 (or current version)
 - External Libraries:
-  implementation 'androidx.appcompat:appcompat:1.7.0'
-  implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-  implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.22')
-  implementation 'androidx.work:work-runtime:2.10.0'
+  implementation 'androidx.appcompat:appcompat:1.7.1'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation 'androidx.work:work-runtime:2.11.2'
   implementation 'androidx.preference:preference-ktx:1.2.1'
-  implementation 'androidx.core:core-ktx:1.15.0'
-  debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.14'
+  implementation 'androidx.core:core-ktx:1.19.0'
+  implementation 'androidx.activity:activity-ktx:1.13.0' // new
+  implementation 'androidx.annotation:annotation-jvm:1.10.0'
+  implementation 'androidx.fragment:fragment-ktx:1.8.9'
+  implementation 'com.google.android.material:material:1.14.0'
 
 ## Start the Project
 Get the project source by downloading the master.zip.

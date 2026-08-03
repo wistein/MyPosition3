@@ -1,802 +1,821 @@
-package com.wistein.myposition;
+package com.wistein.myposition
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.widget.ImageView
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
 
-import static com.wistein.myposition.MyPosition.addressLines;
-import static com.wistein.myposition.MyPosition.corrHeight;
-import static com.wistein.myposition.MyPosition.heightGPS;
-import static com.wistein.myposition.MyPosition.heightNN;
-import static com.wistein.myposition.MyPosition.isFirstStart;
-import static com.wistein.myposition.MyPosition.lat;
-import static com.wistein.myposition.MyPosition.lon;
-import static com.wistein.myposition.MyPosition.uncertainty;
-import static com.wistein.myposition.Utils.fromHtml;
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager.Companion.getInstance
+import androidx.work.WorkRequest
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.google.android.material.snackbar.Snackbar
+import com.wistein.myposition.MapUtils.createShortLinkString
+import com.wistein.myposition.MyPosition.Companion.getPrefs
+import com.wistein.myposition.PermissionsForegroundDialogFragment.Companion.newInstance
+import com.wistein.myposition.TCLifecycleHandler.Companion.isApplicationVisible
+import com.wistein.myposition.Utils.fromHtml
 
-import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
-import com.google.android.material.snackbar.Snackbar;
-
-import java.text.DecimalFormat;
-import java.util.Locale;
-import java.util.Objects;
+import java.text.DecimalFormat
+import java.util.Locale
+import kotlin.system.exitProcess
+import androidx.core.net.toUri
 
 /***********************************************************************
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- * <p>
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * <p>
- *  You should have received a copy of the GNU General Public License
- *  along with this program. If not, see <<a href="https://www.gnu.org/licenses/">...</a>>.
- * <p>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see https://www.gnu.org/licenses/.
+ * 
  * MyPositionActivity.java
  * Main Activity Class for MyPosition3
- * <p>
+ * 
  * Partly based on
- * MyLocation 1.1c for Android <mypapit@gmail.com> (9w2wtf)
+ * MyLocation 1.1c for Android <mypapit></mypapit>@gmail.com> (9w2wtf)
  * Copyright 2012 Mohammad Hafiz bin Ismail. All rights reserved.
- * <p>
+ * 
  * Adopted 2019 by wistein for MyPosition3
- * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
- * last edited on 2026-05-14
+ * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany.
+ * 
+ * Last edited in Java on 2026-06-01,
+ * converted to Kotlin on 2026-07-27,
+ * last edited on 2026-08-03.
  */
-public class MyPositionActivity
-        extends AppCompatActivity
-        implements OnClickListener {
-    private static final String TAG = "MyPositionAct";
+class MyPositionActivity
 
-    private TextView tvDecimalCoord;
-    private TextView tvDegreeCoord;
-    public TextView tvLocation;
-    public TextView tvMessage;
+    : AppCompatActivity(), View.OnClickListener {
+    private var tvDecimalCoord: TextView? = null
+    private var tvDegreeCoord: TextView? = null
+    var tvLocation: TextView? = null
+    var tvMessage: TextView? = null
 
-    private ImageView shareLocation;
-    private ImageView shareDecimal;
-    private ImageView shareDegree;
-    private ImageView shareMessage;
+    private var shareLocation: ImageView? = null
+    private var shareDecimal: ImageView? = null
+    private var shareDegree: ImageView? = null
+    private var shareMessage: ImageView? = null
 
-    private String messageHeader = ""; // 1st line in mail message
-
+    private var messageHeader = "" // 1st line in mail message
     // Preferences
-    private SharedPreferences prefs;
-    private String emailString = "";   // mail address for OSM query
-    private boolean screenOrientL;     // option for screen orientation
-    private boolean showHeightMessage;     // option to show height info
+    private var prefs = getPrefs()
+    private var emailString = "" // mail address for OSM query
+    private var screenOrientL = false // option for screen orientation
+    private var showHeightMessage = false // option to show height info
+    private var showPosition = ""
 
     // The option mapLocal works only after changing the default setting for Maps to an
     //   installed Mapping app. This is especially necessary when GAPPS are present.
     //   It then lets you select where to show the map, either on the local mapping app (true)
     //   or online on OpenStreetMap (false).
-    private boolean mapLocal = false;
-
-    // Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
-    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
-    // Full screen gesture mode (introduced with Android Q)
-    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
-    // Classic three-button navigation (Back, Home, Recent Apps)
-    //   public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
-    public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
+    private var mapLocal = false
 
     // Location info handling
-    LocationService locationService;
-    private boolean locServiceOn = false; // Service control flag
-    private boolean locationPermGranted;  // Foreground location permission state
+    var locationService: LocationService? = null
+    private var locServiceOn = false // Service control flag
+    private var locationPermGranted = false // Foreground location permission state
 
-    private boolean doubleBackToExitPressedTwice = false;
+    private var doubleBackToExitPressedTwice = false
 
-    private ScrollView baseLayout;
+    private var baseLayout: ScrollView? = null
 
-    @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
+    @SuppressLint("SourceLockedOrientationActivity")
+    public override fun onCreate(savedInstanceState: Bundle?) {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "135, onCreate()");
+            Log.i(TAG, "116, onCreate()")
 
         // Preferences
-        prefs = MyPosition.getPrefs();
-        messageHeader = getString(R.string.msg_text);
+        prefs = getPrefs()
         // option for screen orientation
-        screenOrientL = prefs.getBoolean("screen_Orientation", false);
+        screenOrientL = prefs.getBoolean("screen_Orientation", false)
         // Option for dark screen background
-        String showPosition = prefs.getString("show_position", "online");
-        mapLocal = showPosition.equals("offline");
-        showHeightMessage = prefs.getBoolean("show_Toast", false);
-        emailString = prefs.getString("email_String", ""); // for reliable query of Nominatim service
+        showPosition = prefs.getString("show_position", "online")!!
+        mapLocal = showPosition == "offline"
+        showHeightMessage = prefs.getBoolean("show_Toast", false)
+        // for reliable query of Nominatim service
+        emailString = prefs.getString("email_String", "")!!
 
-        if (screenOrientL) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        messageHeader = getString(R.string.msg_text)
+
+        requestedOrientation = if (screenOrientL) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        setTheme(R.style.AppTheme_Dark);
+        setTheme(R.style.AppTheme_Dark)
 
-        super.onCreate(savedInstanceState); // put here for setTheme(...) to work
+        super.onCreate(savedInstanceState) // put here for setTheme(...) to work
 
         // Use EdgeToEdge mode for Android 15+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) // Android 15+, SDK 35+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM)  // Android 15+, SDK 35+
         {
-            EdgeToEdge.enable(this);
+            this.enableEdgeToEdge()
         }
 
-        setContentView(R.layout.activity_my_location);
+        setContentView(R.layout.activity_my_location)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.baseLayout),
-                (v, windowInsets) -> {
-                    Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-                    mlp.topMargin = insets.top;
-                    mlp.bottomMargin = insets.bottom;
-                    mlp.leftMargin = insets.left;
-                    mlp.rightMargin = insets.right;
-                    v.setLayoutParams(mlp);
-                    return WindowInsetsCompat.CONSUMED;
-                });
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.baseLayout)
+        ) { v: View?, windowInsets: WindowInsetsCompat? ->
+            val insets = windowInsets!!.getInsets(WindowInsetsCompat.Type.systemBars())
+            val mlp = v!!.layoutParams as MarginLayoutParams
+            mlp.topMargin = insets.top
+            mlp.bottomMargin = insets.bottom
+            mlp.leftMargin = insets.left
+            mlp.rightMargin = insets.right
+            v.layoutParams = mlp
+            WindowInsetsCompat.CONSUMED
+        }
 
         // Part of location permissions handling:
         //   Set flag locationPermGranted from self permissions
-        locationPermGranted = isFineLocPermGranted();
+        locationPermGranted = this.isFineLocPermGranted
 
         // If not yet location permission is granted query for it
         if (!locationPermGranted) {
-            PermissionsForegroundDialogFragment.newInstance().show(getSupportFragmentManager(),
-                    PermissionsForegroundDialogFragment.class.getName());
+            newInstance().show(
+                supportFragmentManager,
+                PermissionsForegroundDialogFragment::class.java.name
+            )
         }
 
         // Set title and back button in ActionBar
-        baseLayout = findViewById(R.id.baseLayout);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.app_name);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        baseLayout = findViewById(R.id.baseLayout)
+        supportActionBar?.setTitle(R.string.app_name)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // New onBackPressed logic
         // Use only if 2 or 3 button Navigation bar is present.
-        if (getNavBarMode() == 0 || getNavBarMode() == 1) {
-            OnBackPressedCallback callback = getOnBackPressedCallback();
-            getOnBackPressedDispatcher().addCallback(this, callback);
+        if (this.navBarMode == 0 || this.navBarMode == 1) {
+            val callback = this.onBackPressedCallback
+            onBackPressedDispatcher.addCallback(this, callback)
         }
     }
-    // End of onCreate()
 
-    public int getNavBarMode() {
-        Resources resources = this.getResources();
+    val navBarMode: Int
+        // End of onCreate()
+        get() {
+            val resources = this.getResources()
 
-        @SuppressLint("DiscouragedApi")
-        int resourceId = resources.getIdentifier("config_navBarInteractionMode",
-                "integer", "android");
+            @SuppressLint("DiscouragedApi") val resourceId = resources.getIdentifier(
+                "config_navBarInteractionMode",
+                "integer", "android"
+            )
 
-        // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
-        int iMode = resourceId > 0 ? resources.getInteger(resourceId) :
-                NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "213, NavBarMode = " + iMode);
-        return iMode;
-    }
+            // iMode = 0: 3-button, = 1: 2-button, = 2: gesture
+            val iMode =
+                if (resourceId > 0) resources.getInteger(resourceId) else NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                Log.i(TAG, "201, NavBarMode = $iMode")
+            return iMode
+        }
 
-    private OnBackPressedCallback getOnBackPressedCallback() {
-        final Handler m1Handler = new Handler(Looper.getMainLooper());
-        final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
+    private val onBackPressedCallback: OnBackPressedCallback
+        get() {
+            val m1Handler = Handler(Looper.getMainLooper())
+            val r1 =
+                Runnable { doubleBackToExitPressedTwice = false }
 
-        return new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (doubleBackToExitPressedTwice) {
-                    m1Handler.removeCallbacks(r1);
-                    finish();
-                    remove();
-                } else {
-                    doubleBackToExitPressedTwice = true;
-                    showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
-                    m1Handler.postDelayed(r1, 2000);
+            return object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (doubleBackToExitPressedTwice) {
+                        m1Handler.removeCallbacks(r1)
+                        finish()
+                        remove()
+                    } else {
+                        doubleBackToExitPressedTwice = true
+                        showSnackbarBlue(getString(R.string.back_twice) + "\n\n")
+                        m1Handler.postDelayed(r1, 2000)
+                    }
                 }
             }
-        };
-    }
+        }
 
-    // Test for foreground location self permission
-    private boolean isFineLocPermGranted() {
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
+    private val isFineLocPermGranted: Boolean
+        // Test for foreground location self permission
+        get() = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
-    @SuppressLint({"SourceLockedOrientationActivity", "ApplySharedPref"})
-    @Override
-    public void onResume() {
-        setTheme(R.style.AppTheme_Dark);
-        super.onResume(); // put here for setTheme(...) to work
+    @SuppressLint("SourceLockedOrientationActivity")
+    public override fun onResume() {
+        setTheme(R.style.AppTheme_Dark)
+        super.onResume() // put here for setTheme(...) to work
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "250, onResume()");
+            Log.i(TAG, "239, onResume()")
 
-        prefs = MyPosition.getPrefs();
-        messageHeader = getString(R.string.msg_text);
-        screenOrientL = prefs.getBoolean("screen_Orientation", false);
-        String showPosition = prefs.getString("show_position", "online");
-        mapLocal = showPosition.equals("offline");
-        showHeightMessage = prefs.getBoolean("show_Toast", false);
-        emailString = prefs.getString("email_String", "");
+        prefs = getPrefs()
+        screenOrientL = prefs.getBoolean("screen_Orientation", false)
+        showPosition = prefs.getString("show_position", "online")!!
+        mapLocal = showPosition == "offline"
+        showHeightMessage = prefs.getBoolean("show_Toast", false)
+        emailString = prefs.getString("email_String", "")!!
 
-        if (screenOrientL) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        messageHeader = getString(R.string.msg_text)
+
+        requestedOrientation = if (screenOrientL) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         // Load and show the data, set title in ActionBar
-        try {
-            Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.app_name));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException e) {
-            // nothing
-        }
+        supportActionBar?.setTitle(R.string.app_name)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        tvDecimalCoord = findViewById(R.id.tvDecimalCoord);
-        tvDegreeCoord = findViewById(R.id.tvDegreeCoord);
-        tvLocation = findViewById(R.id.tvLocation);
-        tvMessage = findViewById(R.id.tvMessage);
+        tvDecimalCoord = findViewById(R.id.tvDecimalCoord)
+        tvDegreeCoord = findViewById(R.id.tvDegreeCoord)
+        tvLocation = findViewById(R.id.tvLocation)
+        tvMessage = findViewById(R.id.tvMessage)
 
-        shareLocation = findViewById(R.id.shareLocation);
-        shareDecimal = findViewById(R.id.shareDecimal);
-        shareDegree = findViewById(R.id.shareDegree);
-        shareMessage = findViewById(R.id.shareMessage);
+        shareLocation = findViewById(R.id.shareLocation)
+        shareDecimal = findViewById(R.id.shareDecimal)
+        shareDegree = findViewById(R.id.shareDegree)
+        shareMessage = findViewById(R.id.shareMessage)
 
-        shareLocation.setClickable(true);
-        shareDecimal.setClickable(true);
-        shareDegree.setClickable(true);
-        shareMessage.setClickable(true);
+        shareLocation!!.isClickable = true
+        shareDecimal!!.isClickable = true
+        shareDegree!!.isClickable = true
+        shareMessage!!.isClickable = true
 
-        shareLocation.setOnClickListener(this);
-        shareDecimal.setOnClickListener(this);
-        shareDegree.setOnClickListener(this);
-        shareMessage.setOnClickListener(this);
+        shareLocation!!.setOnClickListener(this)
+        shareDecimal!!.setOnClickListener(this)
+        shareDegree!!.setOnClickListener(this)
+        shareMessage!!.setOnClickListener(this)
 
-        if (isFirstStart) {
+        if (MyPosition.isFirstStart) {
             // This is to remind a missing email address for Nominatim Reverse Geocoder.
             //   Info about the first GPS lock is handled in LocationService onLocationChanged().
-            if (Objects.equals(emailString, "")) {
-                String mesg = getString(R.string.missingEmail);
-                Toast.makeText(this, // orange
-                        fromHtml("<font color='#ff6000'>" + mesg + "</font>"),
-                        Toast.LENGTH_SHORT).show();
+            if (emailString == "") {
+                val mesg = getString(R.string.missingEmail)
+                Toast.makeText(
+                    this,  // orange
+                    fromHtml("<font color='#ff6000'>$mesg</font>"),
+                    Toast.LENGTH_SHORT).show()
             }
-            isFirstStart = false;
+            MyPosition.isFirstStart = false
         }
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "307, onResume(), locationPermGranted: " + locationPermGranted);
+            Log.i(TAG, "294, onResume(), locationPermGranted: $locationPermGranted")
 
         // Get location with permissions check
-        locationPermGranted = isFineLocPermGranted();
-        if (locationPermGranted)
-            locationDispatcher(1); // get location with data
+        locationPermGranted = this.isFineLocPermGranted
+        if (locationPermGranted) locationDispatcher(1) // get location with data
     }
     // End of onResume()
 
-    public void onStop() {
-        super.onStop();
+    public override fun onStop() {
+        super.onStop()
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "320, onStop()");
+            Log.i(TAG, "306, onStop()")
 
-        shareLocation.setOnClickListener(null);
-        shareDecimal.setOnClickListener(null);
-        shareDegree.setOnClickListener(null);
-        shareMessage.setOnClickListener(null);
+        shareLocation!!.setOnClickListener(null)
+        shareDecimal!!.setOnClickListener(null)
+        shareDegree!!.setOnClickListener(null)
+        shareMessage!!.setOnClickListener(null)
 
-        baseLayout.invalidate();
+        baseLayout!!.invalidate()
 
         // Stop Services when app is finished but not yet destroyed
-        if (!TCLifecycleHandler.isApplicationVisible()) {
+        if (!isApplicationVisible) {
             // Stop location service with permissions check
-            locationDispatcher(2);
+            locationDispatcher(2)
 
             // Stop RetrieveAddrRunner
-            WorkManager.getInstance(this).cancelAllWork();
+            getInstance(this).cancelAllWork()
 
-            finishAndRemoveTask();
+            finishAndRemoveTask()
         }
     }
 
-    public void onDestroy() {
-        super.onDestroy();
+    public override fun onDestroy() {
+        super.onDestroy()
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "345, onDestroy()");
+            Log.i(TAG, "331, onDestroy()")
 
-        System.exit(0);
+        exitProcess(0)
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_my_location, menu);
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_my_location, menu)
+        return true
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        int id = item.getItemId();
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var intent: Intent?
+        val id = item.itemId
 
-        if (id == android.R.id.home) // back button in actionBar
+        if (id == android.R.id.home)  // back button in actionBar
         {
-            final Handler m1Handler = new Handler(Looper.getMainLooper());
-            final Runnable r1 = () -> doubleBackToExitPressedTwice = false;
+            val m1Handler = Handler(Looper.getMainLooper())
+            val r1 = Runnable { doubleBackToExitPressedTwice = false }
             if (doubleBackToExitPressedTwice) {
-                m1Handler.removeCallbacks(r1);
-                finish();
+                m1Handler.removeCallbacks(r1)
+                finish()
             } else {
-                doubleBackToExitPressedTwice = true;
-                showSnackbarBlue(getString(R.string.back_twice) + "\n\n");
-                m1Handler.postDelayed(r1, 2000);
+                doubleBackToExitPressedTwice = true
+                showSnackbarBlue(getString(R.string.back_twice) + "\n\n")
+                m1Handler.postDelayed(r1, 2000)
             }
         }
         if (id == R.id.menu_getpos) {
             // Get location service with permissions check
-            locationDispatcher(1); // start location service
+            locationDispatcher(1) // start location service
 
             // Re-enter MyPositionActivity to get the new position
-            intent = new Intent(MyPositionActivity.this, MyPositionActivity.class);
-            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            intent = Intent(this@MyPositionActivity, MyPositionActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
         }
-        if (id == R.id.menu_help) {
-            intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
-            intent.putExtra("dialog", "help");
-            startActivity(intent);
-        } else if (id == R.id.menu_about) {
-            intent = new Intent(MyPositionActivity.this, ShowTextDialog.class);
-            intent.putExtra("dialog", "about");
-            startActivity(intent);
-        } else if (id == R.id.menu_settings) {
-            intent = new Intent(MyPositionActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.menu_viewmap) {
-            if (mapLocal) {
-                // When GAPPS are present MyPosition3 by default shows location online on Google Maps.
-                // Without GAPPS or after changing the default setting for Maps, MyPosition3
-                // uses a local mapping app to show the location
-                String geo = "geo:" + lat + "," + lon + "?z=17";
-                intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(geo));
-            } else {
-                // use browser or other web app to show location in OpenStreetMap
-                String urlView = "https://www.openstreetmap.org/?mlat="
-                        + lat + "&mlon=" + lon + "#map=17/" + lat + "/" + lon;
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlView));
+        when (id) {
+            R.id.menu_help -> {
+                intent = Intent(this@MyPositionActivity, ShowTextDialog::class.java)
+                intent.putExtra("dialog", "help")
+                startActivity(intent)
             }
-
-            try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                String mesg = getString(R.string.t_noapp);
-                Toast.makeText(this,
-                        fromHtml("<font color='red'><b>" + mesg + "</b></font>"),
-                        Toast.LENGTH_LONG).show();
+            R.id.menu_about -> {
+                intent = Intent(this@MyPositionActivity, ShowTextDialog::class.java)
+                intent.putExtra("dialog", "about")
+                startActivity(intent)
             }
-        } else if (id == R.id.menu_converter) {
-            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "416, Start ConverterAct");
-
-            intent = new Intent();
-            intent.setClass(MyPositionActivity.this, ConverterActivity.class);
-            intent.putExtra("Latitude", lat);
-            intent.putExtra("Longitude", lon);
-            startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP));
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    // End of onOptionsItemSelected()
-
-    // Part of location permission handling
-    public void locationDispatcher(int locationDispatcherMode) {
-        if (locationPermGranted) {
-            switch (locationDispatcherMode) {
-                case 1 -> {
-                    if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG, "435, locationDispatcher(1)");
-                    // get location with data
-                    getLoc();
-                    getData();
+            R.id.menu_settings -> {
+                intent = Intent(this@MyPositionActivity, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.menu_viewmap -> {
+                if (mapLocal) {
+                    // When GAPPS are present MyPosition3 by default shows location online on Google Maps.
+                    // Without GAPPS or after changing the default setting for Maps, MyPosition3
+                    // uses a local mapping app to show the location
+                    val geo = "geo:" + MyPosition.lat + "," + MyPosition.lon + "?z=17"
+                    intent = Intent(Intent.ACTION_VIEW, geo.toUri())
+                } else {
+                    // use browser or other web app to show location in OpenStreetMap
+                    val urlView = ("https://www.openstreetmap.org/?mlat="
+                            + MyPosition.lat + "&mlon=" + MyPosition.lon + "#map=17/" + MyPosition.lat + "/" + MyPosition.lon)
+                    intent = Intent(Intent.ACTION_VIEW, urlView.toUri())
                 }
-                case 2 -> {
+
+                try {
+                    startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    val mesg = getString(R.string.t_noapp)
+                    Toast.makeText(
+                        this,
+                        fromHtml("<font color='red'><b>$mesg</b></font>"),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            R.id.menu_converter -> {
+                if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                    Log.i(TAG,"409, Start ConverterAct")
+
+                intent = Intent()
+                intent.setClass(this@MyPositionActivity, ConverterActivity::class.java)
+                intent.putExtra("Latitude", MyPosition.lat)
+                intent.putExtra("Longitude", MyPosition.lon)
+                startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    // End of onOptionsItemSelected()
+    // Part of location permission handling
+    fun locationDispatcher(locationDispatcherMode: Int) {
+        if (locationPermGranted) {
+            when (locationDispatcherMode) {
+                1 -> {
                     if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG, "442 locationDispatcher(2)");
+                        Log.i(TAG,"429, locationDispatcher(1)")
+
+                    // get location with data
+                    this.loc
+                    this.data
+                }
+
+                2 -> {
+                    if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                        Log.i(TAG,"438, locationDispatcher(2)")
+
                     // stop location service
                     if (locServiceOn) {
-                        locationService.stopListener(); // .stopListener(this)
-                        Intent sIntent = new Intent(this, LocationService.class);
-                        stopService(sIntent);
-                        locServiceOn = false;
+                        locationService!!.stopListener() // .stopListener(this)
+                        val sIntent = Intent(this, LocationService::class.java)
+                        stopService(sIntent)
+                        locServiceOn = false
                     }
                 }
             }
         }
     }
 
-    // Get the location
-    public void getLoc() {
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "458 getLoc()");
-        if (!locServiceOn) {
-            locationService = new LocationService(this);
-            Intent sIntent = new Intent(this, LocationService.class);
-            startService(sIntent);
-            locServiceOn = true;
+    val loc: Unit
+        // Get the location
+        get() {
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                Log.i(TAG,"456, getLoc()")
+
+            if (!locServiceOn) {
+                locationService = LocationService(this)
+                val sIntent = Intent(this, LocationService::class.java)
+                startService(sIntent)
+                locServiceOn = true
+            }
+            if (locationService!!.canGetLocation()) {
+                locationService!!.getLongitude() // -> lon
+                locationService!!.getLatitude() // -> lat
+                locationService!!.getAltitude() // -> heightGPS, corrHeight, heightNN
+                locationService!!.getAccuracy() // -> uncertainty
+            }
         }
-        if (locationService.canGetLocation()) {
-            locationService.getLongitude(); // -> lon
-            locationService.getLatitude();  // -> lat
-            locationService.getAltitude();  // -> heightGPS, corrHeight, heightNN
-            locationService.getAccuracy();  // -> uncertainty
-        }
-    }
 
-    // Get the location data
-    public void getData() {
-        if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "476 getData()");
-        StringBuilder sb;
-        if (locationService.canGetLocation()) {
-            String nord = getString(R.string.nord);
-            String east = getString(R.string.east);
-            String west = getString(R.string.west);
-            String south = getString(R.string.south);
-            String directionNS, directionEW;
-            String uncert = getString(R.string.uncert);
-            String high = getString(R.string.height);
+    val data: Unit
+        // Get the location data
+        @SuppressLint("DefaultLocale")
+        get() {
+            if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
+                Log.i(TAG,"477, getData()")
 
-            if (lat >= 0)
-                directionNS = nord;
-            else
-                directionNS = south;
+            val sb: StringBuilder?
+            if (locationService!!.canGetLocation()) {
+                val nord = getString(R.string.nord)
+                val east = getString(R.string.east)
+                val west = getString(R.string.west)
+                val south = getString(R.string.south)
+                val uncert = getString(R.string.uncert)
+                val high = getString(R.string.height)
 
-            if (lon >= 0)
-                directionEW = east;
-            else
-                directionEW = west;
+                val directionNS = if (MyPosition.lat >= 0) nord
+                else south
 
-            sb = new StringBuilder();
+                val directionEW = if (MyPosition.lon >= 0) east
+                else west
 
-            @SuppressLint("DefaultLocale") String tempLat = String.format("%.5f", lat); // warnings not relevant here
-            @SuppressLint("DefaultLocale") String tempLon = String.format("%.5f", lon);
-            @SuppressLint("DefaultLocale") String tempHeight = String.format("%.1f", heightNN);
-            @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
+                sb = StringBuilder()
 
-            String language = Locale.getDefault().toString().substring(0, 2);
+                var tempLat = String.format("%.5f", MyPosition.lat)
+                var tempLon = String.format("%.5f", MyPosition.lon)
+                var tempHeight = String.format("%.1f", MyPosition.heightNN)
+                var tempUncert = String.format("%.1f", MyPosition.uncertainty)
 
-            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr")
-                    || language.equals("it") || language.equals("nl") || language.equals("pt")) {
-                tempLat = tempLat.replace('.', ',');
-                tempLon = tempLon.replace('.', ',');
-                tempHeight = tempHeight.replace('.', ',');
-                tempUncert = tempUncert.replace('.', ',');
+                val language =
+                    Locale.getDefault().toString().substring(0, 2)
 
-                sb.append(tempLat).append(" ").append(directionNS).append(",   ")
+                // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
+                if (language == "de" || language == "es" || language == "fr"
+                    || language == "it" || language == "nl" || language == "pt"
+                ) {
+                    tempLat = tempLat.replace('.', ',')
+                    tempLon = tempLon.replace('.', ',')
+                    tempHeight = tempHeight.replace('.', ',')
+                    tempUncert = tempUncert.replace('.', ',')
+
+                    sb.append(tempLat).append(" ").append(directionNS).append(",   ")
                         .append(tempLon).append(" ").append(directionEW).append("\n")
                         .append(uncert).append(" ").append(tempUncert).append(" m,   ")
-                        .append(high).append(" ").append(tempHeight).append(" m");
-            } else {
-                sb.append(directionNS).append(" ").append(tempLat).append(",   ")
+                        .append(high).append(" ").append(tempHeight).append(" m")
+                } else {
+                    sb.append(directionNS).append(" ").append(tempLat).append(",   ")
                         .append(directionEW).append(" ").append(tempLon).append("\n")
                         .append(uncert).append(" ").append(tempUncert).append(" m,   ")
-                        .append(high).append(" ").append(tempHeight).append(" m");
-            }
-
-        } else {
-            sb = new StringBuilder(getString(R.string.posnotknown));
-        }
-
-        // Get reverse geocoding formatted string for message
-        // String addressLines1;
-        if (locationService.canGetLocation() && (lat != 0.0 || lon != 0.0)) {
-            tvDecimalCoord.setText(sb.toString());
-            tvDegreeCoord.setText(toDegree());
-
-            // Call reverse geocoding
-            String urlString;
-            if (Objects.equals(emailString, "")) {
-                urlString = "https://nominatim.openstreetmap.org/reverse?"
-                        + "email=test@temp.test" + "&format=xml&lat="
-                        + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+                        .append(high).append(" ").append(tempHeight).append(" m")
+                }
             } else {
-                urlString = "https://nominatim.openstreetmap.org/reverse?email="
-                        + emailString + "&format=xml&lat="
-                        + lat + "&lon=" + lon + "&zoom=18&addressdetails=1";
+                sb = StringBuilder(getString(R.string.posnotknown))
             }
-            WorkRequest retrieveAddrWorkRequest =
-                    new OneTimeWorkRequest.Builder(RetrieveAddrRunner.class)
-                            .setInputData(new Data.Builder()
-                                    .putString("URL_STRING", urlString)
-                                    .putBoolean("LOC_SERVICE", false)
-                                    .build()
-                            )
-                            .build();
-            WorkManager.getInstance(getApplicationContext()).enqueue(retrieveAddrWorkRequest);
 
-            // Format TextView tvMessage,
-            //   delayed for getting the result of retrieveAddrWorkRequest
-            final Handler m2Handler = new Handler(Looper.getMainLooper());
-            final Runnable r2 = new Runnable() {
-                String addressLines1;
+            // Get reverse geocoding formatted string for message
+            // String addressLines1;
+            if (locationService!!.canGetLocation() && (MyPosition.lat != 0.0 || MyPosition.lon != 0.0)) {
+                tvDecimalCoord!!.text = sb.toString()
+                tvDegreeCoord!!.text = toDegree()
 
-                @Override
-                public void run() {
-                    addressLines1 = "   " + addressLines; // addressLines is set by RetrieveAddrRunner
-                    addressLines1 = addressLines1.replace("\n", "\n   ");
+                // Call reverse geocoding
+                val urlString = if (emailString == "") {
+                    ("https://nominatim.openstreetmap.org/reverse?"
+                            + "email=test@temp.test" + "&format=xml&lat="
+                            + MyPosition.lat + "&lon=" + MyPosition.lon + "&zoom=18&addressdetails=1")
+                } else {
+                    ("https://nominatim.openstreetmap.org/reverse?email="
+                            + emailString + "&format=xml&lat="
+                            + MyPosition.lat + "&lon=" + MyPosition.lon + "&zoom=18&addressdetails=1")
+                }
 
-                    if (!Objects.equals(addressLines, "")) {
-                        try {
-                            tvLocation.setText(addressLines);
-                            tvMessage.setText(getMessage(messageHeader, addressLines1));
-                        } catch (Exception e) {
-                            tvLocation.setText(getString(R.string.noAddr));
-                            tvMessage.setText(getString(R.string.noAddr));
+                val retrieveAddrWorkRequest: WorkRequest =
+                    OneTimeWorkRequest.Builder(RetrieveAddrRunner::class.java)
+                        .setInputData(
+                            Data.Builder()
+                                .putString("URL_STRING", urlString)
+                                .putBoolean("LOC_SERVICE", false)
+                                .build()
+                        )
+                        .build()
+                getInstance(applicationContext).enqueue(retrieveAddrWorkRequest)
+
+                // Format TextView tvMessage,
+                //   delayed for getting the result of retrieveAddrWorkRequest
+                val m2Handler = Handler(Looper.getMainLooper())
+                val r2: Runnable = object : Runnable {
+                    var addressLines1: String? = null
+
+                    override fun run() {
+                        addressLines1 =
+                            "   " + MyPosition.addressLines // addressLines is set by RetrieveAddrRunner
+                        addressLines1 = addressLines1!!.replace("\n", "\n   ")
+
+                        if (MyPosition.addressLines != "") {
+                            try {
+                                tvLocation!!.text = MyPosition.addressLines
+                                tvMessage!!.text = getMessage(messageHeader, addressLines1)
+                            } catch (_: Exception) {
+                                tvLocation!!.text = getString(R.string.noAddr)
+                                tvMessage!!.text = getString(R.string.noAddr)
+                            }
+                        } else {
+                            MyPosition.addressLines = getString(R.string.noAddr)
+                            tvLocation!!.text = MyPosition.addressLines
+                            tvMessage!!.text = MyPosition.addressLines
                         }
-                    } else {
-                        addressLines = getString(R.string.noAddr);
-                        tvLocation.setText(addressLines);
-                        tvMessage.setText(addressLines);
                     }
                 }
-            };
-            m2Handler.postDelayed(r2, 500);
-        } else {
-            addressLines = getString(R.string.noAddr);
-            tvLocation.setText(addressLines);
-            tvMessage.setText(addressLines);
-        }
-
-        if (showHeightMessage) {
-            @SuppressLint("DefaultLocale") String corrtemp = String.format("%.1f", corrHeight); // warnings not relevant here
-            @SuppressLint("DefaultLocale") String gpstemp = String.format("%.1f", heightGPS);
-            @SuppressLint("DefaultLocale") String nntemp = String.format("%.1f", heightNN);
-
-            String language = Locale.getDefault().toString().substring(0, 2);
-            // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
-            if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
-                corrtemp = corrtemp.replace('.', ',');
-                gpstemp = gpstemp.replace('.', ',');
-                nntemp = nntemp.replace('.', ',');
+                m2Handler.postDelayed(r2, 500)
+            } else {
+                MyPosition.addressLines = getString(R.string.noAddr)
+                tvLocation!!.text = MyPosition.addressLines
+                tvMessage!!.text = MyPosition.addressLines
             }
 
-            String hToast = getString(R.string.h_nn) + " " + nntemp + " m"
-                    + " \n " + getString(R.string.h_gps) + " " + gpstemp + " m"
-                    + " \n " + getString(R.string.h_corr) + " " + corrtemp + " m";
-            // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
-            showSnackbarHeight(hToast + "\n\n");
+            if (showHeightMessage) {
+                var corrtemp = String.format("%.1f",MyPosition.corrHeight)
+                var gpstemp = String.format("%.1f", MyPosition.heightGPS)
+                var nntemp = String.format("%.1f", MyPosition.heightNN)
+
+                val language = Locale.getDefault().toString().substring(0, 2)
+
+                // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
+                if (language == "de" || language == "es" || language == "fr" || language == "it" || language == "nl" || language == "pt") {
+                    corrtemp = corrtemp.replace('.', ',')
+                    gpstemp = gpstemp.replace('.', ',')
+                    nntemp = nntemp.replace('.', ',')
+                }
+
+                val hToast = (getString(R.string.h_nn) + " " + nntemp + " m"
+                        + " \n " + getString(R.string.h_gps) + " " + gpstemp + " m"
+                        + " \n " + getString(R.string.h_corr) + " " + corrtemp + " m")
+                // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
+                showSnackbarHeight(hToast + "\n\n")
+            }
         }
-    }
+
     // End of getData()
-
     // Convert to degree
-    private String toDegree() {
+    private fun toDegree(): String {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "614 toDegree()");
-        String language = Locale.getDefault().toString().substring(0, 2);
-        StringBuilder stringb = new StringBuilder();
-        LatLonConvert convert = new LatLonConvert(lat);
+            Log.i(TAG, "614, toDegree()")
 
-        String nord = getString(R.string.nord);
-        String east = getString(R.string.east);
-        String west = getString(R.string.west);
-        String south = getString(R.string.south);
-        String directionNS, directionEW;
+        val language = Locale.getDefault().toString().substring(0, 2)
+        val stringb = StringBuilder()
+        var convert = LatLonConvert(MyPosition.lat)
 
-        if (lat >= 0)
-            directionNS = nord;
-        else
-            directionNS = south;
+        val nord = getString(R.string.nord)
+        val east = getString(R.string.east)
+        val west = getString(R.string.west)
+        val south = getString(R.string.south)
 
-        if (lon >= 0)
-            directionEW = east;
-        else
-            directionEW = west;
+        val directionNS = if (MyPosition.lat >= 0) nord
+        else south
+
+        val directionEW = if (MyPosition.lon >= 0) east
+        else west
 
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr") || language.equals("it") || language.equals("nl") || language.equals("pt")) {
-            stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
-            stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
+        if (language == "de" || language == "es" || language == "fr" || language == "it" || language == "nl" || language == "pt") {
+            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
 
-            String sectemp = new DecimalFormat("#.#").format(convert.getSecond());
-            sectemp = sectemp.replace('.', ',');
-            stringb.append(sectemp).append("\" ").append(directionNS).append(",  ");
+            var sectemp = DecimalFormat("#.#").format(convert.second)
+            sectemp = sectemp.replace('.', ',')
+            stringb.append(sectemp).append("\" ").append(directionNS).append(",  ")
 
-            convert = new LatLonConvert(lon);
+            convert = LatLonConvert(MyPosition.lon)
 
-            stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
-            stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
+            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
 
-            sectemp = new DecimalFormat("#.#").format(convert.getSecond());
-            sectemp = sectemp.replace('.', ',');
-            stringb.append(sectemp).append("\" ").append(directionEW);
+            sectemp = DecimalFormat("#.#").format(convert.second)
+            sectemp = sectemp.replace('.', ',')
+            stringb.append(sectemp).append("\" ").append(directionEW)
         } else {
-            stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
-            stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
-            stringb.append(new DecimalFormat("#.#").format(convert.getSecond())).append("\" ").append(directionNS).append(",  ");
+            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringb.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
+                .append(directionNS).append(",  ")
 
-            convert = new LatLonConvert(lon);
+            convert = LatLonConvert(MyPosition.lon)
 
-            stringb.append(new DecimalFormat("#").format(convert.getDegree())).append("° ");
-            stringb.append(new DecimalFormat("#").format(convert.getMinute())).append("' ");
-            stringb.append(new DecimalFormat("#.#").format(convert.getSecond())).append("\" ").append(directionEW);
+            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringb.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
+                .append(directionEW)
         }
 
-        return stringb.toString();
+        return stringb.toString()
     }
 
     // Share button clicked next to one of the text boxes
-    @Override
-    public void onClick(View view) {
-        Intent intent;
-        intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TITLE, "My Location");
-        intent.setType("text/plain");
-        int viewID = view.getId();
-        if (viewID == R.id.shareLocation) {
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myLoc)
-                    + "\n  " + tvLocation.getText());
-        } else if (viewID == R.id.shareDecimal) {
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myPos)
-                    + "\n  " + tvDecimalCoord.getText());
-        } else if (viewID == R.id.shareDegree) {
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.myPos)
-                    + "\n  " + tvDegreeCoord.getText());
-        } else if (viewID == R.id.shareMessage) {
-            intent.putExtra(Intent.EXTRA_TEXT, tvMessage.getText());
+    override fun onClick(view: View) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_TITLE, "My Location")
+        intent.type = "text/plain"
+        val viewID = view.id
+        when (viewID) {
+            R.id.shareLocation -> {
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, (getString(R.string.myLoc)
+                            + "\n  " + tvLocation!!.text)
+                )
+            }
+            R.id.shareDecimal -> {
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, (getString(R.string.myPos)
+                            + "\n  " + tvDecimalCoord!!.text)
+                )
+            }
+            R.id.shareDegree -> {
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, (getString(R.string.myPos)
+                            + "\n  " + tvDegreeCoord!!.text)
+                )
+            }
+            R.id.shareMessage -> {
+                intent.putExtra(
+                    Intent.EXTRA_TEXT, tvMessage!!.text
+                )
+            }
         }
-        startActivity(Intent.createChooser(intent, "Share via"));
+        startActivity(Intent.createChooser(intent, "Share via"))
     }
 
     // Show message to share
-    private String getMessage(String messageHeader, String adrlines) {
+    @SuppressLint("DefaultLocale")
+    private fun getMessage(messageHeader: String?, adrlines: String?): String {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "693 getMessage to share()");
-        StringBuilder message = new StringBuilder();
-        String geoLoc = getApplicationContext().getString(R.string.geoloc);
-        String uncert = getApplicationContext().getString(R.string.uncert);
-        String nord = getApplicationContext().getString(R.string.nord);
-        String east = getApplicationContext().getString(R.string.east);
-        String west = getApplicationContext().getString(R.string.west);
-        String south = getApplicationContext().getString(R.string.south);
-        String lati = getApplicationContext().getString(R.string.lati);
-        String longi = getApplicationContext().getString(R.string.longi);
-        String directionNS, directionEW;
-        String high = getApplicationContext().getString(R.string.height);
+            Log.i(TAG, "703, getMessage to share()")
 
-        @SuppressLint("DefaultLocale") String tempLat = String.format("%.5f", lat); // warnings not relevant here
-        @SuppressLint("DefaultLocale") String tempLon = String.format("%.5f", lon);
-        @SuppressLint("DefaultLocale") String tempHigh = String.format("%.1f", heightNN);
-        @SuppressLint("DefaultLocale") String tempUncert = String.format("%.1f", uncertainty);
+        val message = StringBuilder()
+        val geoLoc = applicationContext.getString(R.string.geoloc)
+        val uncert = applicationContext.getString(R.string.uncert)
+        val nord = applicationContext.getString(R.string.nord)
+        val east = applicationContext.getString(R.string.east)
+        val west = applicationContext.getString(R.string.west)
+        val south = applicationContext.getString(R.string.south)
+        val lati = applicationContext.getString(R.string.lati)
+        val longi = applicationContext.getString(R.string.longi)
+        val high = applicationContext.getString(R.string.height)
 
-        String language = Locale.getDefault().toString().substring(0, 2);
+        var tempLat = String.format("%.5f", MyPosition.lat)
+        var tempLon = String.format("%.5f", MyPosition.lon)
+        var tempHigh = String.format("%.1f", MyPosition.heightNN)
+        var tempUncert = String.format("%.1f", MyPosition.uncertainty)
+
+        val language = Locale.getDefault().toString().substring(0, 2)
+
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
-        if (language.equals("de") || language.equals("es") || language.equals("fr")
-                || language.equals("it") || language.equals("nl") || language.equals("pt")) {
-            tempLat = tempLat.replace('.', ',');
-            tempLon = tempLon.replace('.', ',');
-            tempHigh = tempHigh.replace('.', ',');
-            tempUncert = tempUncert.replace('.', ',');
+        if (language == "de" || language == "es" || language == "fr"
+            || language == "it" || language == "nl" || language == "pt"
+        ) {
+            tempLat = tempLat.replace('.', ',')
+            tempLon = tempLon.replace('.', ',')
+            tempHigh = tempHigh.replace('.', ',')
+            tempUncert = tempUncert.replace('.', ',')
         }
 
-        if (lat == 0.0 && lon == 0.0) {
-            return getApplicationContext().getString(R.string.posnotknown);
+        if (MyPosition.lat == 0.0 && MyPosition.lon == 0.0) {
+            return applicationContext.getString(R.string.posnotknown)
         }
 
-        if (lat >= 0)
-            directionNS = nord;
-        else
-            directionNS = south;
+        val directionNS = if (MyPosition.lat >= 0) nord
+        else south
 
-        if (lon >= 0)
-            directionEW = east;
-        else
-            directionEW = west;
+        val directionEW = if (MyPosition.lon >= 0) east
+        else west
 
-        message.append(messageHeader);
-        message.append("\n\nhttps://openstreetmap.org/go/");
-        message.append(MapUtils.createShortLinkString(lat, lon, 15));
-        message.append("?m");
+        message.append(messageHeader)
+        message.append("\n\nhttps://openstreetmap.org/go/")
+        message.append(createShortLinkString(MyPosition.lat, MyPosition.lon, 15))
+        message.append("?m")
 //        message.append("\n\nhttps://maps.google.com/maps?q=loc:" + lat + "," + lon + "&z=15");
 //        message.append("\n\nhttps://download.osmand.net/go?lat=" + lat + "&lon=" + lon + "&z=15");
-        message.append("\n\n");
-        message.append(geoLoc);
-        message.append("\n   ");
+        message.append("\n\n")
+        message.append(geoLoc)
+        message.append("\n   ")
 
-        message.append(lati);
-        message.append(" ");
-        message.append(tempLat);
-        message.append("° ");
-        message.append(directionNS);
-        message.append("\n   ");
+        message.append(lati)
+        message.append(" ")
+        message.append(tempLat)
+        message.append("° ")
+        message.append(directionNS)
+        message.append("\n   ")
 
-        message.append(longi);
-        message.append(" ");
-        message.append(tempLon);
-        message.append("° ");
-        message.append(directionEW);
-        message.append("\n   ");
+        message.append(longi)
+        message.append(" ")
+        message.append(tempLon)
+        message.append("° ")
+        message.append(directionEW)
+        message.append("\n   ")
 
-        message.append(high);
-        message.append(" ");
-        message.append(tempHigh);
-        message.append(" m\n   ");
+        message.append(high)
+        message.append(" ")
+        message.append(tempHigh)
+        message.append(" m\n   ")
 
-        message.append(uncert);
-        message.append(" ");
-        message.append(tempUncert);
-        message.append(" m\n\n");
-        message.append(getApplicationContext().getString(R.string.toshortAddr));
-        message.append("\n");
-        message.append(adrlines);
+        message.append(uncert)
+        message.append(" ")
+        message.append(tempUncert)
+        message.append(" m\n\n")
+        message.append(applicationContext.getString(R.string.toshortAddr))
+        message.append("\n")
+        message.append(adrlines)
 
-        return message.toString();
+        return message.toString()
     }
-    // End of getMessage
 
-    private void showSnackbarBlue(String str) // bold cyan text
+    // End of getMessage
+    private fun showSnackbarBlue(str: String) // bold cyan text
     {
-        baseLayout = findViewById(R.id.baseLayout);
-        Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_LONG);
-        TextView tv = sB.getView().findViewById(R.id.snackbar_text);
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-        tv.setTextColor(Color.CYAN);
-        tv.setMaxLines(3);
-        sB.show();
+        baseLayout = findViewById(R.id.baseLayout)
+        val sB = Snackbar.make(baseLayout!!, str, Snackbar.LENGTH_LONG)
+        val tv = sB.getView().findViewById<TextView>(R.id.snackbar_text)
+        tv.gravity = Gravity.CENTER_HORIZONTAL
+        tv.setTypeface(tv.typeface, Typeface.BOLD)
+        tv.setTextColor(Color.CYAN)
+        tv.maxLines = 3
+        sB.show()
     }
 
     // Blue height message with button to dismiss
-    public void showSnackbarHeight(String str) {
-        baseLayout = findViewById(R.id.baseLayout);
-        Snackbar sB = Snackbar.make(baseLayout, str, Snackbar.LENGTH_INDEFINITE);
-        TextView tv = sB.getView().findViewById(R.id.snackbar_text);
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-        tv.setTextColor(Color.CYAN);
-        tv.setMaxLines(5);
-        sB.setAction("Ok\n", View ->
-                sB.dismiss());
-        sB.show();
+    fun showSnackbarHeight(str: String) {
+        baseLayout = findViewById(R.id.baseLayout)
+        val sB = Snackbar.make(baseLayout!!, str, Snackbar.LENGTH_INDEFINITE)
+        val tv = sB.getView().findViewById<TextView>(R.id.snackbar_text)
+        tv.gravity = Gravity.CENTER_HORIZONTAL
+        tv.setTypeface(tv.typeface, Typeface.BOLD)
+        tv.setTextColor(Color.CYAN)
+        tv.maxLines = 5
+        sB.setAction("Ok\n") { _: View? -> sB.dismiss() }
+        sB.show()
+    }
+
+    companion object {
+        private const val TAG = "MyPositionAct"
+
+        // Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
+        //   public static final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
+        // Full screen gesture mode (introduced with Android Q)
+        //   public static final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
+        // Classic three-button navigation (Back, Home, Recent Apps)
+        //   public static final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
+        const val NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON: Int = 0
     }
 
 }

@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -43,13 +42,13 @@ import java.io.IOException
  * - MIN_TIME_BW_UPDATES_NET:      Long = 5000 (msec)
  *
  * Based on LocationSrv created by anupamchugh on 28/11/16, published under
- * [](https://github.com/journaldev/journaldev/tree/master/Android/GPSLocationTracking)
+ * https://github.com/journaldev/journaldev/tree/master/Android/GPSLocationTracking
  * licensed under the MIT License.
  *
  * Adopted for MyPosition3 by wmstein on 2019-02-07,
  * last modification in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-05-14
+ * last edited on 2026-07-28
  */
 open class LocationService : Service, LocationListener {
     companion object {
@@ -60,45 +59,45 @@ open class LocationService : Service, LocationListener {
         private const val MIN_TIME_BW_UPDATES_NET: Long = 5000
     }
 
-    private var mContext: Context? = null
+    private lateinit var mContext: Context
 
     // exactLocation determines whether a first GPS fix has occurred
     //   and if true there is no further need for Network provider usage
     private var exactLocation = false
-    private var checkGPS: Boolean = false
-    private var checkNetwork: Boolean = false
-    var canGetLocation: Boolean = false
+    private var checkGPS = false
+    private var checkNetwork = false
+    var canGetLocation = false
 
     private var location: Location? = null
     protected var locationManager: LocationManager? = null
-    private var locationAttributionContext: Context? = null
+    private lateinit var locationAttributionContext: Context
 
-    private var prefs: SharedPreferences? = null
+    private var prefs = MyPosition.getPrefs()
     private var emailString = "" // mail address for OSM query
     private var showHeightMessage = false
 
     /** Default constructor() demanded by service declaration in AndroidManifest.xml */
     constructor() {} // Deleting it produces a compilation error
 
-    constructor(mContext: Context?) {
+    constructor(mContext: Context) {
         this.mContext = mContext
         getLocation()
     }
 
     fun getLocation() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "90, getLocation()")
+            Log.i(TAG, "89, getLocation()")
         locationAttributionContext =
             if (Build.VERSION.SDK_INT >= 30)
-                mContext!!.createAttributionContext("locationCheck")
+                mContext.createAttributionContext("locationCheck")
             else mContext
 
         prefs = MyPosition.getPrefs()
-        emailString = prefs!!.getString("email_String", "").toString()
-        showHeightMessage = prefs!!.getBoolean("show_Toast", false)
+        emailString = prefs.getString("email_String", "").toString()
+        showHeightMessage = prefs.getBoolean("show_Toast", false)
 
         try {
-            locationManager = locationAttributionContext!!.getSystemService(LOCATION_SERVICE) as LocationManager
+            locationManager = locationAttributionContext.getSystemService(LOCATION_SERVICE) as LocationManager
 
             // get GPS status
             checkGPS = locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -111,7 +110,7 @@ open class LocationService : Service, LocationListener {
             } else {
                 val mesg = getString(R.string.no_provider)
                 Toast.makeText(
-                    locationAttributionContext!!,
+                    locationAttributionContext,
                     fromHtml("<font color='red'><b>$mesg</b></font>"),
                     Toast.LENGTH_SHORT
                 ).show()
@@ -120,7 +119,7 @@ open class LocationService : Service, LocationListener {
             // if GPS is enabled get position using GPS Service
             if (checkGPS && canGetLocation) {
                 if (ActivityCompat.checkSelfPermission(
-                        locationAttributionContext!!,
+                        locationAttributionContext,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
@@ -150,7 +149,7 @@ open class LocationService : Service, LocationListener {
                 // if Network is enabled and still no GPS fix achieved
                 if (checkNetwork && canGetLocation) {
                     if (ActivityCompat.checkSelfPermission(
-                            locationAttributionContext!!,
+                            locationAttributionContext,
                             Manifest.permission.ACCESS_COARSE_LOCATION
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
@@ -176,7 +175,7 @@ open class LocationService : Service, LocationListener {
             }
         } catch (e: Exception) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(TAG, "179, getLocation() $e")
+                Log.e(TAG, "178, getLocation() $e")
         }
     }
 
@@ -202,7 +201,7 @@ open class LocationService : Service, LocationListener {
     // Stop location service
     fun stopListener() {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "205, stopListener()")
+            Log.i(TAG, "204, stopListener()")
         try {
             if (locationManager != null) {
                 locationManager!!.removeUpdates(this@LocationService)
@@ -211,7 +210,7 @@ open class LocationService : Service, LocationListener {
             }
         } catch (e: Exception) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.e(TAG, "214, StopListener: $e")
+                Log.e(TAG, "213, StopListener: $e")
         }
     }
 
@@ -253,11 +252,11 @@ open class LocationService : Service, LocationListener {
         // Ask Nominatim service just once on app start
         if (isFirstLoc && lat != 0.0) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "256, onLocationChanged")
+                Log.i(TAG, "255, onLocationChanged")
 
             isFirstLoc = false
 
-            val mesg: String = locationAttributionContext!!.getString(R.string.newLock) // in green
+            val mesg: String = locationAttributionContext.getString(R.string.newLock) // in green
             Toast.makeText( // bright green
                 locationAttributionContext,
                 fromHtml("<bold><font color='#008000'>$mesg</font></bold>"),
@@ -265,13 +264,12 @@ open class LocationService : Service, LocationListener {
             ).show()
 
             // Get initial location data from Nominatim
-            val urlString: String?
-            if (emailString == "") {
-                urlString = ("https://nominatim.openstreetmap.org/reverse?"
+            val urlString = if (emailString == "") {
+                ("https://nominatim.openstreetmap.org/reverse?"
                         + "email=test@temp.test" + "&format=xml&lat="
                         + lat + "&lon=" + lon + "&zoom=18&addressdetails=1")
             } else {
-                urlString = ("https://nominatim.openstreetmap.org/reverse?email="
+                ("https://nominatim.openstreetmap.org/reverse?email="
                         + emailString + "&format=xml&lat="
                         + lat + "&lon=" + lon + "&zoom=18&addressdetails=1")
             }

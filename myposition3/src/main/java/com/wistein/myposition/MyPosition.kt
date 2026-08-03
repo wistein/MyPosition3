@@ -28,7 +28,7 @@ import androidx.preference.PreferenceManager
  * Copyright (c) 2016-2026, Wilhelm Stein, Bonn, Germany.
  * Last edited in Java on 2025-02-05,
  * converted to Kotlin on 2025-02-05,
- * last edited on 2026-05-14
+ * last edited on 2026-07-06
  */
 class MyPosition : Application() {
     override fun onCreate() {

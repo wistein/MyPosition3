@@ -28,7 +28,7 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat"
         tools:ignore="DataExtractionRules,GoogleAppIndexingWarning"
-        tools:targetApi="33">
+        tools:targetApi="36">
 
         <activity
             android:name=".MyPositionActivity"

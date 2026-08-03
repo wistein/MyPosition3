@@ -10,12 +10,15 @@ import android.text.util.Linkify
 import android.view.MenuItem
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
+
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
+
 import com.wistein.myposition.Utils.fromHtml
+
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -41,7 +44,7 @@ import java.util.Locale
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-01-23
+ * last edited on 2026-08-03
  */
 class ShowTextDialog : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
@@ -131,20 +134,18 @@ class ShowTextDialog : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    companion object {
-        private fun readRawTextFile(id: Int, context: Context): String? {
-            val inputStream = context.resources.openRawResource(id)
-            val `in` = InputStreamReader(inputStream)
-            val buf = BufferedReader(`in`)
-            var line: String?
-            val text = StringBuilder()
-            try {
-                while ((buf.readLine().also { line = it }) != null) text.append(line)
-            } catch (_: IOException) {
-                return null
-            }
-            return text.toString()
+    private fun readRawTextFile(id: Int, context: Context): String? {
+        val inputStream = context.resources.openRawResource(id)
+        val `in` = InputStreamReader(inputStream)
+        val buf = BufferedReader(`in`)
+        var line: String?
+        val text = StringBuilder()
+        try {
+            while ((buf.readLine().also { line = it }) != null) text.append(line)
+        } catch (_: IOException) {
+            return null
         }
+        return text.toString()
     }
 
 }

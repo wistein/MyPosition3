@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 
@@ -31,18 +32,18 @@ import androidx.preference.PreferenceFragmentCompat
  * Adopted 2019 by wistein for MyPosition3,
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-04-01
+ * last edited on 2026-05-29
  */
 class SettingsActivity : AppCompatActivity() {
     private var prefs = MyPosition.getPrefs()
-    private var screenOrientL: Boolean = false
+    private var screenOrientL = false
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "45, onCreate()")
+            Log.i(TAG, "46, onCreate()")
 
         // Option for screen orientation
         screenOrientL = prefs.getBoolean("screen_Orientation", false)

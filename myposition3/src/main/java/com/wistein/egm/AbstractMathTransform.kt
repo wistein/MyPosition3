@@ -1,4 +1,6 @@
-/*
+package com.wistein.egm
+
+/******************************************************************************************
  *    Derived from:
  *    GeoTools - The Open Source Java GIS Toolkit
  *    https://geotools.org
@@ -17,50 +19,47 @@
  *
  *    This package contains documentation from OpenGIS specifications.
  *    OpenGIS consortium's work is fully acknowledged here.
- */
-
-package com.wistein.egm;
-
-/**
- * Provides a default implementation for most methods required by the {MathTransform}
- * interface. {@code AbstractMathTransform} provides a convenient base class from which other
- * transform classes can be easily derived. In addition, {@code AbstractMathTransform} implements
- * methods required by the {MathTransform2D} interface, but <strong>does not</strong>
- * implements {@code MathTransform2D}. Subclasses must declare {@code implements MathTransform2D}
- * themself if they know to maps two-dimensional coordinate systems.
  *
+ * Provides a default implementation for most methods required by the {MathTransform}
+ * interface. `AbstractMathTransform` provides a convenient base class from which other
+ * transform classes can be easily derived. In addition, `AbstractMathTransform` implements
+ * methods required by the {MathTransform2D} interface, but **does not**
+ * implements `MathTransform2D`. Subclasses must declare `implements MathTransform2D`
+ * themself if they know to maps two-dimensional coordinate systems.
+ * 
  * @author Martin Desruisseaux (IRD)
  * tutorial link: docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
  * @since 2.0
+ * 
  * Code adaptation for use by MyPositionActivity by wistein
+ * last change in Java on 2020-04-17,
+ * converted to Kotlin on 2026-07-27,
+ * last edited on 2026-07-27.
  */
-abstract class AbstractMathTransform 
-{
-    /**
-     * Constructs a math transform.
-     */
-    AbstractMathTransform()
-    {
+
+// Constructs a math transform.
+abstract class AbstractMathTransform {
+    // Gets the dimension of input points.
+    protected abstract val sourceDimensions: Int
+
+    // Gets the dimension of output points.
+    protected abstract val targetDimensions: Int
+
+    // Returns a hash value for this transform.
+    override fun hashCode(): Int {
+        return this.sourceDimensions + 37 * this.targetDimensions
     }
 
-    /**
-     * Gets the dimension of input points.
-     */
-    protected abstract int getSourceDimensions();
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    /**
-     * Gets the dimension of output points.
-     */
-    protected abstract int getTargetDimensions();
+        other as AbstractMathTransform
 
-    /**
-     * Returns a hash value for this transform.
-     */
-    @Override
-    public int hashCode() 
-	{
-        return getSourceDimensions() + 37 * getTargetDimensions();
+        if (sourceDimensions != other.sourceDimensions) return false
+        if (targetDimensions != other.targetDimensions) return false
+
+        return true
     }
 
 }
-

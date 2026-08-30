@@ -72,11 +72,9 @@ import androidx.core.net.toUri
  * 
  * Last edited in Java on 2026-06-01,
  * converted to Kotlin on 2026-07-27,
- * last edited on 2026-08-03.
+ * last edited on 2026-08-30.
  */
-class MyPositionActivity
-
-    : AppCompatActivity(), View.OnClickListener {
+class MyPositionActivity : AppCompatActivity(), View.OnClickListener {
     private var tvDecimalCoord: TextView? = null
     private var tvDegreeCoord: TextView? = null
     var tvLocation: TextView? = null
@@ -109,11 +107,12 @@ class MyPositionActivity
     private var doubleBackToExitPressedTwice = false
 
     private var baseLayout: ScrollView? = null
+    private var retFlag = false
 
     @SuppressLint("SourceLockedOrientationActivity")
     public override fun onCreate(savedInstanceState: Bundle?) {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "116, onCreate()")
+            Log.i(TAG, "115, onCreate()")
 
         // Preferences
         prefs = getPrefs()
@@ -187,7 +186,7 @@ class MyPositionActivity
     val navBarMode: Int
         // End of onCreate()
         get() {
-            val resources = this.getResources()
+            val resources = this.resources
 
             @SuppressLint("DiscouragedApi") val resourceId = resources.getIdentifier(
                 "config_navBarInteractionMode",
@@ -198,7 +197,7 @@ class MyPositionActivity
             val iMode =
                 if (resourceId > 0) resources.getInteger(resourceId) else NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "201, NavBarMode = $iMode")
+                Log.i(TAG, "200, NavBarMode = $iMode")
             return iMode
         }
 
@@ -236,7 +235,7 @@ class MyPositionActivity
         super.onResume() // put here for setTheme(...) to work
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "239, onResume()")
+            Log.i(TAG, "238, onResume()")
 
         prefs = getPrefs()
         screenOrientL = prefs.getBoolean("screen_Orientation", false)
@@ -291,7 +290,7 @@ class MyPositionActivity
         }
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "294, onResume(), locationPermGranted: $locationPermGranted")
+            Log.i(TAG, "293, onResume(), locationPermGranted: $locationPermGranted")
 
         // Get location with permissions check
         locationPermGranted = this.isFineLocPermGranted
@@ -303,7 +302,7 @@ class MyPositionActivity
         super.onStop()
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "306, onStop()")
+            Log.i(TAG, "305, onStop()")
 
         shareLocation!!.setOnClickListener(null)
         shareDecimal!!.setOnClickListener(null)
@@ -312,15 +311,21 @@ class MyPositionActivity
 
         baseLayout!!.invalidate()
 
-        // Stop Services when app is finished but not yet destroyed
-        if (!isApplicationVisible) {
-            // Stop location service with permissions check
-            locationDispatcher(2)
+        // retFlag = true, when browser was called to show the position on map
+        //  and though the app should not be killed
+        if (retFlag)
+            retFlag = false
+        else {
+            // Stop Services when app is finished but not yet destroyed
+            if (!isApplicationVisible) {
+                // Stop location service with permissions check
+                locationDispatcher(2)
 
-            // Stop RetrieveAddrRunner
-            getInstance(this).cancelAllWork()
+                // Stop RetrieveAddrRunner
+                getInstance(this).cancelAllWork()
 
-            finishAndRemoveTask()
+                finishAndRemoveTask()
+            }
         }
     }
 
@@ -328,7 +333,7 @@ class MyPositionActivity
         super.onDestroy()
 
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "331, onDestroy()")
+            Log.i(TAG, "336, onDestroy()")
 
         exitProcess(0)
     }
@@ -383,11 +388,13 @@ class MyPositionActivity
                 if (mapLocal) {
                     // When GAPPS are present MyPosition3 by default shows location online on Google Maps.
                     // Without GAPPS or after changing the default setting for Maps, MyPosition3
-                    // uses a local mapping app to show the location
+                    //   uses a local mapping app to show the location
                     val geo = "geo:" + MyPosition.lat + "," + MyPosition.lon + "?z=17"
                     intent = Intent(Intent.ACTION_VIEW, geo.toUri())
                 } else {
-                    // use browser or other web app to show location in OpenStreetMap
+                    // Use browser or other web app to show location in OpenStreetMap
+                    // set flag to return back from browser
+                    retFlag = true
                     val urlView = ("https://www.openstreetmap.org/?mlat="
                             + MyPosition.lat + "&mlon=" + MyPosition.lon + "#map=17/" + MyPosition.lat + "/" + MyPosition.lon)
                     intent = Intent(Intent.ACTION_VIEW, urlView.toUri())
@@ -406,7 +413,7 @@ class MyPositionActivity
             }
             R.id.menu_converter -> {
                 if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                    Log.i(TAG,"409, Start ConverterAct")
+                    Log.i(TAG,"416, Start ConverterAct")
 
                 intent = Intent()
                 intent.setClass(this@MyPositionActivity, ConverterActivity::class.java)
@@ -426,7 +433,7 @@ class MyPositionActivity
             when (locationDispatcherMode) {
                 1 -> {
                     if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG,"429, locationDispatcher(1)")
+                        Log.i(TAG,"436, locationDispatcher(1)")
 
                     // get location with data
                     this.loc
@@ -435,7 +442,7 @@ class MyPositionActivity
 
                 2 -> {
                     if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                        Log.i(TAG,"438, locationDispatcher(2)")
+                        Log.i(TAG,"445, locationDispatcher(2)")
 
                     // stop location service
                     if (locServiceOn) {
@@ -453,7 +460,7 @@ class MyPositionActivity
         // Get the location
         get() {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG,"456, getLoc()")
+                Log.i(TAG,"463, getLoc()")
 
             if (!locServiceOn) {
                 locationService = LocationService(this)
@@ -474,7 +481,7 @@ class MyPositionActivity
         @SuppressLint("DefaultLocale")
         get() {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG,"477, getData()")
+                Log.i(TAG,"484, getData()")
 
             val sb: StringBuilder?
             if (locationService!!.canGetLocation()) {
@@ -482,7 +489,7 @@ class MyPositionActivity
                 val east = getString(R.string.east)
                 val west = getString(R.string.west)
                 val south = getString(R.string.south)
-                val uncert = getString(R.string.uncert)
+                val unCert = getString(R.string.uncert)
                 val high = getString(R.string.height)
 
                 val directionNS = if (MyPosition.lat >= 0) nord
@@ -496,7 +503,7 @@ class MyPositionActivity
                 var tempLat = String.format("%.5f", MyPosition.lat)
                 var tempLon = String.format("%.5f", MyPosition.lon)
                 var tempHeight = String.format("%.1f", MyPosition.heightNN)
-                var tempUncert = String.format("%.1f", MyPosition.uncertainty)
+                var tempUnCert = String.format("%.1f", MyPosition.uncertainty)
 
                 val language =
                     Locale.getDefault().toString().substring(0, 2)
@@ -508,16 +515,16 @@ class MyPositionActivity
                     tempLat = tempLat.replace('.', ',')
                     tempLon = tempLon.replace('.', ',')
                     tempHeight = tempHeight.replace('.', ',')
-                    tempUncert = tempUncert.replace('.', ',')
+                    tempUnCert = tempUnCert.replace('.', ',')
 
                     sb.append(tempLat).append(" ").append(directionNS).append(",   ")
                         .append(tempLon).append(" ").append(directionEW).append("\n")
-                        .append(uncert).append(" ").append(tempUncert).append(" m,   ")
+                        .append(unCert).append(" ").append(tempUnCert).append(" m,   ")
                         .append(high).append(" ").append(tempHeight).append(" m")
                 } else {
                     sb.append(directionNS).append(" ").append(tempLat).append(",   ")
                         .append(directionEW).append(" ").append(tempLon).append("\n")
-                        .append(uncert).append(" ").append(tempUncert).append(" m,   ")
+                        .append(unCert).append(" ").append(tempUnCert).append(" m,   ")
                         .append(high).append(" ").append(tempHeight).append(" m")
                 }
             } else {
@@ -586,22 +593,22 @@ class MyPositionActivity
             }
 
             if (showHeightMessage) {
-                var corrtemp = String.format("%.1f",MyPosition.corrHeight)
-                var gpstemp = String.format("%.1f", MyPosition.heightGPS)
-                var nntemp = String.format("%.1f", MyPosition.heightNN)
+                var corrTemp = String.format("%.1f",MyPosition.corrHeight)
+                var gpsTemp = String.format("%.1f", MyPosition.heightGPS)
+                var nnTemp = String.format("%.1f", MyPosition.heightNN)
 
                 val language = Locale.getDefault().toString().substring(0, 2)
 
                 // for "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
                 if (language == "de" || language == "es" || language == "fr" || language == "it" || language == "nl" || language == "pt") {
-                    corrtemp = corrtemp.replace('.', ',')
-                    gpstemp = gpstemp.replace('.', ',')
-                    nntemp = nntemp.replace('.', ',')
+                    corrTemp = corrTemp.replace('.', ',')
+                    gpsTemp = gpsTemp.replace('.', ',')
+                    nnTemp = nnTemp.replace('.', ',')
                 }
 
-                val hToast = (getString(R.string.h_nn) + " " + nntemp + " m"
-                        + " \n " + getString(R.string.h_gps) + " " + gpstemp + " m"
-                        + " \n " + getString(R.string.h_corr) + " " + corrtemp + " m")
+                val hToast = (getString(R.string.h_nn) + " " + nnTemp + " m"
+                        + " \n " + getString(R.string.h_gps) + " " + gpsTemp + " m"
+                        + " \n " + getString(R.string.h_corr) + " " + corrTemp + " m")
                 // 3 lines message to dismiss by Ok (\n to show above Navigation Bar in 2 or 3 button mode)
                 showSnackbarHeight(hToast + "\n\n")
             }
@@ -611,10 +618,10 @@ class MyPositionActivity
     // Convert to degree
     private fun toDegree(): String {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "614, toDegree()")
+            Log.i(TAG, "621, toDegree()")
 
         val language = Locale.getDefault().toString().substring(0, 2)
-        val stringb = StringBuilder()
+        val stringB = StringBuilder()
         var convert = LatLonConvert(MyPosition.lat)
 
         val nord = getString(R.string.nord)
@@ -630,36 +637,36 @@ class MyPositionActivity
 
         // For "de", "es", "fr", "it", "nl", "pt" replace '.' with ',' in numbers
         if (language == "de" || language == "es" || language == "fr" || language == "it" || language == "nl" || language == "pt") {
-            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
-            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringB.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringB.append(DecimalFormat("#").format(convert.minute)).append("' ")
 
-            var sectemp = DecimalFormat("#.#").format(convert.second)
-            sectemp = sectemp.replace('.', ',')
-            stringb.append(sectemp).append("\" ").append(directionNS).append(",  ")
+            var secTemp = DecimalFormat("#.#").format(convert.second)
+            secTemp = secTemp.replace('.', ',')
+            stringB.append(secTemp).append("\" ").append(directionNS).append(",  ")
 
             convert = LatLonConvert(MyPosition.lon)
 
-            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
-            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringB.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringB.append(DecimalFormat("#").format(convert.minute)).append("' ")
 
-            sectemp = DecimalFormat("#.#").format(convert.second)
-            sectemp = sectemp.replace('.', ',')
-            stringb.append(sectemp).append("\" ").append(directionEW)
+            secTemp = DecimalFormat("#.#").format(convert.second)
+            secTemp = secTemp.replace('.', ',')
+            stringB.append(secTemp).append("\" ").append(directionEW)
         } else {
-            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
-            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
-            stringb.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
+            stringB.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringB.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringB.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
                 .append(directionNS).append(",  ")
 
             convert = LatLonConvert(MyPosition.lon)
 
-            stringb.append(DecimalFormat("#").format(convert.degree)).append("° ")
-            stringb.append(DecimalFormat("#").format(convert.minute)).append("' ")
-            stringb.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
+            stringB.append(DecimalFormat("#").format(convert.degree)).append("° ")
+            stringB.append(DecimalFormat("#").format(convert.minute)).append("' ")
+            stringB.append(DecimalFormat("#.#").format(convert.second)).append("\" ")
                 .append(directionEW)
         }
 
-        return stringb.toString()
+        return stringB.toString()
     }
 
     // Share button clicked next to one of the text boxes
@@ -698,13 +705,12 @@ class MyPositionActivity
 
     // Show message to share
     @SuppressLint("DefaultLocale")
-    private fun getMessage(messageHeader: String?, adrlines: String?): String {
+    private fun getMessage(messageHeader: String?, addrLines: String?): String {
         if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-            Log.i(TAG, "703, getMessage to share()")
+            Log.i(TAG, "710, getMessage to share()")
 
         val message = StringBuilder()
         val geoLoc = applicationContext.getString(R.string.geoloc)
-        val uncert = applicationContext.getString(R.string.uncert)
         val nord = applicationContext.getString(R.string.nord)
         val east = applicationContext.getString(R.string.east)
         val west = applicationContext.getString(R.string.west)
@@ -712,11 +718,12 @@ class MyPositionActivity
         val lati = applicationContext.getString(R.string.lati)
         val longi = applicationContext.getString(R.string.longi)
         val high = applicationContext.getString(R.string.height)
+        val unCert = applicationContext.getString(R.string.uncert)
 
         var tempLat = String.format("%.5f", MyPosition.lat)
         var tempLon = String.format("%.5f", MyPosition.lon)
         var tempHigh = String.format("%.1f", MyPosition.heightNN)
-        var tempUncert = String.format("%.1f", MyPosition.uncertainty)
+        var tempUnCert = String.format("%.1f", MyPosition.uncertainty)
 
         val language = Locale.getDefault().toString().substring(0, 2)
 
@@ -727,7 +734,7 @@ class MyPositionActivity
             tempLat = tempLat.replace('.', ',')
             tempLon = tempLon.replace('.', ',')
             tempHigh = tempHigh.replace('.', ',')
-            tempUncert = tempUncert.replace('.', ',')
+            tempUnCert = tempUnCert.replace('.', ',')
         }
 
         if (MyPosition.lat == 0.0 && MyPosition.lon == 0.0) {
@@ -769,13 +776,13 @@ class MyPositionActivity
         message.append(tempHigh)
         message.append(" m\n   ")
 
-        message.append(uncert)
+        message.append(unCert)
         message.append(" ")
-        message.append(tempUncert)
+        message.append(tempUnCert)
         message.append(" m\n\n")
         message.append(applicationContext.getString(R.string.toshortAddr))
         message.append("\n")
-        message.append(adrlines)
+        message.append(addrLines)
 
         return message.toString()
     }

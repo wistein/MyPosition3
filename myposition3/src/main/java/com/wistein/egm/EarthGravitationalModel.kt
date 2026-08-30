@@ -47,7 +47,7 @@ import kotlin.math.sqrt
  * Code adaptation for use by MyPositionActivity by wm.stein on 2019-05-18.
  * Last edited in Java on 2025-11-09.
  * converted to Kotlin on 2026-07-27,
- * last edited on 2026-08-03.
+ * last edited on 2026-08-30.
  */
 class EarthGravitationalModel : VerticalTransform() {
     // Maximum degree and order attained.
@@ -84,7 +84,7 @@ class EarthGravitationalModel : VerticalTransform() {
     private val bClenshaw: DoubleArray
     private val as1: DoubleArray
 
-    /* Temporary buffer for use by heightOffset only. Allocated once for ever
+    /* Temporary buffer for use by heightOffset only. Allocated once forever
      * for avoiding too many objects creation / destruction.
      */
     private val cr: DoubleArray
@@ -219,20 +219,20 @@ class EarthGravitationalModel : VerticalTransform() {
          * Latitude is used only in trigonometric functions as well.
          */
         val phi = Math.toRadians(latitude)
-        val sin_phi = sin(phi)
-        val sin2_phi = sin_phi * sin_phi
-        val rni = sqrt(1.0 - esq * sin2_phi)
+        val sinPhi = sin(phi)
+        val sin2Phi = sinPhi * sinPhi
+        val rni = sqrt(1.0 - esq * sin2Phi)
         val rn = semiMajor / rni
         val t22 = (rn + height) * cos(phi)
         val x2y2 = t22 * t22
-        val z1 = ((rn * (1 - esq)) + height) * sin_phi
+        val z1 = ((rn * (1 - esq)) + height) * sinPhi
         val th = (Math.PI / 2.0) - atan(z1 / sqrt(x2y2))
         val y = sin(th)
         val t = cos(th)
         val f1 = semiMajor / sqrt(x2y2 + z1 * z1)
         val f2 = f1 * f1
         val rlam = Math.toRadians(longitude)
-        val gravn: Double = grava * (1.0 + star * sin2_phi) / rni
+        val gravn: Double = grava * (1.0 + star * sin2Phi) / rni
         sr[0] = 0.0
         sr[1] = sin(rlam)
         cr[0] = 1.0

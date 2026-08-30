@@ -25,7 +25,7 @@ package com.wistein.egm
  * transform classes can be easily derived. In addition, `AbstractMathTransform` implements
  * methods required by the {MathTransform2D} interface, but **does not**
  * implements `MathTransform2D`. Subclasses must declare `implements MathTransform2D`
- * themself if they know to maps two-dimensional coordinate systems.
+ * themselves if they know to maps two-dimensional coordinate systems.
  * 
  * @author Martin Desruisseaux (IRD)
  * tutorial link: docs.codehaus.org/display/GEOTOOLS/Coordinate+Transformation+Parameters
@@ -34,7 +34,7 @@ package com.wistein.egm
  * Code adaptation for use by MyPositionActivity by wistein
  * last change in Java on 2020-04-17,
  * converted to Kotlin on 2026-07-27,
- * last edited on 2026-07-27.
+ * last edited on 2026-08-30.
  */
 
 // Constructs a math transform.

@@ -48,9 +48,10 @@ Since versions 1.3.0 to current version, copyright by wistein, 2017-2026,<br>
 https://github.com/wistein/MyPosition3<BR>
 
 ### History:
-<B>My Position, version 1.5.1,</B> 2026-08-03<br>
-- All remaining Java files converted to Kotlin
-- Code improved<br>
+<B>My Position, version 1.5.1,</B> 2026-08-30<br>
+- All remaining Java files converted to Kotlin<br>
+- Calling a browser to show the map does not finish the app in background<br>
+- Code and text improvements<br>
 <br>
 
 <B>My Position, version 1.5.0,</B> 2026-05-24<br>
@@ -152,7 +153,7 @@ https://github.com/wistein/MyPosition3<BR>
 
 <B>My Position, version 1.3.5,</B> 2019-02-03<br>
  - Removed background service for GPS first fix function<br>
- - Instead direct GPS position request<br>
+ - Instead, direct GPS position request<br>
  - Some code cleaning<br>
 <br>
 

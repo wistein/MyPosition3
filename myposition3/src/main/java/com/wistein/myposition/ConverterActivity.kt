@@ -1,5 +1,3 @@
-@file:Suppress("KotlinConstantConditions")
-
 package com.wistein.myposition
 
 import android.annotation.SuppressLint
@@ -59,7 +57,7 @@ import kotlin.math.sqrt
  * Copyright 2019-2026, Wilhelm Stein, Bonn, Germany
  * last edited in Java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * Last edited on 2026-08-03
+ * Last edited on 2026-08-30
  */
 class ConverterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDecimalLat: EditText
@@ -221,20 +219,20 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         // Switch off keyboard
         hideKeyboard(this)
         try {
-            var lattemp = (tvDecimalLat.text.toString())
-            var lontemp = (tvDecimalLon.text.toString())
-            lattemp = lattemp.replace(',', '.')
-            lontemp = lontemp.replace(',', '.')
-            val latitemp = lattemp.toDouble()
-            val longitemp = lontemp.toDouble()
+            var latTemp = (tvDecimalLat.text.toString())
+            var lonTemp = (tvDecimalLon.text.toString())
+            latTemp = latTemp.replace(',', '.')
+            lonTemp = lonTemp.replace(',', '.')
+            val latiTemp = latTemp.toDouble()
+            val longiTemp = lonTemp.toDouble()
 
-            var convert = LatLonConvert(latitemp)
+            var convert = LatLonConvert(latiTemp)
 
             tvDegreeLat.setText(DecimalFormat("#").format(convert.degree))
             tvMinuteLat.setText(DecimalFormat("#").format(convert.minute))
             tvSecondLat.setText(DecimalFormat("#.##").format(convert.second))
 
-            convert = LatLonConvert(longitemp)
+            convert = LatLonConvert(longiTemp)
 
             tvDegreeLon.setText(DecimalFormat("#").format(convert.degree))
             tvMinuteLon.setText(DecimalFormat("#").format(convert.minute))
@@ -253,41 +251,41 @@ class ConverterActivity : AppCompatActivity(), View.OnClickListener {
         // Switch off keyboard
         hideKeyboard(this)
         try {
-            var deglattemp = (tvDegreeLat.text.toString())
-            var minlattemp = (tvMinuteLat.text.toString())
-            var seclattemp = (tvSecondLat.text.toString())
+            var degLatTemp = (tvDegreeLat.text.toString())
+            var minLatTemp = (tvMinuteLat.text.toString())
+            var secLatTemp = (tvSecondLat.text.toString())
 
 
             // for correct calculation replace ',' with '.' for German locale
-            deglattemp = deglattemp.replace(',', '.')
-            minlattemp = minlattemp.replace(',', '.')
-            seclattemp = seclattemp.replace(',', '.')
+            degLatTemp = degLatTemp.replace(',', '.')
+            minLatTemp = minLatTemp.replace(',', '.')
+            secLatTemp = secLatTemp.replace(',', '.')
 
             var convert = LatLonConvert(
-                deglattemp.toDouble(),
-                minlattemp.toDouble(),
-                seclattemp.toDouble()
+                degLatTemp.toDouble(),
+                minLatTemp.toDouble(),
+                secLatTemp.toDouble()
             )
-            var tvtemp: String? = DecimalFormat("#.#####").format(convert.decimal)
-            tvDecimalLat.setText(tvtemp)
+            var tvTemp: String? = DecimalFormat("#.#####").format(convert.decimal)
+            tvDecimalLat.setText(tvTemp)
 
-            var deglontemp = (tvDegreeLon.text.toString())
-            var minlontemp = (tvMinuteLon.text.toString())
-            var seclontemp = (tvSecondLon.text.toString())
+            var degLonTemp = (tvDegreeLon.text.toString())
+            var minLonTemp = (tvMinuteLon.text.toString())
+            var secLonTemp = (tvSecondLon.text.toString())
 
             // for correct calculation replace ',' with '.' for German locale
-            deglontemp = deglontemp.replace(',', '.')
-            minlontemp = minlontemp.replace(',', '.')
-            seclontemp = seclontemp.replace(',', '.')
+            degLonTemp = degLonTemp.replace(',', '.')
+            minLonTemp = minLonTemp.replace(',', '.')
+            secLonTemp = secLonTemp.replace(',', '.')
 
             convert = LatLonConvert(
-                deglontemp.toDouble(),
-                minlontemp.toDouble(),
-                seclontemp.toDouble()
+                degLonTemp.toDouble(),
+                minLonTemp.toDouble(),
+                secLonTemp.toDouble()
             )
 
-            tvtemp = DecimalFormat("#.#####").format(convert.decimal)
-            tvDecimalLon.setText(tvtemp)
+            tvTemp = DecimalFormat("#.#####").format(convert.decimal)
+            tvDecimalLon.setText(tvTemp)
         } catch (_: NumberFormatException) {
             val mesg = getString(R.string.decimal) + " " + getString(R.string.invValue)
             Toast.makeText(

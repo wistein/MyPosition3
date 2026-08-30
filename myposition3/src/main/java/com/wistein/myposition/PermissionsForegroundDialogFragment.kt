@@ -25,7 +25,7 @@ import androidx.fragment.app.DialogFragment
  * Adopted for MyPosition3 by wistein on 2019-02-08,
  * last edited in java on 2024-09-30,
  * converted to Kotlin on 2024-09-30,
- * last edited on 2026-05-29
+ * last edited on 2026-08-30
  */
 class PermissionsForegroundDialogFragment : DialogFragment() {
     private var context: Context? = null
@@ -60,7 +60,7 @@ class PermissionsForegroundDialogFragment : DialogFragment() {
     { isGranted ->
         if (isGranted) {
             if (IsRunningOnEmulator.DLOG || BuildConfig.DEBUG)
-                Log.i(TAG, "63, permLauncherForegrnd granted: $isGranted")
+                Log.i(TAG, "63, permLauncherForegrnd granted: true")
             dismiss()
         } else {
             showAppSettingsForegroundDialog()

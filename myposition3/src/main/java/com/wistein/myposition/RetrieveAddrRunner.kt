@@ -38,7 +38,7 @@ import javax.net.ssl.HttpsURLConnection
  * created on 2018-03-10,
  * last modification in Java on 2023-05-30,
  * converted to Kotlin on 2023-07-09,
- * last edited on 2026-05-24
+ * last edited on 2026-08-30
  */
 class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
     Worker(context, parameters) {
@@ -110,37 +110,37 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
 
         // Parse the XML content
         if (xmlString.contains("<addressparts>")) {
-            var sstart = xmlString.indexOf("<addressparts>") + 14
-            var send = xmlString.indexOf("</addressparts>")
-            xmlString = xmlString.substring(sstart, send)
+            var strStart = xmlString.indexOf("<addressparts>") + 14
+            var strEnd = xmlString.indexOf("</addressparts>")
+            xmlString = xmlString.substring(strStart, strEnd)
             val msg = java.lang.StringBuilder()
 
             // 1. line: building, viewpoint, hotel or guesthouse
             if (xmlString.contains("<building>")) {
-                sstart = xmlString.indexOf("<building>") + 10
-                send = xmlString.indexOf("</building>")
-                val building = xmlString.substring(sstart, send)
+                strStart = xmlString.indexOf("<building>") + 10
+                strEnd = xmlString.indexOf("</building>")
+                val building = xmlString.substring(strStart, strEnd)
                 msg.append(building)
                 msg.append("\n")
             }
             if (xmlString.contains("<viewpoint>")) {
-                sstart = xmlString.indexOf("<viewpoint>") + 11
-                send = xmlString.indexOf("</viewpoint>")
-                val viewpoint = xmlString.substring(sstart, send)
+                strStart = xmlString.indexOf("<viewpoint>") + 11
+                strEnd = xmlString.indexOf("</viewpoint>")
+                val viewpoint = xmlString.substring(strStart, strEnd)
                 msg.append(viewpoint)
                 msg.append("\n")
             }
             if (xmlString.contains("<hotel>")) {
-                sstart = xmlString.indexOf("<hotel>") + 7
-                send = xmlString.indexOf("</hotel>")
-                val hotel = xmlString.substring(sstart, send)
+                strStart = xmlString.indexOf("<hotel>") + 7
+                strEnd = xmlString.indexOf("</hotel>")
+                val hotel = xmlString.substring(strStart, strEnd)
                 msg.append(hotel)
                 msg.append("\n")
             }
             if (xmlString.contains("<guestHouse>")) {
-                sstart = xmlString.indexOf("<guestHouse>") + 13
-                send = xmlString.indexOf("</guestHouse>")
-                val guestHouse = xmlString.substring(sstart, send)
+                strStart = xmlString.indexOf("<guestHouse>") + 13
+                strEnd = xmlString.indexOf("</guestHouse>")
+                val guestHouse = xmlString.substring(strStart, strEnd)
                 msg.append(guestHouse)
                 msg.append("\n")
             }
@@ -151,23 +151,23 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
 
                 // 2. line: road or street, house-No.
                 if (xmlString.contains("<road>")) {
-                    sstart = xmlString.indexOf("<road>") + 6
-                    send = xmlString.indexOf("</road>")
-                    val road = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<road>") + 6
+                    strEnd = xmlString.indexOf("</road>")
+                    val road = xmlString.substring(strStart, strEnd)
                     msg.append(road)
                     msg.append(" ")
                 }
                 if (xmlString.contains("<street>")) {
-                    sstart = xmlString.indexOf("<street>") + 8
-                    send = xmlString.indexOf("</street>")
-                    val street = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<street>") + 8
+                    strEnd = xmlString.indexOf("</street>")
+                    val street = xmlString.substring(strStart, strEnd)
                     msg.append(street)
                     msg.append(" ")
                 }
                 if (xmlString.contains("<houseNumber>")) {
-                    sstart = xmlString.indexOf("<houseNumber>") + 14
-                    send = xmlString.indexOf("</houseNumber>")
-                    val houseNumber = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<houseNumber>") + 14
+                    strEnd = xmlString.indexOf("</houseNumber>")
+                    val houseNumber = xmlString.substring(strStart, strEnd)
                     msg.append(houseNumber)
                     msg.append("\n")
                 } else  // without house-No.
@@ -178,9 +178,9 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
 
                 // 3. line: cityDistrict, suburb
                 if (xmlString.contains("<cityDistrict>")) {
-                    sstart = xmlString.indexOf("<cityDistrict>") + 15
-                    send = xmlString.indexOf("</cityDistrict>")
-                    val cityDistrict = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<cityDistrict>") + 15
+                    strEnd = xmlString.indexOf("</cityDistrict>")
+                    val cityDistrict = xmlString.substring(strStart, strEnd)
                     msg.append(cityDistrict)
                     if (xmlString.contains("<suburb>")) {
                         msg.append(" - ")
@@ -189,171 +189,171 @@ class RetrieveAddrRunner(context: Context, parameters: WorkerParameters) :
                     }
                 }
                 if (xmlString.contains("<suburb>")) {
-                    sstart = xmlString.indexOf("<suburb>") + 8
-                    send = xmlString.indexOf("</suburb>")
-                    val suburb = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<suburb>") + 8
+                    strEnd = xmlString.indexOf("</suburb>")
+                    val suburb = xmlString.substring(strStart, strEnd)
                     msg.append(suburb)
                     msg.append("\n")
                 }
 
                 // 4. line: zip code village, town, city, county
                 if (xmlString.contains("<postcode>")) {
-                    sstart = xmlString.indexOf("<postcode>") + 10
-                    send = xmlString.indexOf("</postcode>")
-                    val postcode = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<postcode>") + 10
+                    strEnd = xmlString.indexOf("</postcode>")
+                    val postcode = xmlString.substring(strStart, strEnd)
                     msg.append(postcode)
                     msg.append(" ")
                 }
 
                 if (xmlString.contains("<village>")) {
-                    sstart = xmlString.indexOf("<village>") + 9
-                    send = xmlString.indexOf("</village>")
-                    val village = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<village>") + 9
+                    strEnd = xmlString.indexOf("</village>")
+                    val village = xmlString.substring(strStart, strEnd)
                     msg.append(village)
                     msg.append("\n")
                 }
 
                 if (xmlString.contains("<town>")) {
-                    sstart = xmlString.indexOf("<town>") + 6
-                    send = xmlString.indexOf("</town>")
-                    val town = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<town>") + 6
+                    strEnd = xmlString.indexOf("</town>")
+                    val town = xmlString.substring(strStart, strEnd)
                     msg.append(town)
                     msg.append("\n")
                 }
 
                 if (xmlString.contains("<city>")) {
-                    sstart = xmlString.indexOf("<city>") + 6
-                    send = xmlString.indexOf("</city>")
-                    val city = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<city>") + 6
+                    strEnd = xmlString.indexOf("</city>")
+                    val city = xmlString.substring(strStart, strEnd)
                     msg.append(city)
                     msg.append("\n")
                 }
 
                 if (xmlString.contains("<county>")) {
-                    sstart = xmlString.indexOf("<county>") + 8
-                    send = xmlString.indexOf("</county>")
-                    val county = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<county>") + 8
+                    strEnd = xmlString.indexOf("</county>")
+                    val county = xmlString.substring(strStart, strEnd)
                     msg.append(county)
                     msg.append("\n")
                 }
 
                 // 5. line: state, country
                 if (xmlString.contains("<state>")) {
-                    sstart = xmlString.indexOf("<state>") + 7
-                    send = xmlString.indexOf("</state>")
-                    val state = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<state>") + 7
+                    strEnd = xmlString.indexOf("</state>")
+                    val state = xmlString.substring(strStart, strEnd)
                     msg.append(state)
                     msg.append("\n")
                 }
                 if (xmlString.contains("<country>")) {
-                    sstart = xmlString.indexOf("<country>") + 9
-                    send = xmlString.indexOf("</country>")
-                    val country = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<country>") + 9
+                    strEnd = xmlString.indexOf("</country>")
+                    val country = xmlString.substring(strStart, strEnd)
                     msg.append(country)
                 }
             } else  // not at, ch, de, fr, it
             {
                 // 2. line: house, house-No., road or street
                 if (xmlString.contains("<house>")) {
-                    sstart = xmlString.indexOf("<house>") + 7
-                    send = xmlString.indexOf("</house>")
-                    val house = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<house>") + 7
+                    strEnd = xmlString.indexOf("</house>")
+                    val house = xmlString.substring(strStart, strEnd)
                     msg.append(house)
                     msg.append(" ")
                 }
                 if (xmlString.contains("<houseNumber>")) {
-                    sstart = xmlString.indexOf("<houseNumber>") + 14
-                    send = xmlString.indexOf("</houseNumber>")
-                    val houseNumber = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<houseNumber>") + 14
+                    strEnd = xmlString.indexOf("</houseNumber>")
+                    val houseNumber = xmlString.substring(strStart, strEnd)
                     msg.append(houseNumber)
                     msg.append(" ")
                 }
                 if (xmlString.contains("<road>")) {
-                    sstart = xmlString.indexOf("<road>") + 6
-                    send = xmlString.indexOf("</road>")
-                    val road = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<road>") + 6
+                    strEnd = xmlString.indexOf("</road>")
+                    val road = xmlString.substring(strStart, strEnd)
                     msg.append(road)
                     msg.append("\n")
                 }
                 if (xmlString.contains("<street>")) {
-                    sstart = xmlString.indexOf("<street>") + 8
-                    send = xmlString.indexOf("</street>")
-                    val street = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<street>") + 8
+                    strEnd = xmlString.indexOf("</street>")
+                    val street = xmlString.substring(strStart, strEnd)
                     msg.append(street)
                     msg.append("\n")
                 }
 
                 // 3. line: suburb
                 if (xmlString.contains("<suburb>")) {
-                    sstart = xmlString.indexOf("<suburb>") + 8
-                    send = xmlString.indexOf("</suburb>")
-                    val suburb = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<suburb>") + 8
+                    strEnd = xmlString.indexOf("</suburb>")
+                    val suburb = xmlString.substring(strStart, strEnd)
                     msg.append(suburb)
                     msg.append("\n")
                 }
 
                 // 4. line: village, town
                 if (xmlString.contains("<village>")) {
-                    sstart = xmlString.indexOf("<village>") + 9
-                    send = xmlString.indexOf("</village>")
-                    val village = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<village>") + 9
+                    strEnd = xmlString.indexOf("</village>")
+                    val village = xmlString.substring(strStart, strEnd)
                     msg.append(village)
                     msg.append("\n")
                 }
                 if (xmlString.contains("<town>")) {
-                    sstart = xmlString.indexOf("<town>") + 6
-                    send = xmlString.indexOf("</town>")
-                    val town = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<town>") + 6
+                    strEnd = xmlString.indexOf("</town>")
+                    val town = xmlString.substring(strStart, strEnd)
                     msg.append(town)
                     msg.append("\n")
                 }
 
                 // 5. line: city
                 if (xmlString.contains("<city>")) {
-                    sstart = xmlString.indexOf("<city>") + 6
-                    send = xmlString.indexOf("</city>")
-                    val city = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<city>") + 6
+                    strEnd = xmlString.indexOf("</city>")
+                    val city = xmlString.substring(strStart, strEnd)
                     msg.append(city)
                     msg.append("\n")
                 }
 
                 // 6. line: county, stateDistrict
                 if (xmlString.contains("<county>")) {
-                    sstart = xmlString.indexOf("<county>") + 8
-                    send = xmlString.indexOf("</county>")
-                    val county = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<county>") + 8
+                    strEnd = xmlString.indexOf("</county>")
+                    val county = xmlString.substring(strStart, strEnd)
                     msg.append(county)
                     msg.append("\n")
                 }
 
                 if (xmlString.contains("<stateDistrict>")) {
-                    sstart = xmlString.indexOf("<stateDistrict>") + 16
-                    send = xmlString.indexOf("</stateDistrict>")
-                    val stateDistrict = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<stateDistrict>") + 16
+                    strEnd = xmlString.indexOf("</stateDistrict>")
+                    val stateDistrict = xmlString.substring(strStart, strEnd)
                     msg.append(stateDistrict)
                     msg.append("\n")
                 }
 
                 // 7. line: state or country, zip code
                 if (xmlString.contains("<state>")) {
-                    sstart = xmlString.indexOf("<state>") + 7
-                    send = xmlString.indexOf("</state>")
-                    val state = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<state>") + 7
+                    strEnd = xmlString.indexOf("</state>")
+                    val state = xmlString.substring(strStart, strEnd)
                     msg.append(state)
                     msg.append("\n")
                 }
                 if (xmlString.contains("<country>")) {
-                    sstart = xmlString.indexOf("<country>") + 9
-                    send = xmlString.indexOf("</country>")
-                    val country = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<country>") + 9
+                    strEnd = xmlString.indexOf("</country>")
+                    val country = xmlString.substring(strStart, strEnd)
                     msg.append(country)
                     msg.append(", ")
                 }
 
                 if (xmlString.contains("<postcode>")) {
-                    sstart = xmlString.indexOf("<postcode>") + 10
-                    send = xmlString.indexOf("</postcode>")
-                    val postcode = xmlString.substring(sstart, send)
+                    strStart = xmlString.indexOf("<postcode>") + 10
+                    strEnd = xmlString.indexOf("</postcode>")
+                    val postcode = xmlString.substring(strStart, strEnd)
                     msg.append(postcode)
                 }
             }

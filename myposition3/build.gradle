@@ -1,5 +1,5 @@
 // Build file where you can add configuration options for the module.
-// Last edited on 2026-07-06
+// Last edited on 2026-08-30
 
 plugins {
     id 'com.android.application'
@@ -50,14 +50,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.work:work-runtime:2.11.2'
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.core:core-ktx:1.19.0'
     implementation 'androidx.activity:activity-ktx:1.13.0' // new
     implementation 'androidx.annotation:annotation-jvm:1.10.0'
-    implementation 'androidx.fragment:fragment-ktx:1.8.9'
+    implementation 'androidx.fragment:fragment-ktx:1.9.0'
     implementation 'com.google.android.material:material:1.14.0'
 
 // Uncomment the last line when LeakCanary should run in debug builds.
